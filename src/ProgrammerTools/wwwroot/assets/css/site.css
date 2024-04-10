@@ -1,0 +1,225 @@
+html,
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.hidden {
+    display: none;
+}
+
+.overflow-hidden {
+    overflow: hidden;
+}
+
+.fullheight {
+    height: 100%;
+}
+
+.fullwidth {
+    width: 100%;
+}
+
+@keyframes fadeInAnimation {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1
+    }
+}
+
+@keyframes fadeOutAnimation {
+    from {
+        opacity: 1
+    }
+
+    to {
+        opacity: 0
+    }
+}
+
+@keyframes rotateAnimation {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.notify-container {
+    position: fixed;
+    top: 50px;
+    right: 0;
+    padding: 1rem;
+    z-index: 100;
+    max-height: 100%;
+    overflow: hidden;
+}
+
+.notify-container .message {
+    border-radius: 4px;
+    background: var(--gray-200);
+    margin-bottom: 1rem;
+    width: 200px;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: box-shadow .3s;
+}
+
+.notify-container .message.show {
+    animation: fadeInAnimation .3s ease forwards;
+}
+
+.notify-container .message.close {
+    animation: fadeOutAnimation .3s ease forwards;
+}
+
+.notify-container .message:hover {
+    box-shadow: var(--gray-600) 0 0 10px;
+}
+
+.notify-container .message .title {
+    padding: .5rem;
+    display: flex;
+    align-items: center;
+    color: var(--light);
+}
+
+.notify-container .message .title svg {
+    height: 20px;
+    width: 20px;
+    vertical-align: middle;
+    fill: var(--light);
+}
+
+.notify-container .message .title.info {
+    background-color: var(--info);
+}
+
+.notify-container .message .title.success {
+    background-color: var(--success);
+}
+
+.notify-container .message .title.warning {
+    background-color: var(--warning);
+}
+
+.notify-container .message .title.error {
+    background-color: var(--danger);
+}
+
+.notify-container .message .title-content {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 4px;
+}
+
+.notify-container .message .content {
+    padding: .5rem;
+    word-wrap: break-word;
+    max-height: 300px;
+    overflow: auto;
+    font-size: .9rem;
+}
+
+.notify-container .message .close-button {
+    cursor: pointer;
+    border-radius: 18px;
+    height: 18px;
+    width: 18px;
+    border: none;
+    background: none;
+    color: var(--dark);
+    padding: 0;
+    transition: background-color .3s;
+}
+
+.notify-container .message .close-button svg {
+    height: 12px;
+    width: 12px;
+}
+
+.notify-container .message .close-button:hover {
+    background: var(--danger);
+    color: var(--light);
+}
+
+.confirm-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--gray-opacity);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 50;
+}
+
+.confirm-overlay .confirm-content {
+    background: var(--light);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: box-shadow .3s;
+    font-size: .9rem;
+}
+
+.confirm-overlay .confirm-content:hover {
+    box-shadow: var(--gray-600) 0 0 10px;
+}
+
+.confirm-overlay .confirm-content.show {
+    animation: fadeInAnimation .3s ease forwards;
+}
+
+.confirm-overlay .confirm-content.hide {
+    animation: fadeOutAnimation .3s ease forwards;
+}
+
+.confirm-overlay .confirm-content .content {
+    padding: 1.5rem;
+    width: 250px;
+    white-space:pre-wrap;
+    word-break: break-word;
+    max-height: 80%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.confirm-overlay .confirm-content .operation-container {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    gap: 1rem;
+    padding: .5rem;
+    background: var(--gray-200);
+}
+
+.confirm-overlay .confirm-content button {
+    border: none;
+    cursor: pointer;
+    padding: .5rem 1rem;
+    border-radius: var(--border-radius);
+    transition: background-color .3s;
+}
+
+.confirm-overlay .confirm-content button:hover {
+    opacity: .8;
+    transition: opacity .2s;
+}
+
+.confirm-overlay .confirm-content .cancle {
+    background: var(--gray-400);
+}
+
+.confirm-overlay .confirm-content .ok {
+    background: var(--primary);
+    color: var(--light);
+}
