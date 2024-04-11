@@ -62,11 +62,11 @@ html, body, #vue-app, .page-layout {
 }
 
 .el-menu-item:hover {
-    background: var(--purple-700);
+    background: var(--gray-600);
 }
 
 .el-sub-menu__title:hover {
-    background: var(--purple-600);
+    background: var(--gray-500);
 }
 
 .el-menu-item.is-active, .el-sub-menu.is-active {
@@ -74,5 +74,5 @@ html, body, #vue-app, .page-layout {
 }
 
 .el-sub-menu.is-opened.is-active {
-    background: var(--theme);
+    background: var(--gray);
 }
