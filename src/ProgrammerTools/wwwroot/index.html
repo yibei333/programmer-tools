@@ -34,27 +34,7 @@
     <script src="/assets/js/resource.js"></script>
     <script src="/assets/js/util.js"></script>
     <script>
-        let routes = [
-            { path: '/', redirect: '/home' },
-            {
-                path: '/home',
-                name: 'home',
-                component: () => importPage('home'),
-                props: false
-            },
-            {
-                path: '/crypto/symmetric/aes',
-                name: 'aes',
-                component: () => importPage('crypto/symmetric/aes'),
-                props: false
-            },
-            {
-                path: '/:pathMatch(.*)*',
-                name: 'notfound',
-                component: () => importPage('notfound'),
-            },
-        ];
-
+        let routes = getVueRotes();
         let routerData = VueRouter.createRouter({
             history: VueRouter.createWebHashHistory(),
             routes,
