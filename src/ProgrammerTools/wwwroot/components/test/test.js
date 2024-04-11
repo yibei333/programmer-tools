@@ -1,9 +1,9 @@
-export default {
+﻿export default {
     methods: {
         async test(name) {
-            vant.showToast('��ʾ');
+            ElementPlus.ElMessage('提示');
             let result = await invokeSharpMethod('Test', name);
-            vant.showToast(result);
+            ElementPlus.ElMessage(result);
         }
     }
 }
