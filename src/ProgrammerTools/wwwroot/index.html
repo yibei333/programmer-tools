@@ -30,7 +30,9 @@
     <script src="_framework/blazor.webview.js" autostart="false"></script>
     <script src="/assets/lib/vue-3.2.36.js"></script>
     <script src="/assets/lib/vue-router-4.1.2.js"></script>
+    <script src="/assets/lib/vue-i18n.global.js"></script>
     <script src="/assets/lib/element-plus/index.full.min.js"></script>
+    <script src="/assets/js/i18n.js"></script>
     <script src="/assets/js/resource.js"></script>
     <script src="/assets/js/util.js"></script>
     <script>
@@ -45,6 +47,7 @@
                 layout: Vue.defineAsyncComponent(async () => await importComponent('layout')),
             },
         });
+        app.use(i18n);
         app.use(routerData);
         app.use(ElementPlus);
         app.component('test', Vue.defineAsyncComponent(async () => await importComponent(`test`)))

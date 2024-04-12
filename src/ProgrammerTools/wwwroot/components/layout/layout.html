@@ -65,12 +65,11 @@
        <div class="content center">
        </div>
        <div class="content end">
-           <el-dropdown>
-               <el-button size="small">中文</el-button>
+           <el-dropdown trigger="click" @command="selectLocale">
+               <el-button size="small">{{$i18n.locale}}</el-button>
                <template #dropdown>
                    <el-dropdown-menu>
-                       <el-dropdown-item>中文</el-dropdown-item>
-                       <el-dropdown-item>English</el-dropdown-item>
+                       <el-dropdown-item v-for="locale in $i18n.availableLocales" :command="locale">{{ locale }}</el-dropdown-item>
                    </el-dropdown-menu>
                </template>
            </el-dropdown>

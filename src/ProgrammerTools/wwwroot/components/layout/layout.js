@@ -28,6 +28,9 @@ export default {
                 this.$router.push({ name: name });
             }
         },
+        selectLocale(command) {
+            this.$i18n.locale = command;
+        },
         openGithub() {
             invokeSharpMethod('OpenBrowser', 'https://github.com/yibei333/programmer-tools');
         }
