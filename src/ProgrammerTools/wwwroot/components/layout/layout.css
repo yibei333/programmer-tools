@@ -51,12 +51,6 @@ html, body, #vue-app, .page-layout {
     gap: .5rem;
 }
 
-    .el-menu-item.large, .el-sub-menu.large .el-sub-menu__title {
-        line-height: unset !important;
-        height: 58px !important;
-        gap: .5rem;
-    }
-
 .el-menu--popup {
     min-width: 100px;
 }
@@ -76,3 +70,37 @@ html, body, #vue-app, .page-layout {
 .el-sub-menu.is-opened.is-active {
     background: var(--gray);
 }
+
+.page-layout-header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    background: var(--theme);
+    gap: .5rem;
+    padding: 0 .5rem;
+    align-items: center;
+    color: var(--light);
+    height: 44px;
+}
+
+    .page-layout-header svg {
+        height: 24px;
+        width: 24px;
+        cursor: pointer;
+    }
+
+        .page-layout-header svg path {
+            fill: var(--light);
+        }
+
+        .page-layout-header svg:hover path {
+            fill: var(--gray-400);
+        }
+
+    .page-layout-header .content {
+        display: flex;
+        align-items: center;
+    }
+
+        .page-layout-header .content.end {
+            gap: .5rem;
+        }

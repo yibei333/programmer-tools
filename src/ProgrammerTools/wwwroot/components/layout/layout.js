@@ -27,6 +27,9 @@ export default {
             if (name) {
                 this.$router.push({ name: name });
             }
+        },
+        openGithub() {
+            invokeSharpMethod('OpenBrowser', 'https://github.com/yibei333/programmer-tools');
         }
     }
 }
