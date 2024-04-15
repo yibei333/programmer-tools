@@ -27,7 +27,7 @@ html, body, #vue-app, .page-layout {
         height: 100%;
         overflow: auto;
         display: grid;
-        grid-template-rows: 52px 1fr;
+        grid-template-rows: auto 1fr;
         background: var(--gray);
         color: var(--light);
         box-shadow: 0 0 5px 5px #aaa;
@@ -45,17 +45,25 @@ html, body, #vue-app, .page-layout {
             display: none;
         }
 
-    .page-layout-nav .brand {
-        border-bottom: 0;
-        display: flex;
-        align-items: center;
-        padding: .5rem;
-        background: var(--purple-600);
+.page-layout-brand {
+    border-bottom: 0;
+    display: grid;
+    align-items: center;
+    padding: .5rem;
+    background: var(--purple-600);
+    grid-template-columns: auto 1fr auto;
+    gap: .5rem;
+    height: 52px;
+}
+
+    .page-layout-brand .ivu-icon-ios-close:hover {
+        cursor: pointer;
+        opacity: .8;
     }
 
-    .page-layout-nav .menu {
-        padding: .5rem;
-    }
+.page-layout-nav .menu {
+    padding: .5rem;
+}
 
 .page-layout-header {
     grid-column: 2;
@@ -102,6 +110,6 @@ html, body, #vue-app, .page-layout {
     color: var(--light);
 }
 
-.ivu-icon-ios-menu {
-    margin-top: 2px;
+.ivu-drawer-header {
+    padding: 0;
 }

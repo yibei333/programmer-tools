@@ -4,7 +4,7 @@ export default {
     },
     data() {
         return {
-            isCollapse: false,
+            isMenuOpen: false,
             pagesConfigList: [],
             menus: [],
             currentMenuId: 1,
@@ -26,11 +26,11 @@ export default {
             }
         },
         "$root.size"() {
-            this.isSmall = this.$root.size == 1;
+            this.setSize();
         }
     },
     mounted() {
-        this.isSmall = this.$root.size == 1;
+        this.setSize();
         this.menus = pagesConfig;
         this.pagesConfigList = getPagesConfigList();
     },
@@ -47,5 +47,9 @@ export default {
         openGithub() {
             invokeSharpMethod('OpenBrowser', 'https://github.com/yibei333/programmer-tools');
         },
+        setSize() {
+            this.isSmall = this.$root.size == 1;
+            this.isMenuOpen = !this.isSmall;
+        }
     }
 }

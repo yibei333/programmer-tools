@@ -1,23 +1,23 @@
 <div class="page-layout">
     <div class="page-layout-nav">
-        <Drawer v-if="isSmall" placement="left" :closable="false" v-model="isCollapse">
+        <Drawer v-if="isSmall" placement="left" :closable="false" v-model="isMenuOpen">
             <template #header>
-                <Space>
+                <div class="page-layout-brand">
                     <Icon type="ios-hammer-outline" size="24" />
                     <span>{{$t('appName')}}</span>
-                </Space>
+                    <Icon type="ios-close" size="24" @click="isMenuOpen=false" />
+                </div>
             </template>
             <Menu ref="menu" accordion="true" theme="dark" width="200" @on-select="nav" :active-name="currentMenuId" :open-names="openMenuArray">
                 <menuitem v-for="menu in menus" v-bind:item="menu"></menuitem>
             </Menu>
         </Drawer>
 
-        <div v-else v-bind:class="['large',isCollapse?'hide':'show']">
-            <div class="brand">
-                <Space>
-                    <Icon type="ios-hammer-outline" size="24" />
-                    <span>{{$t('appName')}}</span>
-                </Space>
+        <div v-else v-bind:class="['large',isMenuOpen?'show':'hide']">
+            <div class="page-layout-brand">
+                <Icon type="ios-hammer-outline" size="24" />
+                <span>{{$t('appName')}}</span>
+                <Icon type="ios-close" size="24" @click="isMenuOpen=false" />
             </div>
             <div class="menu">
                 <Menu ref="menu" accordion="true" theme="dark" width="200" @on-select="nav" :active-name="currentMenuId" :open-names="openMenuArray">
@@ -28,8 +28,9 @@
     </div>
     <div class="page-layout-header">
         <div class="content start">
-            <Space>
-                <Icon type="ios-menu" @click="isCollapse=!isCollapse" size="20" />
+            <Space v-if="!isMenuOpen">
+                <Icon type="ios-menu" @click="isMenuOpen=true" size="20" color="var(--orange-500)" />
+                <Icon type="ios-hammer-outline" size="24" />
                 <span>{{$t('appName')}}</span>
             </Space>
         </div>
