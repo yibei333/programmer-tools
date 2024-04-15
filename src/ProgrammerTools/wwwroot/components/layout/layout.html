@@ -56,7 +56,7 @@
 
     <div class="page-layout-body">
         <Tabs type="card" :draggable="true" @on-drag-drop="handleDragDrop" closable @on-tab-remove="handleTabRemove" v-model:model-value="currentTabName">
-            <TabPane v-for="(tab, index) in tabList" :key="index" :label="$t('menus.'+tab.name)" :name="tab.name">
+            <TabPane v-for="(tab, index) in tabList" :key="index" :label="$t('menus.'+tab.name)" :name="tab.name" :closable="tabList.length>1">
                 <slot></slot>
             </TabPane>
         </Tabs>
