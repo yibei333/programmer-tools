@@ -9,15 +9,19 @@ export default {
             menus: [],
             currentMenuId: 1,
             openMenuArray: [],
-            isSmall: false
+            isSmall: false,
+            tabList: [],
+            currentTabName: ''
         }
     },
     watch: {
         $route(to) {
-            let id = this.pagesConfigList.filter(x => x.name == to?.name)[0]?.id;
-            if (id) {
-                this.currentMenuId = id;
-                this.openMenuArray = getVueRouteParents(this.pagesConfigList, id).map(x => x.id);
+            let route = this.pagesConfigList.filter(x => x.name == to?.name)[0];
+            if (route) {
+                this.currentMenuId = route.id;
+                this.openMenuArray = getVueRouteParents(this.pagesConfigList, route.id).map(x => x.id);
+                if (this.tabList.indexOf(route) < 0) this.tabList.push(route);
+                this.currentTabName = route.name;
                 let timer = setTimeout(() => {
                     clearTimeout(timer);
                     this.$refs.menu.updateActiveName();
@@ -27,6 +31,9 @@ export default {
         },
         "$root.size"() {
             this.setSize();
+        },
+        currentTabName() {
+            this.$router.push({ name: this.currentTabName });
         }
     },
     mounted() {
@@ -51,6 +58,13 @@ export default {
         setSize() {
             this.isSmall = this.$root.size == 1;
             this.isMenuOpen = !this.isSmall;
+        },
+        handleTabRemove(name) {
+            let tab = this.tabList.filter(x => x.name == name)[0];
+            if (tab) this.tabList.remove(tab);
+        },
+        handleDragDrop(name, newName, a, b, names) {
+            this.tabList.splice(b, 1, ...this.tabList.splice(a, 1, this.tabList[b]));
         }
     }
 }

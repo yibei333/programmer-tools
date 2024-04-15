@@ -19,3 +19,9 @@ async function invokeSharpMethod(name, parameter, hasParameterRefercence = false
         parameter: parameter
     });
 }
+
+Array.prototype.remove = function (item) {
+    let targetIndex = this.findIndex(x => x === item);
+    if (targetIndex < 0) return;
+    this.splice(targetIndex, 1);
+}

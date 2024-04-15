@@ -108,3 +108,7 @@ html, body, #vue-app, .page-layout {
 .ivu-drawer-header {
     padding: 0;
 }
+
+.ivu-tabs-bar {
+    user-select: none;
+}

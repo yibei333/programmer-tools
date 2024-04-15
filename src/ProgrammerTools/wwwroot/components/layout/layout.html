@@ -55,9 +55,11 @@
     </div>
 
     <div class="page-layout-body">
-        <h2>this is body</h2>
-        <slot></slot>
-        <h2 style="height:2000px">this is very height body</h2>
+        <Tabs type="card" :draggable="true" @on-drag-drop="handleDragDrop" closable @on-tab-remove="handleTabRemove" v-model:model-value="currentTabName">
+            <TabPane v-for="(tab, index) in tabList" :key="index" :label="$t('menus.'+tab.name)" :name="tab.name">
+                <slot></slot>
+            </TabPane>
+        </Tabs>
     </div>
 </div>
 
