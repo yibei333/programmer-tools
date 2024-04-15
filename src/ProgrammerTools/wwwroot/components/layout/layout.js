@@ -35,9 +35,6 @@ export default {
         this.pagesConfigList = getPagesConfigList();
     },
     methods: {
-        test(name) {
-            this.$router.push({ name: name, replace: true });
-        },
         nav(id) {
             let name = this.pagesConfigList.filter(x => x.id == id)[0]?.name;
             if (name) {

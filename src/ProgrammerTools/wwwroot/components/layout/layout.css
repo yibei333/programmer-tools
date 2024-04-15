@@ -27,7 +27,7 @@ html, body, #vue-app, .page-layout {
         height: 100%;
         overflow: auto;
         display: grid;
-        grid-template-rows: 53px 1fr;
+        grid-template-rows: 52px 1fr;
         background: var(--gray);
         color: var(--light);
         box-shadow: 0 0 5px 5px #aaa;
@@ -46,10 +46,11 @@ html, body, #vue-app, .page-layout {
         }
 
     .page-layout-nav .brand {
-        border-bottom: 1px solid var(--gray-400);
+        border-bottom: 0;
         display: flex;
         align-items: center;
         padding: .5rem;
+        background: var(--purple-600);
     }
 
     .page-layout-nav .menu {
@@ -65,12 +66,16 @@ html, body, #vue-app, .page-layout {
     padding: 0 .5rem;
     align-items: center;
     color: var(--light);
-    height: 53px;
+    height: 52px;
 }
 
     .page-layout-header i:hover {
         cursor: pointer;
         opacity: .8;
+    }
+
+    .page-layout-header .start {
+        padding-top: 2px;
     }
 
 .page-layout-body {
@@ -88,10 +93,15 @@ html, body, #vue-app, .page-layout {
 }
 
 .ivu-drawer-header {
-    border-bottom: 1px solid var(--gray-400);
+    border-bottom: 0;
+    background: var(--purple-600);
 }
 
 .ivu-drawer-content {
     background: var(--gray);
     color: var(--light);
+}
+
+.ivu-icon-ios-menu {
+    margin-top: 2px;
 }

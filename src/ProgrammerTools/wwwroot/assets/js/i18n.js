@@ -3,12 +3,12 @@ const messages = {
         appName:'程序员工具',
         menus: {
             home: '主页',
-            crypto: '加密/解密',
+            crypto: '加密 / 解密',
             symmetric: '对称',
-            aes: 'aes',
-            des: 'des',
+            aes: 'AES',
+            des: 'DES',
             asymmetric: '非对称',
-            rsa: 'rsa'
+            rsa: 'RSA'
         },
         message: {
             hello: '你好世界'
@@ -17,13 +17,13 @@ const messages = {
     English: {
         appName: 'ProgrammerTools',
         menus: {
-            home: 'home',
-            crypto: 'encrypt/decrypt',
-            symmetric: 'symmetric',
-            aes: 'aes',
-            des: 'des',
-            asymmetric: 'asymmetric',
-            rsa:'rsa'
+            home: 'Home',
+            crypto: 'Encrypt / Decrypt',
+            symmetric: 'Symmetric',
+            aes: 'AES',
+            des: 'DES',
+            asymmetric: 'Asymmetric',
+            rsa:'RSA'
         },
         message: {
             hello: 'hello world'
