@@ -39,6 +39,7 @@ export default {
             let name = this.pagesConfigList.filter(x => x.id == id)[0]?.name;
             if (name) {
                 this.$router.push({ name: name });
+                if (this.isSmall) this.isMenuOpen = false;
             }
         },
         selectLocale(command) {
