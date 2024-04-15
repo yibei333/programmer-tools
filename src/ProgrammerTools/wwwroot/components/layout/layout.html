@@ -1,40 +1,51 @@
 <div class="page-layout">
-    <div class="page-layout-side-nav">
-        <el-menu v-bind:default-active="activedId"
-                 class="page-layout-side-menu"
-                 active-text-color="var(--theme-reverse)"
-                 background-color="var(--gray-700)"
-                 text-color="var(--theme-reverse)"
-                 @select="handleSelect"
-                 :collapse="isCollapse">
-            <menuitem v-for="menu in menus" v-bind:item="menu" v-bind:isCollapse="isCollapse" />
-        </el-menu>
-    </div>
+    <div class="page-layout-nav">
+        <Drawer v-if="isSmall" placement="left" :closable="false" v-model="isCollapse">
+            <template #header>
+                <Space>
+                    <Icon type="ios-hammer-outline" size="24" />
+                    <span>{{$t('appName')}}</span>
+                </Space>
+            </template>
+            <Menu ref="menu" accordion="true" theme="dark" width="200" @on-select="nav" :active-name="currentMenuId" :open-names="openMenuArray">
+                <menuitem v-for="menu in menus" v-bind:item="menu"></menuitem>
+            </Menu>
+        </Drawer>
 
+        <div v-else v-bind:class="['large',isCollapse?'hide':'show']">
+            <div class="brand">
+                <Icon type="ios-hammer-outline" size="24" />
+                <span>{{$t('appName')}}</span>
+            </div>
+            <div class="menu">
+                <Menu ref="menu" accordion="true" theme="dark" width="200" @on-select="nav" :active-name="currentMenuId" :open-names="openMenuArray">
+                    <menuitem v-for="menu in menus" v-bind:item="menu"></menuitem>
+                </Menu>
+            </div>
+        </div>
+    </div>
     <div class="page-layout-header">
         <div class="content start">
-            <svg v-if="isCollapse" viewBox="0 0 1024 1024" width="0" height="0" @click="isCollapse=!isCollapse">
-                <path d="M213.333333 288A32 32 0 0 1 245.333333 256h533.333334a32 32 0 0 1 0 64H245.333333A32 32 0 0 1 213.333333 288zM213.333333 512a32 32 0 0 1 32-32h533.333334a32 32 0 0 1 0 64H245.333333A32 32 0 0 1 213.333333 512z m32 213.333333a32 32 0 0 0 0 64h533.333334a32 32 0 0 0 0-64H245.333333z"></path>
-            </svg>
-            <svg v-else viewBox="0 0 1024 1024" width="0" height="0" @click="isCollapse=!isCollapse" style="margin-top:4px">
-                <path d="M363.946667 577.28a32 32 0 0 0 0-45.226667L301.226667 469.333333l62.72-62.72a32 32 0 0 0-45.226667-45.226666l-85.333333 85.333333a32 32 0 0 0 0 45.226667l85.333333 85.333333a32 32 0 0 0 45.226667 0zM213.333333 224a32 32 0 0 1 32-32h576a32 32 0 0 1 0 64H245.333333A32 32 0 0 1 213.333333 224zM426.666667 480a32 32 0 0 1 32-32h362.666666a32 32 0 0 1 0 64h-362.666666a32 32 0 0 1-32-32zM213.333333 736a32 32 0 0 1 32-32h576a32 32 0 0 1 0 64H245.333333a32 32 0 0 1-32-32z"></path>
+            <Space>
+                <Icon type="md-menu" @click="isCollapse=!isCollapse" size="20" />
+                <span>{{$t('appName')}}</span>
+            </Space>
+        </div>
+        <div class="content center">
+        </div>
+        <div class="content end">
+            <el-dropdown trigger="click" @command="selectLocale">
+                <el-button size="small">{{$i18n.locale}}</el-button>
+                <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item v-for="locale in $i18n.availableLocales" :command="locale">{{ locale }}</el-dropdown-item>
+                    </el-dropdown-menu>
+                </template>
+            </el-dropdown>
+            <svg class="github" viewBox="0 0 1024 1024" width="0" height="0" @click="openGithub" style="margin-top:-2px">
+                <path d="M0 524.992q0 166.016 95.488 298.496t247.488 185.504q6.016 0.992 10.016 0.992t6.496-1.504 4-3.008 2.016-4.992 0.512-4.992v-100.512q-36.992 4-66.016-0.512t-45.504-14.016-28.992-23.488-16.992-25.504-8.992-24-5.504-14.496q-8.992-15.008-27.008-27.488t-27.008-20-2.016-14.496q50.016-26.016 112.992 66.016 34.016 51.008 119.008 30.016 10.016-40.992 40-70.016Q293.984 736 237.984 670.976t-56-158.016q0-87.008 55.008-151.008-22.016-64.992 6.016-136.992 28.992-2.016 64.992 11.488t50.496 23.008 25.504 17.504q56.992-16 128.512-16t129.504 16q12.992-8.992 28.992-19.008t48.992-21.504 60.992-9.504q27.008 71.008 7.008 135.008 56 64 56 151.008 0 92.992-56.992 158.496t-172 85.504q43.008 43.008 43.008 104v128.992q0 0.992 0.992 3.008 0 6.016 0.512 8.992t4.512 6.016 12 3.008q152.992-52 250.496-185.504t97.504-300.512q0-104-40.512-199.008t-108.992-163.488-163.488-108.992T512.032 12.96 313.024 53.472 149.536 162.464t-108.992 163.488-40.512 199.008z"></path>
             </svg>
         </div>
-       <div class="content center">
-       </div>
-       <div class="content end">
-           <el-dropdown trigger="click" @command="selectLocale">
-               <el-button size="small">{{$i18n.locale}}</el-button>
-               <template #dropdown>
-                   <el-dropdown-menu>
-                       <el-dropdown-item v-for="locale in $i18n.availableLocales" :command="locale">{{ locale }}</el-dropdown-item>
-                   </el-dropdown-menu>
-               </template>
-           </el-dropdown>
-           <svg class="github" viewBox="0 0 1024 1024" width="0" height="0" @click="openGithub" style="margin-top:-2px">
-               <path d="M0 524.992q0 166.016 95.488 298.496t247.488 185.504q6.016 0.992 10.016 0.992t6.496-1.504 4-3.008 2.016-4.992 0.512-4.992v-100.512q-36.992 4-66.016-0.512t-45.504-14.016-28.992-23.488-16.992-25.504-8.992-24-5.504-14.496q-8.992-15.008-27.008-27.488t-27.008-20-2.016-14.496q50.016-26.016 112.992 66.016 34.016 51.008 119.008 30.016 10.016-40.992 40-70.016Q293.984 736 237.984 670.976t-56-158.016q0-87.008 55.008-151.008-22.016-64.992 6.016-136.992 28.992-2.016 64.992 11.488t50.496 23.008 25.504 17.504q56.992-16 128.512-16t129.504 16q12.992-8.992 28.992-19.008t48.992-21.504 60.992-9.504q27.008 71.008 7.008 135.008 56 64 56 151.008 0 92.992-56.992 158.496t-172 85.504q43.008 43.008 43.008 104v128.992q0 0.992 0.992 3.008 0 6.016 0.512 8.992t4.512 6.016 12 3.008q152.992-52 250.496-185.504t97.504-300.512q0-104-40.512-199.008t-108.992-163.488-163.488-108.992T512.032 12.96 313.024 53.472 149.536 162.464t-108.992 163.488-40.512 199.008z"></path>
-           </svg>
-       </div>
     </div>
 
     <div class="page-layout-body">

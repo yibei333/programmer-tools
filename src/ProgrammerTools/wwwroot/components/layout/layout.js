@@ -5,22 +5,41 @@ export default {
     data() {
         return {
             isCollapse: false,
-            activedId: "1",
-            routes: [],
+            pagesConfigList: [],
             menus: [],
+            currentMenuId: 1,
+            openMenuArray: [],
+            isSmall: false
+        }
+    },
+    watch: {
+        $route(to) {
+            let id = this.pagesConfigList.filter(x => x.name == to?.name)[0]?.id;
+            if (id) {
+                this.currentMenuId = id;
+                this.openMenuArray = getVueRouteParents(this.pagesConfigList, id).map(x => x.id);
+                let timer = setTimeout(() => {
+                    clearTimeout(timer);
+                    this.$refs.menu.updateActiveName();
+                    this.$refs.menu.updateOpened();
+                }, 200);
+            }
+        },
+        "$root.size"() {
+            this.isSmall = this.$root.size == 1;
         }
     },
     mounted() {
+        this.isSmall = this.$root.size == 1;
         this.menus = pagesConfig;
-        this.routes = getVueRotes();
+        this.pagesConfigList = getPagesConfigList();
     },
     methods: {
         test(name) {
             this.$router.push({ name: name, replace: true });
         },
-        handleSelect(id) {
-            let route = this.routes.filter(x => x.id == id);
-            let name = (route && route.length > 0) ? route[0].name : null;
+        nav(id) {
+            let name = this.pagesConfigList.filter(x => x.id == id)[0]?.name;
             if (name) {
                 this.$router.push({ name: name });
             }
@@ -30,6 +49,6 @@ export default {
         },
         openGithub() {
             invokeSharpMethod('OpenBrowser', 'https://github.com/yibei333/programmer-tools');
-        }
+        },
     }
 }

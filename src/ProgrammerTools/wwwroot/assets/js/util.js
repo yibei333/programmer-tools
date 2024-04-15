@@ -9,9 +9,8 @@ const platforms = [
 
 function getPlatform() {
     let ua = navigator.userAgent.toLowerCase();
-    let platform = platforms.filter(x => ua.indexOf(x.key) > -1);
-    if (!platform || platform.length <= 0) return 0;
-    return platform[0].value;
+    let platform = platforms.filter(x => ua.indexOf(x.key) > -1)[0];
+    return platform?.value ?? 0;
 }
 
 async function invokeSharpMethod(name, parameter, hasParameterRefercence = false) {

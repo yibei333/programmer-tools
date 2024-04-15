@@ -1,5 +1,6 @@
 const messages = {
     中文: {
+        appName:'程序员工具',
         menus: {
             home: '主页',
             crypto: '加密/解密',
@@ -14,6 +15,7 @@ const messages = {
         }
     },
     English: {
+        appName: 'ProgrammerTools',
         menus: {
             home: 'home',
             crypto: 'encrypt/decrypt',

@@ -1,13 +1,11 @@
-<el-menu-item v-if="!item.children||item.children.length<=0" v-bind:index="item.id">
-    <img v-if="item.icon" v-bind:src="item.icon" v-bind:class="[isCollapse?'large':'']" v-bind:title="$t('menus.'+item.name)" />
-    <span>{{$t('menus.'+item.name)}}</span>
-</el-menu-item>
-
-<el-sub-menu v-else v-bind:index="item.id">
+<MenuItem v-if="!item.children||item.children.length<=0" v-bind:name="item.id">
+    <Icon v-if="item.icon" v-bind:type="item.icon" v-bind:title="$t('menus.'+item.name)" size="20" />
+    {{upper($t('menus.'+item.name))}}
+</MenuItem>
+<Submenu v-else v-bind:name="item.id">
     <template #title>
-        <img v-if="item.icon" v-bind:src="item.icon" v-bind:class="[isCollapse?'large':'']" v-bind:title="$t('menus.'+item.name)" />
-        <span>{{$t('menus.'+item.name)}}</span>
+        <Icon v-if="item.icon" v-bind:type="item.icon" v-bind:title="$t('menus.'+item.name)" size="20" />
+        {{upper($t('menus.'+item.name))}}
     </template>
-
-    <menuitem v-for="subItem in item.children" v-bind:item="subItem" v-bind:isCollapse="isCollapse"></menuitem>
-</el-sub-menu>
+    <menuitem v-for="subItem in item.children" v-bind:item="subItem"></menuitem>
+</Submenu>
