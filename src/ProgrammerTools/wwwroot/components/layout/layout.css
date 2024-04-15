@@ -8,6 +8,7 @@ html, body, #vue-app, .page-layout {
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: auto 1fr;
+    user-select: none;
 }
 
 .page-layout-side-nav {

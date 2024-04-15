@@ -7,49 +7,7 @@
                  text-color="var(--theme-reverse)"
                  @select="handleSelect"
                  :collapse="isCollapse">
-
-            <template v-for="menu in menus">
-                <el-menu-item v-if="!menu.children||menu.children.length<=0" index="1">
-                    <img v-if="menu.icon" v-bind:src="menu.icon" v-bind:class="[isCollapse?'large':'']" v-bind:title="menu.displayName"/>
-                    <span>{{menu.displayName}}</span>
-                </el-menu-item>
-                <el-sub-menu v-else v-bind:index="menu.id">
-                    <template #title>
-                        <img v-if="menu.icon" v-bind:src="menu.icon" v-bind:class="[isCollapse?'large':'']" v-bind:title="menu.displayName" />
-                        <span>{{menu.displayName}}</span>
-                    </template>
-                    <template v-for="subOneMenu in menu.children">
-                        <el-menu-item v-if="!subOneMenu.children||subOneMenu.children.length<=0" v-bind:index="subOneMenu.id">
-                            <img v-if="subOneMenu.icon" v-bind:src="subOneMenu.icon" v-bind:class="[isCollapse?'large':'']" v-bind:title="subOneMenu.displayName" />
-                            <span>{{subOneMenu.displayName}}</span>
-                        </el-menu-item>
-                        <el-sub-menu v-else v-bind:index="subOneMenu.id">
-                            <template #title>
-                                <img v-if="subOneMenu.icon" v-bind:src="subOneMenu.icon" v-bind:class="[isCollapse?'large':'']" v-bind:title="subOneMenu.displayName" />
-                                <span>{{subOneMenu.displayName}}</span>
-                            </template>
-                            <template v-for="subTwoMenu in subOneMenu.children">
-                                <el-menu-item v-if="!subTwoMenu.children||subTwoMenu.children.length<=0" v-bind:index="subTwoMenu.id">
-                                    <img v-if="subTwoMenu.icon" v-bind:src="subTwoMenu.icon" v-bind:class="[isCollapse?'large':'']" v-bind:title="subTwoMenu.displayName" />
-                                    <span>{{subTwoMenu.displayName}}</span>
-                                </el-menu-item>
-                                <el-sub-menu v-else v-bind:index="subTwoMenu.id">
-                                    <template #title>
-                                        <img v-if="subTwoMenu.icon" v-bind:src="subTwoMenu.icon" v-bind:class="[isCollapse?'large':'']" v-bind:title="subTwoMenu.displayName" />
-                                        <span>{{subTwoMenu.displayName}}</span>
-                                    </template>
-                                    <template v-for="subThreeMenu in subTwoMenu.children">
-                                        <el-menu-item v-bind:index="subThreeMenu.id">
-                                            <img v-if="subThreeMenu.icon" v-bind:src="subThreeMenu.icon" v-bind:class="[isCollapse?'large':'']" v-bind:title="subThreeMenu.displayName" />
-                                            <span>{{subThreeMenu.displayName}}</span>
-                                        </el-menu-item>
-                                    </template>
-                                </el-sub-menu>
-                            </template>
-                        </el-sub-menu>
-                    </template>
-                </el-sub-menu>
-            </template>
+            <menuitem v-for="menu in menus" v-bind:item="menu" v-bind:isCollapse="isCollapse" />
         </el-menu>
     </div>
 

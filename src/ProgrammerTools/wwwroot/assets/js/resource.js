@@ -8,41 +8,37 @@ const pagesConfig = [
         id: 1,
         path: '/home',
         name: 'home',
-        displayName: '主页',
         icon: staticImages.home,
     },
     {
         id: 2,
-        displayName: '加/解密',
+        name: 'crypto',
         icon: staticImages.key,
         children: [
             {
                 id: 201,
-                displayName: '对称',
+                name: 'symmetric',
                 children: [
                     {
                         id: 201001,
                         path: '/crypto/symmetric/aes',
                         name: 'aes',
-                        displayName: 'AES',
                     },
                     {
                         id: 201002,
                         path: '/crypto/symmetric/des',
                         name: 'des',
-                        displayName: 'DES',
                     }
                 ]
             },
             {
                 id: 202,
-                displayName: '非对称',
+                name: 'asymmetric',
                 children: [
                     {
                         id: 202001,
                         path: '/crypto/asymmetric/rsa',
                         name: 'rsa',
-                        displayName: 'RSA',
                     }
                 ]
             }

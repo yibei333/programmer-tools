@@ -1,16 +1,13 @@
 export default {
+    components: {
+        menuitem: Vue.defineAsyncComponent(async () => await importComponent('menuitem')),
+    },
     data() {
         return {
             isCollapse: false,
             activedId: "1",
             routes: [],
             menus: [],
-            tabs: [
-                {
-                    label: '主页',
-                    key: '1',
-                },
-            ],
         }
     },
     mounted() {
@@ -19,7 +16,7 @@ export default {
     },
     methods: {
         test(name) {
-            this.$router.push({ name: name });
+            this.$router.push({ name: name, replace: true });
         },
         handleSelect(id) {
             let route = this.routes.filter(x => x.id == id);
