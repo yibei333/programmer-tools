@@ -26,6 +26,7 @@
             </div>
         </div>
     </div>
+
     <div class="page-layout-header">
         <div class="content start">
             <Space v-if="!isMenuOpen">
@@ -54,12 +55,16 @@
         </div>
     </div>
 
-    <div class="page-layout-body">
+    <div class="page-layout-route-tabs">
         <Tabs type="card" :draggable="true" @on-drag-drop="handleDragDrop" closable @on-tab-remove="handleTabRemove" v-model:model-value="currentTabName">
-            <TabPane v-for="(tab, index) in tabList" :key="index" :label="$t('menus.'+tab.name)" :name="tab.name" :closable="tabList.length>1">
-                <slot></slot>
-            </TabPane>
+            <TabPane v-for="(tab, index) in tabList" :index="index" :label="$t('menus.'+tab.name)" :name="tab.name" :closable="tabList.length>1" v-bind:data-id="tab.id"/>
         </Tabs>
+    </div>
+
+    <div class="page-layout-body">
+        <div class="page-layout-body-content">
+            <slot></slot>
+        </div>
     </div>
 </div>
 
