@@ -1,9 +1,3 @@
-html, body, #vue-app, .page-layout {
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
-}
-
 .page-layout {
     display: grid;
     grid-template-columns: auto 1fr;

@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using ProgrammerTools.Extensions;
 
 namespace ProgrammerTools;
 
@@ -7,10 +8,14 @@ public static class MauiProgram
 {
     public static MauiApp CreateMauiApp()
     {
+        Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--allow-running-insecure-content");
+
         var builder = MauiApp.CreateBuilder();
         builder
+            .UseLogging()
             .UseMauiApp<App>()
-            .UseMauiCommunityToolkit();
+            .UseMauiCommunityToolkit()
+            .ConfigServices();
 
         builder.Services.AddMauiBlazorWebView();
 
@@ -18,7 +23,6 @@ public static class MauiProgram
         builder.Services.AddBlazorWebViewDeveloperTools();
         builder.Logging.AddDebug();
 #endif
-
         return builder.Build();
     }
 }
