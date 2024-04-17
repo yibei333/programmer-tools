@@ -1,4 +1,4 @@
-const platforms = [
+﻿const platforms = [
     { key: 'android', value: 1 },
     { key: 'ios', value: 2 },
     { key: 'iphone', value: 2 },

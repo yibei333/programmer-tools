@@ -9,6 +9,9 @@ public static class MauiProgram
     public static MauiApp CreateMauiApp()
     {
         Environment.SetEnvironmentVariable("WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS", "--allow-running-insecure-content");
+#if WINDOWS
+        Environment.SetEnvironmentVariable("WEBVIEW2_USER_DATA_FOLDER", Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData));
+#endif
 
         var builder = MauiApp.CreateBuilder();
         builder

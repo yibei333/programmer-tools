@@ -1,6 +1,6 @@
-const messages = {
+﻿const messages = {
     中文: {
-        appName:'程序员工具',
+        appName: '程序员工具',
         menus: {
             home: '主页',
             crypto: '加密 / 解密',
@@ -23,7 +23,7 @@ const messages = {
             aes: 'AES',
             des: 'DES',
             asymmetric: 'Asymmetric',
-            rsa:'RSA'
+            rsa: 'RSA'
         },
         message: {
             hello: 'hello world'
@@ -35,4 +35,4 @@ const i18n = VueI18n.createI18n({
     locale: '中文',
     fallbackLocale: '中文',
     messages,
-})
+});

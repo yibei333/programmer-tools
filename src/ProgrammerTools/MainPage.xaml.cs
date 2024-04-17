@@ -11,6 +11,14 @@ public partial class MainPage : ContentPage
         App.Logger.Info("started");
 
         Toast.Make($"path:{AppExtension.LogDirectory}").Show();
+        blazorWebView.StartPath = "/";
+
+    }
+
+    private void Button_Clicked(object sender, EventArgs e)
+    {
+        Toast.Make($"path:{AppExtension.LogDirectory}").Show();
+        Toast.Make($"path:{blazorWebView.HostPage},{blazorWebView.StartPath}").Show();
     }
 }
 

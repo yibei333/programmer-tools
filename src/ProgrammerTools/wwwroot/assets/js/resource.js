@@ -1,4 +1,4 @@
-const pagesConfig = [
+﻿const pagesConfig = [
     {
         id: 1,
         path: '/home',
