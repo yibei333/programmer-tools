@@ -17,7 +17,24 @@ export default {
     },
     watch: {
         $route(to) {
-            let route = this.pagesConfigList.filter(x => x.name == to?.name)[0];
+            this.updateTabs(to?.name);
+        },
+        "$root.size"() {
+            this.setSize();
+        },
+        currentTabName() {
+            this.$router.push({ name: this.currentTabName });
+        }
+    },
+    mounted() {
+        this.setSize();
+        this.menus = pagesConfig;
+        this.pagesConfigList = getPagesConfigList();
+        this.updateTabs('home');
+    },
+    methods: {
+        updateTabs(name) {
+            let route = this.pagesConfigList.filter(x => x.name == name)[0];
             if (route) {
                 this.currentMenuId = route.id;
                 this.openMenuArray = getVueRouteParents(this.pagesConfigList, route.id).map(x => x.id);
@@ -33,19 +50,6 @@ export default {
                 }, 300);
             }
         },
-        "$root.size"() {
-            this.setSize();
-        },
-        currentTabName() {
-            this.$router.push({ name: this.currentTabName });
-        }
-    },
-    mounted() {
-        this.setSize();
-        this.menus = pagesConfig;
-        this.pagesConfigList = getPagesConfigList();
-    },
-    methods: {
         nav(id) {
             let name = this.pagesConfigList.filter(x => x.id == id)[0]?.name;
             if (name) {

@@ -4,17 +4,10 @@
              x:Class="ProgrammerTools.MainPage"
              xmlns:local="clr-namespace:ProgrammerTools">
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50"/>
-            <RowDefinition Height="*"/>
-            <RowDefinition Height="50"/>
-        </Grid.RowDefinitions>
-        <Button Text="1" Clicked="Button_Clicked"></Button>
-        <BlazorWebView x:Name="blazorWebView" Grid.Row="1" HostPage="wwwroot/index.html">
+        <BlazorWebView x:Name="blazorWebView" HostPage="wwwroot/index.html" StartPath="/">
             <BlazorWebView.RootComponents>
                 <RootComponent ComponentType="{x:Type local:Routes}" Selector="#app" />
             </BlazorWebView.RootComponents>
         </BlazorWebView>
-        <Button Grid.Row="2" Text="2"></Button>
     </Grid>
 </ContentPage>
