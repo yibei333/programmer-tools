@@ -161,14 +161,14 @@ export default {
             };
             invokeSharpMethod('DownloadAsync', options, this).then(res => {
                 if (res.isSuccess) {
-                    this.$Message.success(`安装包保存在位置:${res.data}`);
+                    this.$Message.success(`瀹夎鍖呬繚瀛樺湪浣嶇疆:${res.data}`);
                     this.upgradeComplete(res);
                     return;
                 }
 
                 options.url = staticConfigs.githubUrl + `/releases/download/${this.lastVersion}/${name}`;
                 invokeSharpMethod('DownloadAsync', options, true).then(res => {
-                    if (res.isSuccess) this.$Message.success(`安装包保存在位置:${res.data}`);
+                    if (res.isSuccess) this.$Message.success(`瀹夎鍖呬繚瀛樺湪浣嶇疆:${res.data}`);
                     this.upgradeComplete(res);
                 });
             });
@@ -186,7 +186,7 @@ export default {
                     this.installing = false;
                 });
             }
-            else this.$Message.error(`下载失败:${response.message}`);
+            else this.$Message.error(`涓嬭浇澶辫触:${response.message}`);
         }
     }
 }
