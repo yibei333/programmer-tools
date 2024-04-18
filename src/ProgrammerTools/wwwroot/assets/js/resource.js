@@ -1,4 +1,10 @@
-﻿const pagesConfig = [
+﻿const staticConfigs = {
+    giteeUrl: 'https://gitee.com/developer333/programmer-tools',
+    githubUrl: 'https://github.com/yibei333/programmer-tools',
+    githubRawUrl: 'https://raw.githubusercontent.com/yibei333/programmer-tools'
+};
+
+const pagesConfig = [
     {
         id: 1,
         path: '/home',

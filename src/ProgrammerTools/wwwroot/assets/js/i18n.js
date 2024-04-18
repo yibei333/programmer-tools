@@ -11,7 +11,8 @@
             rsa: 'RSA'
         },
         message: {
-            hello: '你好世界'
+            hello: '你好世界',
+            checkUpdate:'检查更新'
         }
     },
     English: {
@@ -26,7 +27,8 @@
             rsa: 'RSA'
         },
         message: {
-            hello: 'hello world'
+            hello: 'hello world',
+            checkUpdate: 'check update'
         }
     },
 };

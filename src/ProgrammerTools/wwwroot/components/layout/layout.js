@@ -13,6 +13,13 @@ export default {
             tabList: [],
             currentTabName: '',
             moveStartTab: null,
+            currentVersion: {},
+            showVersionModal: false,
+            lastVersion: null,
+            checking: false,
+            upgrading: false,
+            progress: null,
+            installing: false,
         }
     },
     watch: {
@@ -31,6 +38,7 @@ export default {
         this.menus = pagesConfig;
         this.pagesConfigList = getPagesConfigList();
         this.updateTabs('home');
+        this.getCurrentVersion();
     },
     methods: {
         updateTabs(name) {
@@ -61,7 +69,7 @@ export default {
             this.$i18n.locale = command;
         },
         openGithub() {
-            invokeSharpMethod('OpenBrowser', 'https://github.com/yibei333/programmer-tools');
+            invokeSharpMethod('OpenBrowserAsync', staticConfigs.githubUrl);
         },
         setSize() {
             this.isSmall = this.$root.size == 1;
@@ -106,5 +114,70 @@ export default {
             }
             this.moveStartTab = this.tabList.filter(x => x.id == id)[0];
         },
+        getCurrentVersion() {
+            invokeSharpMethod('GetAppInfoAsync').then(res => {
+                this.currentVersion = res;
+            });
+        },
+        showVersion() {
+            this.showVersionModal = true;
+            this.checkUpdate();
+        },
+        checkUpdate() {
+            this.checking = true;
+            var options = {
+                url: staticConfigs.giteeUrl + '/raw/main/pack/version.txt',
+                method: 'get',
+            };
+            invokeSharpMethod('HttpRequestAsync', options).then(res => {
+                if (res.isSuccess) {
+                    this.checkComplete(res);
+                    return;
+                }
+
+                options.url = staticConfigs.githubRawUrl + '/main/pack/version.txt';
+                invokeSharpMethod('HttpRequestAsync', options).then(res => this.checkComplete(res));
+            });
+        },
+        checkComplete(response) {
+            this.lastVersion = response.isSuccess ? response.data : null;
+            this.checking = false;
+            if (!response.isSuccess) this.$Message.error(response.message);
+        },
+        upgrade() {
+            if (!this.lastVersion || this.lastVersion == this.currentVersion.version) return;
+            this.upgrading = true;
+
+            let name = this.currentVersion.platform == 'android' ? `ProgrammerTools.android.${this.lastVersion}.apk` : `ProgrammerTools.win64.${this.lastVersion}.exe`;
+            var options = {
+                url: staticConfigs.giteeUrl + `releases/download/${this.lastVersion}/${name}`,
+                method: 'get',
+                name: name
+            };
+            invokeSharpMethod('DownloadAsync', options, true).then(res => {
+                if (res.isSuccess) {
+                    this.upgradeComplete(res);
+                    return;
+                }
+
+                options.url = staticConfigs.githubUrl + `releases/download/${this.lastVersion}/${name}`;
+                invokeSharpMethod('DownloadAsync', options, true).then(res => this.upgradeComplete(res));
+            });
+        },
+        setProgress(p) {
+            this.progress = p;
+        },
+        upgradeComplete(response) {
+            this.progress = null;
+            this.upgrading = false;
+            if (response.isSuccess) {
+                this.$Message.success(`安装包保存在位置:${response.data}`);
+                this.installing = true;
+                invokeSharpMethod('Upgrade', response.data).then(res => {
+                    this.installing = false;
+                });
+            }
+            else this.$Message.error(`下载失败:${response.message}`);
+        }
     }
 }
