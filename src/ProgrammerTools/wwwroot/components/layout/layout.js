@@ -20,6 +20,7 @@ export default {
             upgrading: false,
             progress: null,
             installing: false,
+            packagePath: null
         }
     },
     watch: {
@@ -121,7 +122,7 @@ export default {
         },
         showVersion() {
             this.showVersionModal = true;
-            this.checkUpdate();
+            //this.checkUpdate();
         },
         checkUpdate() {
             this.checking = true;
@@ -146,6 +147,10 @@ export default {
         },
         upgrade() {
             if (!this.lastVersion || this.lastVersion == this.currentVersion.version) return;
+            if (this.packagePath) {
+                this.upgradeComplete({ isSuccess: true, data: this.packagePath });
+                return;
+            }
             this.upgrading = true;
 
             let name = this.currentVersion.platform == 'android' ? `ProgrammerTools.android.${this.lastVersion}.apk` : `ProgrammerTools.win64.${this.lastVersion}.exe`;
@@ -156,12 +161,16 @@ export default {
             };
             invokeSharpMethod('DownloadAsync', options, this).then(res => {
                 if (res.isSuccess) {
+                    this.$Message.success(`安装包保存在位置:${res.data}`);
                     this.upgradeComplete(res);
                     return;
                 }
 
                 options.url = staticConfigs.githubUrl + `/releases/download/${this.lastVersion}/${name}`;
-                invokeSharpMethod('DownloadAsync', options, true).then(res => this.upgradeComplete(res));
+                invokeSharpMethod('DownloadAsync', options, true).then(res => {
+                    if (res.isSuccess) this.$Message.success(`安装包保存在位置:${res.data}`);
+                    this.upgradeComplete(res);
+                });
             });
         },
         setProgress(p) {
@@ -171,13 +180,13 @@ export default {
             this.progress = null;
             this.upgrading = false;
             if (response.isSuccess) {
-                this.$Message.success(`瀹夎鍖呬繚瀛樺湪浣嶇疆:${response.data}`);
+                this.packagePath = response.data;
                 this.installing = true;
                 invokeSharpMethod('Upgrade', response.data).then(res => {
                     this.installing = false;
                 });
             }
-            else this.$Message.error(`涓嬭浇澶辫触:${response.message}`);
+            else this.$Message.error(`下载失败:${response.message}`);
         }
     }
 }
