@@ -13,9 +13,9 @@ function getPlatform() {
     return platform?.value ?? 0;
 }
 
-async function invokeSharpMethod(name, parameter, hasParameterRefercence = false) {
+async function invokeSharpMethod(name, parameter, parameterRefercence) {
     return await DotNet.invokeMethodAsync("ProgrammerTools", name, {
-        parameterRefercence: hasParameterRefercence ? DotNet.createJSObjectReference(parameter) : null,
+        parameterRefercence: parameterRefercence ? DotNet.createJSObjectReference(parameterRefercence) : null,
         parameter: parameter
     });
 }

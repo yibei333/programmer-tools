@@ -49,17 +49,18 @@ public static class AppService
     }
 
     [JSInvokable]
-    public static void Upgrade(string path)
+    public static void Upgrade(JsParameter<string> parameter)
     {
+        if (parameter.Parameter is null) return;
         try
         {
 
 #if WINDOWS
-            Process.Start(new ProcessStartInfo(path));
+            Process.Start(new ProcessStartInfo(parameter.Parameter));
 #elif ANDROID
             var context = Android.App.Application.Context;
             if (context is null || context.ApplicationContext is null) throw new Exception("unable to find android context");
-            var file = new Java.IO.File(path);
+            var file = new Java.IO.File(parameter.Parameter);
 
             using var install = new Android.Content.Intent(Android.Content.Intent.ActionView);
             var apkURI = AndroidX.Core.Content.FileProvider.GetUriForFile(context, context.ApplicationContext.PackageName + ".provider", file);

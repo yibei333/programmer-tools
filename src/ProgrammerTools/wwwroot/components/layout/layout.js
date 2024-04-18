@@ -150,17 +150,17 @@ export default {
 
             let name = this.currentVersion.platform == 'android' ? `ProgrammerTools.android.${this.lastVersion}.apk` : `ProgrammerTools.win64.${this.lastVersion}.exe`;
             var options = {
-                url: staticConfigs.giteeUrl + `releases/download/${this.lastVersion}/${name}`,
+                url: staticConfigs.giteeUrl + `/releases/download/${this.lastVersion}/${name}`,
                 method: 'get',
                 name: name
             };
-            invokeSharpMethod('DownloadAsync', options, true).then(res => {
+            invokeSharpMethod('DownloadAsync', options, this).then(res => {
                 if (res.isSuccess) {
                     this.upgradeComplete(res);
                     return;
                 }
 
-                options.url = staticConfigs.githubUrl + `releases/download/${this.lastVersion}/${name}`;
+                options.url = staticConfigs.githubUrl + `/releases/download/${this.lastVersion}/${name}`;
                 invokeSharpMethod('DownloadAsync', options, true).then(res => this.upgradeComplete(res));
             });
         },
