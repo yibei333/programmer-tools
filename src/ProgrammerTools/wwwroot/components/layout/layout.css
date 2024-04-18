@@ -9,35 +9,36 @@
     grid-row: 1/4;
 }
 
-    .page-layout-nav li, .page-layout-nav span {
-        white-space: nowrap;
-    }
+.page-layout-nav li,
+.page-layout-nav span {
+    white-space: nowrap;
+}
 
-    .page-layout-nav .large {
-        transition: all .3s ease;
-        transform-origin: left;
-        overflow: hidden;
-        width: 256px;
-        height: 100%;
-        display: grid;
-        grid-template-rows: auto 1fr;
-        background: var(--gray);
-        color: var(--light);
-        box-shadow: 0 0 5px 5px #aaa;
-    }
+.page-layout-nav .large {
+    transition: all .3s ease;
+    transform-origin: left;
+    overflow: hidden;
+    width: 256px;
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    background: var(--gray);
+    color: var(--light);
+    box-shadow: 0 0 5px 5px #aaa;
+}
 
-        .page-layout-nav .large.hide {
-            width: 0;
-            box-shadow: none;
-        }
+.page-layout-nav .large.hide {
+    width: 0;
+    box-shadow: none;
+}
 
-        .page-layout-nav .large.show {
-            width: 256px;
-        }
+.page-layout-nav .large.show {
+    width: 256px;
+}
 
-        .page-layout-nav .large.hide .ivu-menu-submenu-title-icon {
-            display: none;
-        }
+.page-layout-nav .large.hide .ivu-menu-submenu-title-icon {
+    display: none;
+}
 
 .page-layout-brand {
     border-bottom: 0;
@@ -50,10 +51,12 @@
     height: 52px;
 }
 
-    .page-layout-brand .ivu-icon-ios-close:hover, .page-layout-header .ivu-icon-ios-menu:hover, .page-layout-header .ivu-icon-logo-github:hover {
-        cursor: pointer;
-        opacity: .8;
-    }
+.page-layout-brand .ivu-icon-ios-close:hover,
+.page-layout-header .ivu-icon-ios-menu:hover,
+.page-layout-header .ivu-icon-logo-github:hover {
+    cursor: pointer;
+    opacity: .8;
+}
 
 .page-layout-nav-body {
     display: grid;
@@ -62,18 +65,18 @@
     overflow: hidden;
 }
 
-    .page-layout-nav-body .menu {
-        overflow: auto;
-        padding: .5rem;
-    }
+.page-layout-nav-body .menu {
+    overflow: auto;
+    padding: .5rem;
+}
 
-    .page-layout-nav-body .version {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        background: var(--gray-700);
-        padding: .5rem;
-        align-items: center;
-    }
+.page-layout-nav-body .version {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    background: var(--gray-700);
+    padding: .5rem;
+    align-items: center;
+}
 
 .page-layout-header {
     grid-column: 2;
@@ -87,9 +90,9 @@
     height: 52px;
 }
 
-    .page-layout-header .start {
-        padding-top: 2px;
-    }
+.page-layout-header .start {
+    padding-top: 2px;
+}
 
 .page-layout-route-tabs {
     grid-column: 2;
@@ -139,18 +142,18 @@
     background: var(--gray-300) !important;
 }
 
-    .page-layout-route-tabs .ivu-tabs-tab.ivu-tabs-tab-active {
-        background: var(--theme) !important;
-        color: var(--light) !important;
-    }
+.page-layout-route-tabs .ivu-tabs-tab.ivu-tabs-tab-active {
+    background: var(--theme) !important;
+    color: var(--light) !important;
+}
 
-        .page-layout-route-tabs .ivu-tabs-tab.ivu-tabs-tab-active .ivu-tabs-close {
-            color: var(--light) !important;
-        }
+.page-layout-route-tabs .ivu-tabs-tab.ivu-tabs-tab-active .ivu-tabs-close {
+    color: var(--light) !important;
+}
 
-            .page-layout-route-tabs .ivu-tabs-tab.ivu-tabs-tab-active .ivu-tabs-close:hover {
-                opacity: .8;
-            }
+.page-layout-route-tabs .ivu-tabs-tab.ivu-tabs-tab-active .ivu-tabs-close:hover {
+    opacity: .8;
+}
 
 .page-layout-body {
     grid-column: 2;
@@ -168,20 +171,17 @@
     box-shadow: 0 0 .25rem .25rem var(--gray-400);
 }
 
-.versionModalBody {
+.versionModalBody .operations {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: .5rem;
 }
 
-    .versionModalBody .operations {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: .5rem;
-    }
+.versionModalBody .progress {
+    margin-bottom: .2rem;
+}
 
-    .versionModalBody .progress {
-        margin-bottom: .2rem;
-    }
-
-    .versionModalBody .ivu-progress-outer {
-        padding-right: 0;
-        margin-right: 0;
-    }
+.versionModalBody .ivu-progress-outer {
+    padding-right: 0;
+    margin-right: 0;
+}
