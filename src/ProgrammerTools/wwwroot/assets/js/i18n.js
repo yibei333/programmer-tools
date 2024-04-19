@@ -10,6 +10,12 @@
             asymmetric: '非对称',
             rsa: 'RSA',
         },
+        theme: {
+            dark: '暗黑',
+            light: '明亮',
+            yellow: '黄色',
+            purple: '紫色'
+        },
         message: {
             platform: '运行平台',
             currentVersion: '当前版本',
@@ -34,6 +40,12 @@
             des: 'DES',
             asymmetric: 'Asymmetric',
             rsa: 'RSA'
+        },
+        theme: {
+            dark: 'dark',
+            light: 'light',
+            yellow: 'yellow',
+            purple: 'purple'
         },
         message: {
             platform: 'platform',

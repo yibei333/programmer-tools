@@ -4,6 +4,8 @@
     },
     data() {
         return {
+            themes: ['dark', 'light', 'yellow','purple'],
+            theme: 'light',
             isMenuOpen: false,
             pagesConfigList: [],
             menus: [],
@@ -32,9 +34,13 @@
         },
         currentTabName() {
             this.$router.push({ name: this.currentTabName });
+        },
+        theme() {
+            this.setTheme();
         }
     },
     mounted() {
+        this.setTheme();
         this.setSize();
         this.menus = pagesConfig;
         this.pagesConfigList = getPagesConfigList();
@@ -42,6 +48,17 @@
         this.getCurrentVersion();
     },
     methods: {
+        setTheme() {
+            let existed = document.querySelector('link[href*="/assets/css/theme-"]');
+            if (existed) document.head.removeChild(existed);
+            let link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = `/assets/css/theme-${this.theme}.css`;
+            document.head.appendChild(link);
+        },
+        selectTheme(theme) {
+            this.theme = theme;
+        },
         updateTabs(name) {
             let route = this.pagesConfigList.filter(x => x.name == name)[0];
             if (route) {
@@ -66,8 +83,8 @@
                 if (this.isSmall) this.isMenuOpen = false;
             }
         },
-        selectLocale(command) {
-            this.$i18n.locale = command;
+        selectLocale(locale) {
+            this.$i18n.locale = locale;
         },
         openGithub() {
             invokeSharpMethod('OpenBrowserAsync', staticConfigs.githubUrl);

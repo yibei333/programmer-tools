@@ -1,4 +1,5 @@
 ﻿using Microsoft.JSInterop;
+using SharpDevLib;
 using SharpDevLib.Extensions.Model;
 using System.Diagnostics;
 using System.Text;
@@ -7,6 +8,13 @@ namespace ProgrammerTools.Services;
 
 public static class AppService
 {
+    [JSInvokable]
+    public static async Task<bool> WwwRootFilesExsitAsync(JsParameter<string> parameter)
+    {
+        var path = "wwwroot".CombinePath(parameter.Parameter);
+        return await FileSystem.AppPackageFileExistsAsync(path);
+    }
+
     [JSInvokable]
     public static async Task OpenBrowserAsync(JsParameter<string> parameter)
     {

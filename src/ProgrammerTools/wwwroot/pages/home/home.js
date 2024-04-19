@@ -1,7 +1,8 @@
 export default {
     data() {
         return {
-            message: ''
+            message: '',
+            files: []
         }
     },
     mounted() {

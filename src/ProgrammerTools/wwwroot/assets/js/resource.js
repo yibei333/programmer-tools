@@ -120,6 +120,7 @@ async function importPage(path) {
     let html = await fetch(`/pages${path}/${name}.html`).then(r => r.text());
     let page = await import(`/pages${path}/${name}.js`);
     page.default.template = html;
+    await addStyle(`/pages${path}/${name}.css`);
     return page;
 }
 
@@ -128,6 +129,18 @@ async function importComponent(path) {
     let html = await fetch(`/components/${path}/${name}.html`).then(r => r.text());
     let component = await import(`/components/${path}/${name}.js`);
     component.default.template = html;
+    await addStyle(`/components/${path}/${name}.css`);
     return component;
 }
 
+async function addStyle(path) {
+    let existed = document.querySelector(`link[href="${path}"]`);
+    if (existed) return;
+    let res = await invokeSharpMethod('WwwRootFilesExsitAsync', path);
+    if (res) {
+        let link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = path;
+        document.head.appendChild(link);
+    }
+}
