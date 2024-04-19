@@ -173,8 +173,7 @@
 
 .versionModalBody .operations {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: .5rem;
+    grid-template-columns: 1fr;
 }
 
 .versionModalBody .progress {

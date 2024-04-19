@@ -1,4 +1,4 @@
-<div class="page-layout">
+﻿<div class="page-layout">
     <div class="page-layout-nav">
         <Drawer v-if="isSmall" placement="left" :closable="false" v-model="isMenuOpen">
             <template #header>
@@ -29,7 +29,7 @@
             </div>
             <div class="page-layout-nav-body">
                 <div class="menu">
-                    <Menu ref="menu" accordion="true" theme="dark" width="200" @on-select="nav" :active-name="currentMenuId" :open-names="openMenuArray">
+                    <Menu ref="menu" accordion="true" theme="dark" width="300" @on-select="nav" :active-name="currentMenuId" :open-names="openMenuArray">
                         <menuitem v-for="menu in menus" v-bind:item="menu"></menuitem>
                     </Menu>
                 </div>
@@ -40,7 +40,7 @@
             </div>
         </div>
 
-        <Modal v-model="showVersionModal" width="360" :mask-closable="false" footer-hide="true">
+        <Modal v-model="showVersionModal" :mask-closable="false" footer-hide="true" width="250">
             <template #header>
                 <p style="color:#f60;text-align:center">
                     <Icon type="md-arrow-up"></Icon>
@@ -49,26 +49,26 @@
             </template>
             <div class="versionModalBody">
                 <div style="display:grid;grid-template-columns:auto 1fr;grid-template-rows:repeat(4,auto)">
-                    <p style="grid-row:1;grid-column:1;text-align:right;padding-right:.5rem;">运行平台:</p>
+                    <p style="grid-row:1;grid-column:1;text-align:right;padding-right:.5rem;">{{$t('message.platform')}}:</p>
                     <p style="grid-row:1;grid-column:2;font-weight:bold;">{{currentVersion.platform}}</p>
 
-                    <p style="grid-row:2;grid-column:1;text-align:right;padding-right:.5rem;">当前版本:</p>
+                    <p style="grid-row:2;grid-column:1;text-align:right;padding-right:.5rem;">{{$t('message.currentVersion')}}:</p>
                     <p style="grid-row:2;grid-column:2;font-weight:bold;">v{{currentVersion.version}}</p>
 
-                    <p v-if="lastVersion" style="grid-row:3;grid-column:1;text-align:right;padding-right:.5rem;">最新版本:</p>
+                    <p v-if="lastVersion" style="grid-row:3;grid-column:1;text-align:right;padding-right:.5rem;">{{$t('message.lastVersion')}}:</p>
                     <p v-if="lastVersion" style="grid-row:3;grid-column:2;font-weight:bold;">v{{lastVersion}}</p>
 
-                    <p v-if="lastVersion==currentVersion.version" style="grid-row:4;grid-column:1/3;font-weight:bold;">已是最新<Icon color="var(--success)" type="ios-checkmark-circle" /></p>
-                    <p v-if="lastVersion&&lastVersion!=currentVersion.version" style="grid-row:4;grid-column:1/3;font-weight:bold;">发现新版本</p>
+                    <p v-if="lastVersion==currentVersion.version" style="grid-row:4;grid-column:1/3;font-weight:bold;">{{$t('message.alreadyUptodate')}}<Icon color="var(--success)" type="ios-checkmark-circle" /></p>
+                    <p v-if="lastVersion&&lastVersion!=currentVersion.version" style="grid-row:4;grid-column:1/3;font-weight:bold;">{{$t('message.newVersionDetected')}}</p>
                 </div>
                 <div v-if="progress" class="progress">
                     <Progress :percent="progress.progress" status="active">
-                        <span>进度:{{progress.progressString}}&nbsp;&nbsp;速度:{{progress.speed}}</span>
+                        <span>{{$t('message.progress')}}:{{progress.progressString}}&nbsp;&nbsp;{{$t('message.downloadSpeed')}}:{{progress.speed}}</span>
                     </Progress>
                 </div>
                 <div class="operations">
-                    <Button type="primary" @click="checkUpdate" :loading="checking" :disabled="checking||upgrading||installing">检查更新</Button>
-                    <Button type="success" @click="upgrade" :loading="upgrading" :disabled="checking||upgrading||installing||!lastVersion||lastVersion==currentVersion.version">安装更新</Button>
+                    <Button v-if="!lastVersion||lastVersion==currentVersion.version" type="primary" @click="checkUpdate" :loading="checking">{{$t('message.checkUpdate')}}</Button>
+                    <Button v-else type="success" @click="upgrade" :loading="upgrading||installing">{{$t('message.installUpdate')}}</Button>
                 </div>
             </div>
         </Modal>

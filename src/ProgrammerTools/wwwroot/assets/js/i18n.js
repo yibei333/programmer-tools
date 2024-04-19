@@ -8,11 +8,20 @@
             aes: 'AES',
             des: 'DES',
             asymmetric: '非对称',
-            rsa: 'RSA'
+            rsa: 'RSA',
         },
         message: {
-            hello: '你好世界',
-            checkUpdate:'检查更新'
+            platform: '运行平台',
+            currentVersion: '当前版本',
+            lastVersion: '最新版本',
+            alreadyUptodate: '已是最新',
+            checkUpdate: '检查更新',
+            installUpdate: '安装更新',
+            newVersionDetected: '发现新版本',
+            progress: '进度',
+            downloadSpeed: '下载速度',
+            installPackageSavedAt: '安装包保存在位置',
+            downloadFailed: '下载失败',
         }
     },
     English: {
@@ -27,8 +36,17 @@
             rsa: 'RSA'
         },
         message: {
-            hello: 'hello world',
-            checkUpdate: 'check update'
+            platform: 'platform',
+            currentVersion: 'current version',
+            lastVersion: 'last version',
+            alreadyUptodate: 'already up to date',
+            checkUpdate: 'check update',
+            installUpdate: 'install update',
+            newVersionDetected: 'new version detected',
+            progress: 'progress',
+            downloadSpeed: 'download speed',
+            installPackageSavedAt: 'install package save at',
+            downloadFailed: 'download failed',
         }
     },
 };

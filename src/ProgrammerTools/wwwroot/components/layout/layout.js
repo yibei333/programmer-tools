@@ -1,4 +1,4 @@
-export default {
+﻿export default {
     components: {
         menuitem: Vue.defineAsyncComponent(async () => await importComponent('menuitem')),
     },
@@ -122,7 +122,7 @@ export default {
         },
         showVersion() {
             this.showVersionModal = true;
-            //this.checkUpdate();
+            if (!this.lastVersion) this.checkUpdate();
         },
         checkUpdate() {
             this.checking = true;
@@ -161,14 +161,14 @@ export default {
             };
             invokeSharpMethod('DownloadAsync', options, this).then(res => {
                 if (res.isSuccess) {
-                    this.$Message.success(`安装包保存在位置:${res.data}`);
+                    this.$Message.success(`${this.$t('message.installPackageSavedAt')}:${res.data}`);
                     this.upgradeComplete(res);
                     return;
                 }
 
                 options.url = staticConfigs.githubUrl + `/releases/download/${this.lastVersion}/${name}`;
-                invokeSharpMethod('DownloadAsync', options, true).then(res => {
-                    if (res.isSuccess) this.$Message.success(`安装包保存在位置:${res.data}`);
+                invokeSharpMethod('DownloadAsync', options, this).then(res => {
+                    if (res.isSuccess) this.$Message.success(`${this.$t('message.installPackageSavedAt')}:${res.data}`);
                     this.upgradeComplete(res);
                 });
             });
@@ -181,12 +181,18 @@ export default {
             this.upgrading = false;
             if (response.isSuccess) {
                 this.packagePath = response.data;
-                this.installing = true;
-                invokeSharpMethod('Upgrade', response.data).then(res => {
-                    this.installing = false;
-                });
+                this.installUpdate();
             }
-            else this.$Message.error(`下载失败:${response.message}`);
+            else this.$Message.error(`${this.$t('message.downloadFailed')}:${response.message}`);
+        },
+        installUpdate() {
+            if (!this.packagePath) return;
+            this.installing = true;
+            invokeSharpMethod('Upgrade', this.packagePath, this);
+        },
+        notifyInstallUpdate(res) {
+            this.installing = false;
+            if (!res.success) this.$Message.error(res.description);
         }
     }
 }

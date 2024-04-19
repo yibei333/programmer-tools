@@ -51,12 +51,21 @@ public static class AppService
     [JSInvokable]
     public static void Upgrade(JsParameter<string> parameter)
     {
-        if (parameter.Parameter is null) return;
+        if (parameter.Parameter is null)
+        {
+            parameter.ParameterRefercence?.InvokeVoidAsync("notifyInstallUpdate", Result.Failed("parameter error"));
+            return;
+        }
+
         try
         {
 
 #if WINDOWS
-            Process.Start(new ProcessStartInfo(parameter.Parameter));
+            var process = Process.Start(new ProcessStartInfo(parameter.Parameter));
+            process!.WaitForExitAsync().ContinueWith((s) =>
+            {
+                parameter.ParameterRefercence?.InvokeVoidAsync("notifyInstallUpdate", Result.Succeed());
+            });
 #elif ANDROID
             var context = Android.App.Application.Context;
             if (context is null || context.ApplicationContext is null) throw new Exception("unable to find android context");
@@ -70,11 +79,13 @@ public static class AppService
             install.AddFlags(Android.Content.ActivityFlags.ClearTop);
             install.PutExtra(Android.Content.Intent.ExtraNotUnknownSource, true);
             Platform.CurrentActivity?.StartActivity(install);
+            parameter.ParameterRefercence?.InvokeVoidAsync("notifyInstallUpdate", Result.Succeed());
 #endif
         }
         catch (Exception ex)
         {
-            App.Logger.Error(ex,$"启动安装失败:{ex.Message}");
+            App.Logger.Error(ex, $"启动安装失败:{ex.Message}");
+            parameter.ParameterRefercence?.InvokeVoidAsync("notifyInstallUpdate", Result.Failed(ex.Message));
         }
     }
 }

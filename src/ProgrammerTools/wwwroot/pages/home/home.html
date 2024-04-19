@@ -1,15 +1,10 @@
 <h2>this is home</h2>
 <input />
-<el-button v-on:click="test">test</el-button>
-
-<h2>
-    {{ $t("message.hello") }}
-</h2>
-
+<h2>{{message}}</h2>
 <Space direction="vertical">
     <Space wrap>
         <Button @click="$router.push({name:'aes'})">Default</Button>
-        <Button type="primary">Primary</Button>
+        <Button @click="test" type="primary">Primary</Button>
         <Button type="dashed">Dashed</Button>
         <Button type="text">Text</Button>
     </Space>
