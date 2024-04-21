@@ -22,9 +22,8 @@
         height: 100%;
         display: grid;
         grid-template-rows: auto 1fr;
-        background: var(--theme-500);
+        background: var(--theme);
         color: var(--theme-reverse);
-        box-shadow: 0 0 5px 5px #aaa;
     }
 
         .page-layout-nav .large.hide {
@@ -50,7 +49,6 @@
     grid-template-columns: auto 1fr auto;
     gap: .5rem;
     height: 52px;
-    box-shadow: 0 0 5px 5px #aaa;
 }
 
     .page-layout-brand .ivu-icon-ios-close:hover,
@@ -75,7 +73,7 @@
     .page-layout-nav-body .version {
         display: grid;
         grid-template-columns: 1fr auto;
-        background: var(--theme-300);
+        background: var(--theme-700);
         padding: .5rem;
         align-items: center;
     }
@@ -99,9 +97,10 @@
 .page-layout-route-tabs {
     grid-column: 2;
     grid-row: 2;
-    padding: 1rem;
-    padding-bottom: .5rem;
+    padding: .5rem;
+    padding-bottom: .25rem;
     overflow: hidden;
+    background: var(--theme-800);
 }
 
 .ivu-drawer-wrap {
@@ -118,7 +117,7 @@
 }
 
 .ivu-drawer-content {
-    background: var(--theme-500);
+    background: var(--theme);
     color: var(--theme-reverse);
 }
 
@@ -128,8 +127,7 @@
 
 .page-layout-route-tabs .ivu-tabs {
     padding: .5rem;
-    border-radius: .5rem;
-    box-shadow: 0 0 .25rem .25rem var(--gray-400);
+    background: var(--theme);
 }
 
 .page-layout-route-tabs .ivu-tabs-bar {
@@ -141,11 +139,12 @@
 .page-layout-route-tabs .ivu-tabs-tab {
     border-radius: 4px !important;
     border: none !important;
-    background: var(--gray-300) !important;
+    background: var(--theme-700) !important;
+    color: var(--theme-reverse) !important;
 }
 
     .page-layout-route-tabs .ivu-tabs-tab.ivu-tabs-tab-active {
-        background: var(--theme) !important;
+        background: var(--primary) !important;
         color: var(--light) !important;
     }
 
@@ -157,20 +156,24 @@
                 opacity: .8;
             }
 
+.ivu-menu-vertical.ivu-menu-light:after, .ivu-menu-light.ivu-menu-vertical .ivu-menu-item-active:not(.ivu-menu-submenu):after {
+    content: none;
+}
+
 .page-layout-body {
     grid-column: 2;
     grid-row: 3;
-    padding: 1rem;
-    padding-top: .5rem;
+    padding: .5rem;
+    padding-top: .25rem;
     overflow: hidden;
+    background: var(--theme-800);
 }
 
 .page-layout-body-content {
     height: 100%;
     overflow: auto;
     padding: .5rem;
-    border-radius: .5rem;
-    box-shadow: 0 0 .25rem .25rem var(--gray-400);
+    background: var(--theme);
 }
 
 .versionModalBody .operations {

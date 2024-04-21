@@ -4,7 +4,7 @@
     },
     data() {
         return {
-            themes: ['dark', 'light', 'yellow','purple'],
+            themes: ['dark', 'light'],
             theme: 'light',
             isMenuOpen: false,
             pagesConfigList: [],
@@ -160,7 +160,11 @@
         checkComplete(response) {
             this.lastVersion = response.isSuccess ? response.data : null;
             this.checking = false;
-            if (!response.isSuccess) this.$Message.error(response.message);
+            if (response.isSuccess) {
+                if (this.lastVersion == this.currentVersion.version) this.$Message.info(this.$t('message.alreadyUptodate'));
+                else this.$Message.info(this.$t('message.newVersionDetected'));
+            }
+            else this.$Message.error(response.message);
         },
         upgrade() {
             if (!this.lastVersion || this.lastVersion == this.currentVersion.version) return;

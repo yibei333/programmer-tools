@@ -133,4 +133,5 @@
     --theme-600: var(--gray-600);
     --theme-700: var(--gray-700);
     --theme-800: var(--gray-800);
+    --theme-900: var(--gray-900);
 }
