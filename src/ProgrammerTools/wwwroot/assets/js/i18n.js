@@ -28,6 +28,10 @@
             downloadSpeed: '下载速度',
             installPackageSavedAt: '安装包保存在位置',
             downloadFailed: '下载失败',
+            sourceRepository: '源码仓库',
+            languages: '语言',
+            themes: '主题',
+            menu: '菜单',
         }
     },
     English: {
@@ -59,6 +63,10 @@
             downloadSpeed: 'download speed',
             installPackageSavedAt: 'install package save at',
             downloadFailed: 'download failed',
+            sourceRepository: 'source repository',
+            languages: 'languages',
+            themes: 'themes',
+            menu: 'menu',
         }
     },
 };
