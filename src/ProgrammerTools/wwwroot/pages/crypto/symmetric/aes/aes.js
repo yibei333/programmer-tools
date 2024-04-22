@@ -10,24 +10,32 @@ export default {
                 result: {
                     type: 'base64',
                     case: 'lower'
-                }
+                },
+                plainText: null,
+                cipherText: null,
             },
             types: ['txt', 'file'],
             modes: ['CBC', 'ECB', 'OFB', 'CFB', 'CTS'],
             paddings: ['None', 'PKCS7', 'Zeros', 'ANSIX923', 'ISO10126'],
             resultTypes: ['base64', 'hex'],
-            resultCases: ['lower', 'upper']
+            resultCases: ['lower', 'upper'],
         }
     },
     mounted() {
 
     },
     methods: {
-        encrypt() {
-
+        async encrypt() {
+            let result = await invokeSharpMethod('Encrypt', this.request);
+            if (result.success) {
+                this.request.cipherText = result.data;
+            } else this.$Message.error(result.description);
         },
-        decrypt() {
-
+        async decrypt() {
+            let result = await invokeSharpMethod('Decrypt', this.request);
+            if (result.success) {
+                this.request.plainText = result.data;
+            } else this.$Message.error(result.description);
         }
     }
 }

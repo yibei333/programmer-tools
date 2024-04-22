@@ -1,42 +1,59 @@
-<div v-bind:style="{display:'grid',gap:'.5rem','grid-template-columns':'repeat('+($root.size+1)+',1fr)'}">
-    <div class="label-input">
-        <label>{{$t('message.type')}}</label>
-        <Select v-model="request.type" :placeholder="$t('message.type')">
-            <Option v-for="item in types" :value="item" :key="item">{{ $t('message.'+item) }}</Option>
-        </Select>
+<div class="aes-page">
+    <div v-bind:style="{display:'grid',gap:'.5rem','grid-template-columns':'repeat('+($root.size+1)+',1fr)'}">
+        <div class="label-input">
+            <label>{{$t('message.type')}}</label>
+            <Select v-model="request.type" :placeholder="$t('message.type')">
+                <Option v-for="item in types" :value="item" :key="item">{{ $t('message.'+item) }}</Option>
+            </Select>
+        </div>
+
+        <div class="label-input">
+            <label>{{$t('message.mode')}}</label>
+            <Select v-model="request.mode" :placeholder="$t('message.mode')">
+                <Option v-for="item in modes" :value="item" :key="item">{{item}}</Option>
+            </Select>
+        </div>
+
+        <div class="label-input">
+            <label>{{$t('message.padding')}}</label>
+            <Select v-model="request.padding" :placeholder="$t('message.padding')">
+                <Option v-for="item in paddings" :value="item" :key="item">{{item}}</Option>
+            </Select>
+        </div>
+
+        <div class="label-input">
+            <label>{{$t('message.key')}}</label>
+            <Tooltip placement="top">
+                <Input v-model="request.key" :placeholder="$t('message.key')" />
+                <template #content>
+                    <div style="white-space: normal;">{{$t('message.aesKeyNotice')}}</div>
+                </template>
+            </Tooltip>
+        </div>
+
+        <div class="label-input" v-if="request.mode!='ECB'">
+            <label>{{$t('message.iv')}}</label>
+            <Tooltip placement="top">
+                <Input v-model="request.iv" :placeholder="$t('message.iv')" />
+                <template #content>
+                    <div style="white-space: normal;">{{$t('message.aesIVNotice')}}</div>
+                </template>
+            </Tooltip>
+        </div>
     </div>
 
-    <div class="label-input">
-        <label>{{$t('message.mode')}}</label>
-        <Select v-model="request.mode" :placeholder="$t('message.mode')">
-            <Option v-for="item in modes" :value="item" :key="item">{{item}}</Option>
-        </Select>
+    <div class="text-container" v-if="request.type=='txt'">
+        <textarea v-model="request.plainText" :placeholder="$t('message.plainText')" />
+        <div class="operations">
+            <Button :disabled="!request.plainText" @click="encrypt">{{$t('message.encrypt')}}</Button>
+            <Button :disabled="!request.cipherText" @click="decrypt">{{$t('message.decrypt')}}</Button>
+        </div>
+        <textarea v-model="request.cipherText" :placeholder="$t('message.cipherText')" />
+        <div class="result-models">
+        </div>
     </div>
 
-    <div class="label-input">
-        <label>{{$t('message.padding')}}</label>
-        <Select v-model="request.padding" :placeholder="$t('message.padding')">
-            <Option v-for="item in paddings" :value="item" :key="item">{{item}}</Option>
-        </Select>
-    </div>
-
-    <div class="label-input">
-        <label>{{$t('message.key')}}</label>
-        <Tooltip placement="top">
-            <Input v-model="request.key" :placeholder="$t('message.key')" />
-            <template #content>
-                <div style="white-space: normal;">{{$t('message.aesKeyNotice')}}</div>
-            </template>
-        </Tooltip>
-    </div>
-
-    <div class="label-input" v-if="request.mode!='ECB'">
-        <label>{{$t('message.iv')}}</label>
-        <Tooltip placement="top">
-            <Input v-model="request.iv" :placeholder="$t('message.iv')" />
-            <template #content>
-                <div style="white-space: normal;">{{$t('message.aesIVNotice')}}</div>
-            </template>
-        </Tooltip>
+    <div v-if="request.type=='file'">
+        this is file
     </div>
 </div>
