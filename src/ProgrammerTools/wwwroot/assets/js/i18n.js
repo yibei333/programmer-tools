@@ -1,4 +1,4 @@
-﻿const messages = {
+﻿const i18nMessages = {
     中文: {
         appName: '程序员工具',
         menus: {
@@ -32,6 +32,19 @@
             languages: '语言',
             themes: '主题',
             menu: '菜单',
+            txt: '文本',
+            file: '文件',
+            encrypt: '加密',
+            decrypt: '解密',
+            type: '类型',
+            mode: '模式',
+            padding: '填充',
+            key: '密钥',
+            iv: '向量',
+            plainText: '明文',
+            cipherText: '密文',
+            outputFormat: '输出格式',
+            textCase: '大小写'
         }
     },
     English: {
@@ -67,12 +80,33 @@
             languages: 'languages',
             themes: 'themes',
             menu: 'menu',
+            txt: 'text',
+            file: 'file',
+            encrypt: 'encrypt',
+            decrypt: 'decrypt',
+            type: 'type',
+            mode: 'mode',
+            padding: 'padding',
+            key: 'key',
+            iv: 'iv',
+            plainText: 'plain text',
+            cipherText: 'cipher text',
+            outputFormat: 'output format',
+            textCase: 'text case'
         }
     },
 };
 
-const i18n = VueI18n.createI18n({
-    locale: '中文',
-    fallbackLocale: '中文',
-    messages,
-});
+function createI18n(viewuiZh,viewuiEn) {
+    return VueI18n.createI18n({
+        allowComposition: true,
+        globalInjection: true,
+        legacy: false,
+        locale: '中文',
+        fallbackLocale: '中文',
+        messages: {
+            中文: { ...viewuiZh, ...i18nMessages.中文 },
+            English: { ...viewuiEn, ...i18nMessages.English },
+        }
+    });
+}

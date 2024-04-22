@@ -1,2 +1,6 @@
 <h2>this is aes page</h2>
-<input />
+
+
+<Select v-model="request.type" style="width:200px" :placeholder="$t('message.type')">
+    <Option v-for="item in types" :value="item" :key="item">{{ $t('message.'+item) }}</Option>
+</Select>

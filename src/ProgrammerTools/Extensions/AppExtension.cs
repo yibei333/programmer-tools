@@ -5,6 +5,7 @@ using SharpDevLib.Extensions.Http;
 using NLog.Targets;
 using SharpDevLib;
 using System.Diagnostics;
+using SharpDevLib.Extensions.Encryption;
 
 namespace ProgrammerTools.Extensions;
 
@@ -52,6 +53,7 @@ public static class AppExtension
     public static MauiAppBuilder ConfigServices(this MauiAppBuilder builder)
     {
         builder.Services.AddHttp();
+        builder.Services.AddEncryption();
         return builder;
     }
 }

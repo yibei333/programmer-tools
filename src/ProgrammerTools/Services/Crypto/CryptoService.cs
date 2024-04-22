@@ -1,4 +1,5 @@
 ﻿using Microsoft.JSInterop;
+using SharpDevLib.Extensions.Encryption;
 
 namespace ProgrammerTools.Services.Crypto
 {
@@ -7,6 +8,8 @@ namespace ProgrammerTools.Services.Crypto
         [JSInvokable]
         public static string Test(JsParameter<string> parameter)
         {
+            //var encryption = App.ServiceProvider.GetRequiredService<IEncryption>();
+            //encryption.Symmetric.Aes.Encrypt("", new AesEncryptOption { });
             return $"hello,{parameter.Parameter}";
         }
     }

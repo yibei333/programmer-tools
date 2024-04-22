@@ -10,7 +10,10 @@
     </layout>
 </div>
 
-<script>
+<script type="module">
+    import en from '/assets/lib/viewuiplus/locale/en-US.js';
+    import zh from '/assets/lib/viewuiplus/locale/zh-CN.js';
+
     let routes = getVueRoutes();
     let routerData = VueRouter.createRouter({
         history: VueRouter.createWebHashHistory(),
@@ -46,6 +49,7 @@
             },
         }
     });
+    let i18n = createI18n(zh, en);
     app.use(i18n);
     app.use(ViewUIPlus, { i18n });
     app.use(routerData);
