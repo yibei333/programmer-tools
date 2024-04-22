@@ -44,7 +44,9 @@
             plainText: '明文',
             cipherText: '密文',
             outputFormat: '输出格式',
-            textCase: '大小写'
+            textCase: '大小写',
+            aesIVNotice: '向量长度固定为16个字节',
+            aesKeyNotice: '密钥长度应为128位、192位、256位,如果超出256位将截断,长度不足向上补足(字节为0)',
         }
     },
     English: {
@@ -92,12 +94,14 @@
             plainText: 'plain text',
             cipherText: 'cipher text',
             outputFormat: 'output format',
-            textCase: 'text case'
+            textCase: 'text case',
+            aesIVNotice: 'vector lenght should be 16bytes',
+            aesKeyNotice: 'key lenght should be 128bytes、192bytes、256bytes,if it exceeds 256 bits, it will be truncated, and if the length is insufficient, it will be supplemented upwards (byte is 0)',
         }
     },
 };
 
-function createI18n(viewuiZh,viewuiEn) {
+function createI18n(viewuiZh, viewuiEn) {
     return VueI18n.createI18n({
         allowComposition: true,
         globalInjection: true,

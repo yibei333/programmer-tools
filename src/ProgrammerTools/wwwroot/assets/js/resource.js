@@ -142,5 +142,11 @@ async function addStyle(path) {
         link.rel = 'stylesheet';
         link.href = path;
         document.head.appendChild(link);
+        await new Promise((resolve) => {
+            let timer = setTimeout(() => {
+                clearTimeout(timer);
+                resolve();
+            }, 100);
+        });
     }
 }

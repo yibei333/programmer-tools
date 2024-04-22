@@ -2,14 +2,14 @@ export default {
     data() {
         return {
             request: {
-                type: "",
-                mode: '',
-                padding: '',
+                type: "txt",
+                mode: 'CBC',
+                padding: 'PKCS7',
                 key: '',
-                iv: '',
+                iv: '0000000000000000',
                 result: {
-                    type: '',
-                    case: ''
+                    type: 'base64',
+                    case: 'lower'
                 }
             },
             types: ['txt', 'file'],
