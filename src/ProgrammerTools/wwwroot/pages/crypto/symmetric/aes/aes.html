@@ -43,13 +43,30 @@
     </div>
 
     <div class="text-container" v-if="request.type=='txt'">
-        <textarea v-model="request.plainText" :placeholder="$t('message.plainText')" />
-        <div class="operations">
-            <Button :disabled="!request.plainText" @click="encrypt">{{$t('message.encrypt')}}</Button>
-            <Button :disabled="!request.cipherText" @click="decrypt">{{$t('message.decrypt')}}</Button>
+        <div class="text">
+            <textarea v-model="request.plainText" :placeholder="$t('message.plainText')" />
+            <div class="transfer" v-if="request.plainText">
+                <Button @click="copy(request.plainText)">{{$t('message.copy')}}</Button>
+            </div>
         </div>
-        <textarea v-model="request.cipherText" :placeholder="$t('message.cipherText')" />
-        <div class="result-models">
+        <div class="operations">
+            <Button :disabled="!request.plainText" type="primary" @click="encrypt" icon="md-arrow-down">{{$t('message.encrypt')}}</Button>
+            <Button :disabled="!request.cipherText" type="primary" @click="decrypt" icon="md-arrow-up">{{$t('message.decrypt')}}</Button>
+        </div>
+        <div class="text">
+            <textarea v-model="request.cipherText" :placeholder="$t('message.cipherText')" />
+            <div class="transfer" v-if="request.cipherText">
+                <Button @click="convertToHex(request.cipherText)">{{$t('message.convertToHex')}}</Button>
+                <Button @click="copy(request.cipherText)">{{$t('message.copy')}}</Button>
+            </div>
+            <Modal v-model="hexResultShow"
+                   width="250px"
+                   :title="$t('message.convertToHex')"
+                   :ok-text="$t('message.copy')"
+                   @on-ok="copy(hexResult)"
+                   @on-cancel="hexResultShow=false">
+                <Input v-model="hexResult" type="textarea" autosize="true" />
+            </Modal>
         </div>
     </div>
 

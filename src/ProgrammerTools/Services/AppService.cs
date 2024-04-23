@@ -43,11 +43,11 @@ public static class AppService
     }
 
     [JSInvokable]
-    public static async Task<Result> SetClipboardAsync(string text)
+    public static async Task<Result> SetClipboardAsync(JsParameter<string> parameter)
     {
         try
         {
-            await Clipboard.Default.SetTextAsync(text);
+            await Clipboard.Default.SetTextAsync(parameter.Parameter);
             return Result.Succeed();
         }
         catch (Exception ex)
