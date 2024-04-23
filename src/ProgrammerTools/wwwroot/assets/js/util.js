@@ -20,6 +20,14 @@ async function invokeSharpMethod(name, parameter, parameterRefercence) {
     });
 }
 
+async function callService(signature, request, objectRefercence) {
+    return await DotNet.invokeMethodAsync("ProgrammerTools", "Invoke", {
+        signature: signature,
+        jSObjectReference: objectRefercence ? DotNet.createJSObjectReference(objectRefercence) : null,
+        json: request ? (request instanceof Object ? JSON.stringify(request) : request) : null
+    });
+}
+
 Array.prototype.remove = function (item) {
     let targetIndex = this.findIndex(x => x === item);
     if (targetIndex < 0) return;

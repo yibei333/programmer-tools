@@ -86,8 +86,9 @@
         selectLocale(locale) {
             this.$i18n.locale = locale;
         },
-        openGithub() {
-            invokeSharpMethod('OpenBrowserAsync', staticConfigs.githubUrl);
+        async openGithub() {
+            let result = await callService('AppService.OpenBrowser', staticConfigs.githubUrl);
+            if (!result.success) this.$Message.error(result.description);
         },
         setSize() {
             this.isSmall = this.$root.size == 1;
@@ -132,30 +133,30 @@
             }
             this.moveStartTab = this.tabList.filter(x => x.id == id)[0];
         },
-        getCurrentVersion() {
-            invokeSharpMethod('GetAppInfoAsync').then(res => {
-                this.currentVersion = res;
-            });
+        async getCurrentVersion() {
+            let result = await callService('AppService.GetAppInfo');
+            if (!result.success) this.$Message.error(result.description);
+            else this.currentVersion = result.data;
         },
         showVersion() {
             this.showVersionModal = true;
             if (!this.lastVersion) this.checkUpdate();
         },
-        checkUpdate() {
+        async checkUpdate() {
             this.checking = true;
             var options = {
                 url: staticConfigs.giteeUrl + '/raw/main/pack/version.txt',
                 method: 'get',
             };
-            invokeSharpMethod('HttpRequestAsync', options).then(res => {
-                if (res.isSuccess) {
-                    this.checkComplete(res);
-                    return;
-                }
-
-                options.url = staticConfigs.githubRawUrl + '/main/pack/version.txt';
-                invokeSharpMethod('HttpRequestAsync', options).then(res => this.checkComplete(res));
-            });
+            let result = await callService('HttpService.HttpRequest', options);
+            if (result.success && result.data.isSuccess) {
+                this.checkComplete(result.data);
+                return;
+            }
+            options.url = staticConfigs.githubRawUrl + '/main/pack/version.txt';
+            result = await callService('HttpService.HttpRequest', options);
+            if (!result.success) this.$Message.error(result.description);
+            else this.checkComplete(result.data);
         },
         checkComplete(response) {
             this.lastVersion = response.isSuccess ? response.data : null;
@@ -166,7 +167,7 @@
             }
             else this.$Message.error(response.message);
         },
-        upgrade() {
+        async upgrade() {
             if (!this.lastVersion || this.lastVersion == this.currentVersion.version) return;
             if (this.packagePath) {
                 this.upgradeComplete({ isSuccess: true, data: this.packagePath });
@@ -180,19 +181,20 @@
                 method: 'get',
                 name: name
             };
-            invokeSharpMethod('DownloadAsync', options, this).then(res => {
-                if (res.isSuccess) {
-                    this.$Message.success(`${this.$t('message.installPackageSavedAt')}:${res.data}`);
-                    this.upgradeComplete(res);
-                    return;
-                }
+            let result = await callService('HttpService.Download', options, this);
+            if (result.success && result.data.isSuccess) {
+                this.$Message.success(`${this.$t('message.installPackageSavedAt')}:${result.data.data}`);
+                this.upgradeComplete(result.data);
+                return;
+            }
 
-                options.url = staticConfigs.githubUrl + `/releases/download/${this.lastVersion}/${name}`;
-                invokeSharpMethod('DownloadAsync', options, this).then(res => {
-                    if (res.isSuccess) this.$Message.success(`${this.$t('message.installPackageSavedAt')}:${res.data}`);
-                    this.upgradeComplete(res);
-                });
-            });
+            options.url = staticConfigs.githubUrl + `/releases/download/${this.lastVersion}/${name}`;
+            result = await callService('HttpService.Download', options, this);
+            if (!result.success) this.$Message.error(result.description);
+            else {
+                if (result.data.isSuccess) this.$Message.success(`${this.$t('message.installPackageSavedAt')}:${result.data.data}`);
+                this.upgradeComplete(result.data);
+            }
         },
         setProgress(p) {
             this.progress = p;
@@ -206,10 +208,11 @@
             }
             else this.$Message.error(`${this.$t('message.downloadFailed')}:${response.message}`);
         },
-        installUpdate() {
+        async installUpdate() {
             if (!this.packagePath) return;
             this.installing = true;
-            invokeSharpMethod('Upgrade', this.packagePath, this);
+            let result = await callService('AppService.Upgrade', this.packagePath, this);
+            if (!result.success) this.$Message.error(result.description);
         },
         notifyInstallUpdate(res) {
             this.installing = false;

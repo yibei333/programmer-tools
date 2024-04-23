@@ -35,25 +35,23 @@ export default {
         },
         async encrypt() {
             if (!this.valid()) return;
-            let result = await invokeSharpMethod('AesEncrypt', this.request);
-            if (result.success) {
-                this.request.cipherText = result.data;
-            } else this.$Message.error(result.description);
+            let result = await callService('AesCryptoService.AesEncrypt', this.request);
+            if (result.success) this.request.cipherText = result.data;
+            else this.$Message.error(result.description);
         },
         async decrypt() {
             if (!this.valid()) return;
-            let result = await invokeSharpMethod('AesDecrypt', this.request);
-            if (result.success) {
-                this.request.plainText = result.data;
-            } else this.$Message.error(result.description);
+            let result = await callService('AesCryptoService.AesDecrypt', this.request);
+            if (result.success) this.request.plainText = result.data;
+            else this.$Message.error(result.description);
         },
         async copy(text) {
-            let result = await invokeSharpMethod('SetClipboardAsync', text);
+            let result = await callService('AppService.SetClipboard', text);
             if (result.success) this.$Message.success(this.$t('message.copySuccess'));
             else this.$Message.error(result.description);
         },
         async convertToHex(text) {
-            let result = await invokeSharpMethod('ConvertBase64ToHext', text);
+            let result = await callService('EncodeService.ConvertBase64ToHext', text);
             if (result.success) {
                 this.hexResult = result.data;
                 this.hexResultShow = true;
@@ -61,22 +59,20 @@ export default {
             else this.$Message.error(result.description);
         },
         async filePicker() {
-            let result = await invokeSharpMethod('PickFilesAsync');
-            if (result.success) {
-                this.request.inputFiles = result.data;
-            }
+            let result = await callService('AppService.PickFiles');
+            if (result.success) this.request.inputFiles = result.data;
             else this.$Message.error(result.description);
         },
         async encryptFile() {
             if (!this.valid()) return;
-            let result = await invokeSharpMethod('AesEncryptFile', this.request);
+            let result = await callService('AesCryptoService.AesEncryptFile', this.request);
             if (result.success) {
                 this.$Message.success('ok');
             } else this.$Message.error(result.description);
         },
         async decryptFile() {
             if (!this.valid()) return;
-            let result = await invokeSharpMethod('AesDecryptFile', this.request);
+            let result = await callService('AesCryptoService.AesDecryptFile', this.request);
             if (result.success) {
                 this.$Message.success('ok');
             } else this.$Message.error(result.description);

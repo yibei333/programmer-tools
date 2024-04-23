@@ -136,7 +136,7 @@ async function importComponent(path) {
 async function addStyle(path) {
     let existed = document.querySelector(`link[href="${path}"]`);
     if (existed) return;
-    let res = await invokeSharpMethod('WwwRootFilesExsitAsync', path);
+    let res = await callService('AppService.WWWRootFilesExsit', path);
     if (res) {
         let link = document.createElement('link');
         link.rel = 'stylesheet';

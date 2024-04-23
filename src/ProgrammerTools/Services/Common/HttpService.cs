@@ -5,10 +5,9 @@ using SharpDevLib.Extensions.Http;
 
 namespace ProgrammerTools.Services.Common;
 
-public static class HttpService
+public class HttpService : BaseService
 {
-    [JSInvokable]
-    public static async Task<HttpResult<string>> UploadFolderAsync(JsParameter<RequestOptions> request)
+    public async Task<HttpResult<string>> UploadFolder(JSRequest<RequestOptions> request)
     {
         var pickResult = await FolderPicker.Default.PickAsync();
         if (!pickResult.IsSuccessful) return new HttpResult<string> { IsSuccess = true, Code = System.Net.HttpStatusCode.OK, Message = "cancle" };
@@ -23,16 +22,7 @@ public static class HttpService
         return await App.ServiceProvider.GetRequiredService<IHttpService>().PostFormAsync<string>(option);
     }
 
-    private static List<FormFile> GetFolderFiles(string rootPath, DirectoryInfo directory)
-    {
-        var childDirectories = directory.GetDirectories();
-        var childDirecotryFiles = childDirectories.SelectMany(x => GetFolderFiles(rootPath, x));
-        var childFiles = directory.GetFiles().Select(x => new FormFile("Files", rootPath.IsEmpty() ? x.FullName : x.FullName.Replace(rootPath, ""), File.OpenRead(x.FullName)));
-        return childDirecotryFiles.Union(childFiles).ToList();
-    }
-
-    [JSInvokable]
-    public static async Task<HttpResult<string>> UploadFilesAsync(JsParameter<RequestOptions> request)
+    public async Task<HttpResult<string>> UploadFiles(JSRequest<RequestOptions> request)
     {
         var pickResult = await FilePicker.Default.PickMultipleAsync();
         if (!pickResult.Any()) return new HttpResult<string> { IsSuccess = true, Code = System.Net.HttpStatusCode.OK, Message = "cancle" };
@@ -45,8 +35,7 @@ public static class HttpService
         return await App.ServiceProvider.GetRequiredService<IHttpService>().PostFormAsync<string>(option);
     }
 
-    [JSInvokable]
-    public static async Task<HttpResult<string>> DownloadAsync(JsParameter<RequestOptions> options)
+    public async Task<HttpResult<string>> Download(JSRequest<RequestOptions> options)
     {
         try
         {
@@ -65,7 +54,30 @@ public static class HttpService
         }
     }
 
-    static async Task<HttpResult<string>> AndroidDownloadAsync(RequestOptions options, Stream stream)
+    public async Task<HttpResult<string>> HttpRequest(JSRequest<RequestOptions> options)
+    {
+        if (options.Parameter!.Method == "get") return await GetAsync(options);
+        else if (options.Parameter.Method == "post") return await PostAsync(options);
+        else if (options.Parameter.Method == "put") return await PutAsync(options);
+        else if (options.Parameter.Method == "delete") return await DeleteAsync(options);
+        else return new HttpResult<string> { IsSuccess = false, Message = $"request '{options.Parameter.Method}' not supported" };
+    }
+
+    public async Task<HttpResult<byte[]>> GetBlob(JSRequest<RequestOptions> options)
+    {
+        var requestOptions = new ParameterOption(options.Parameter!.Url).SetOptions(options);
+        return await App.ServiceProvider.GetRequiredService<IHttpService>().GetAsync<byte[]>(requestOptions);
+    }
+
+    List<FormFile> GetFolderFiles(string rootPath, DirectoryInfo directory)
+    {
+        var childDirectories = directory.GetDirectories();
+        var childDirecotryFiles = childDirectories.SelectMany(x => GetFolderFiles(rootPath, x));
+        var childFiles = directory.GetFiles().Select(x => new FormFile("Files", rootPath.IsEmpty() ? x.FullName : x.FullName.Replace(rootPath, ""), File.OpenRead(x.FullName)));
+        return childDirecotryFiles.Union(childFiles).ToList();
+    }
+
+    async Task<HttpResult<string>> AndroidDownloadAsync(RequestOptions options, Stream stream)
     {
         try
         {
@@ -87,64 +99,50 @@ public static class HttpService
         }
     }
 
-    [JSInvokable]
-    public static async Task<HttpResult<string>> HttpRequestAsync(JsParameter<RequestOptions> options)
-    {
-        if (options.Parameter!.Method == "get") return await GetAsync(options);
-        else if (options.Parameter.Method == "post") return await PostAsync(options);
-        else if (options.Parameter.Method == "put") return await PutAsync(options);
-        else if (options.Parameter.Method == "delete") return await DeleteAsync(options);
-        else return new HttpResult<string> { IsSuccess = false, Message = $"request '{options.Parameter.Method}' not supported" };
-    }
-
-    [JSInvokable]
-    public static async Task<HttpResult<byte[]>> GetBlobAsync(JsParameter<RequestOptions> options)
-    {
-        var requestOptions = new ParameterOption(options.Parameter!.Url).SetOptions(options);
-        return await App.ServiceProvider.GetRequiredService<IHttpService>().GetAsync<byte[]>(requestOptions);
-    }
-
-    static async Task<HttpResult<string>> GetAsync(JsParameter<RequestOptions> options)
+    async Task<HttpResult<string>> GetAsync(JSRequest<RequestOptions> options)
     {
         var requestOptions = new ParameterOption(options.Parameter!.Url).SetOptions(options);
         return await App.ServiceProvider.GetRequiredService<IHttpService>().GetAsync<string>(requestOptions);
     }
 
-    static async Task<HttpResult<string>> PostAsync(JsParameter<RequestOptions> options)
+    async Task<HttpResult<string>> PostAsync(JSRequest<RequestOptions> options)
     {
         var requestOptions = new JsonOption(options.Parameter!.Url, options.Parameter.Data).SetOptions(options);
         return await App.ServiceProvider.GetRequiredService<IHttpService>().PostAsync<string>(requestOptions);
     }
 
-    static async Task<HttpResult<string>> PutAsync(JsParameter<RequestOptions> options)
+    async Task<HttpResult<string>> PutAsync(JSRequest<RequestOptions> options)
     {
         var requestOptions = new JsonOption(options.Parameter!.Url, options.Parameter.Data).SetOptions(options);
         return await App.ServiceProvider.GetRequiredService<IHttpService>().PutAsync<string>(requestOptions);
     }
 
-    static async Task<HttpResult<string>> DeleteAsync(JsParameter<RequestOptions> options)
+    async Task<HttpResult<string>> DeleteAsync(JSRequest<RequestOptions> options)
     {
         var requestOptions = new ParameterOption(options.Parameter!.Url).SetOptions(options);
         return await App.ServiceProvider.GetRequiredService<IHttpService>().DeleteAsync<string>(requestOptions);
     }
+}
 
-    static TOption SetOptions<TOption>(this TOption option, JsParameter<RequestOptions> options) where TOption : HttpOption
+public static class RequestOptionExtension
+{
+    public static TOption SetOptions<TOption>(this TOption option, JSRequest<RequestOptions> options) where TOption : HttpOption
     {
         option.Headers = options.Parameter!.Headers.ToDictionary(x => x.Key, x => x.Value);
-        if (options.ParameterRefercence is not null)
+        if (options.JSObjectReference is not null)
         {
             if (options.Parameter.Method == "post")
             {
                 option.OnSendProgress = async (p) =>
                 {
-                    await options.ParameterRefercence.InvokeVoidAsync("setProgress", p);
+                    await options.JSObjectReference.InvokeVoidAsync("setProgress", p);
                 };
             }
             else
             {
                 option.OnReceiveProgress = async (p) =>
                 {
-                    await options.ParameterRefercence.InvokeVoidAsync("setProgress", p);
+                    await options.JSObjectReference.InvokeVoidAsync("setProgress", p);
                 };
             }
         }

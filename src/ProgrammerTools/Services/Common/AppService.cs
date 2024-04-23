@@ -1,35 +1,28 @@
 ﻿using Microsoft.JSInterop;
 using SharpDevLib;
 using SharpDevLib.Extensions.Model;
-using System.Diagnostics;
 using System.Text;
+
+#if WINDOWS
+using System.Diagnostics;
+#endif
 
 namespace ProgrammerTools.Services.Common;
 
-public static class AppService
+public class AppService : BaseService
 {
-    [JSInvokable]
-    public static async Task<bool> WwwRootFilesExsitAsync(JsParameter<string> parameter)
+    public async Task<bool> WWWRootFilesExsit(JSRequest<string> request)
     {
-        var path = "wwwroot".CombinePath(parameter.Parameter);
+        var path = "wwwroot".CombinePath(request.Parameter);
         return await FileSystem.AppPackageFileExistsAsync(path);
     }
 
-    [JSInvokable]
-    public static async Task OpenBrowserAsync(JsParameter<string> parameter)
+    public async Task OpenBrowser(JSRequest<string> request)
     {
-        try
-        {
-            await Browser.Default.OpenAsync(new Uri(parameter.Parameter!), BrowserLaunchMode.SystemPreferred);
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"open browser failed:{ex.Message}");
-        }
+        await Browser.Default.OpenAsync(new Uri(request.Parameter!), BrowserLaunchMode.SystemPreferred);
     }
 
-    [JSInvokable]
-    public static async Task<ApplicationInfo> GetAppInfoAsync()
+    public async Task<ApplicationInfo> GetAppInfo()
     {
         var version = string.Empty;
         using var stream = await FileSystem.Current.OpenAppPackageFileAsync("wwwroot/version.txt");
@@ -42,26 +35,16 @@ public static class AppService
         return new() { Version = version, Platform = DeviceInfo.Current.Platform.Convert() };
     }
 
-    [JSInvokable]
-    public static async Task<Result> SetClipboardAsync(JsParameter<string> parameter)
+    public async Task SetClipboard(JSRequest<string> request)
     {
-        try
-        {
-            await Clipboard.Default.SetTextAsync(parameter.Parameter);
-            return Result.Succeed();
-        }
-        catch (Exception ex)
-        {
-            return Result.Failed(ex.Message);
-        }
+        await Clipboard.Default.SetTextAsync(request.Parameter);
     }
 
-    [JSInvokable]
-    public static void Upgrade(JsParameter<string> parameter)
+    public async Task Upgrade(JSRequest<string> request)
     {
-        if (parameter.Parameter is null)
+        if (request.Parameter is null)
         {
-            parameter.ParameterRefercence?.InvokeVoidAsync("notifyInstallUpdate", Result.Failed("parameter error"));
+            request.JSObjectReference?.InvokeVoidAsync("notifyInstallUpdate", Result.Failed("parameter error"));
             return;
         }
 
@@ -69,15 +52,15 @@ public static class AppService
         {
 
 #if WINDOWS
-            var process = Process.Start(new ProcessStartInfo(parameter.Parameter));
-            process!.WaitForExitAsync().ContinueWith((s) =>
+            var process = Process.Start(new ProcessStartInfo(request.Parameter));
+            await process!.WaitForExitAsync().ContinueWith((s) =>
             {
-                parameter.ParameterRefercence?.InvokeVoidAsync("notifyInstallUpdate", Result.Succeed());
+                request.JSObjectReference?.InvokeVoidAsync("notifyInstallUpdate", Result.Succeed());
             });
 #elif ANDROID
             var context = Android.App.Application.Context;
             if (context is null || context.ApplicationContext is null) throw new Exception("unable to find android context");
-            var file = new Java.IO.File(parameter.Parameter);
+            var file = new Java.IO.File(request.Parameter);
 
             using var install = new Android.Content.Intent(Android.Content.Intent.ActionView);
             var apkURI = AndroidX.Core.Content.FileProvider.GetUriForFile(context, context.ApplicationContext.PackageName + ".provider", file);
@@ -87,32 +70,24 @@ public static class AppService
             install.AddFlags(Android.Content.ActivityFlags.ClearTop);
             install.PutExtra(Android.Content.Intent.ExtraNotUnknownSource, true);
             Platform.CurrentActivity?.StartActivity(install);
-            parameter.ParameterRefercence?.InvokeVoidAsync("notifyInstallUpdate", Result.Succeed());
+            request.JSObjectReference?.InvokeVoidAsync("notifyInstallUpdate", Result.Succeed());
+            await Task.CompletedTask;
 #endif
         }
         catch (Exception ex)
         {
             App.Logger.Error(ex, $"启动安装失败:{ex.Message}");
-            parameter.ParameterRefercence?.InvokeVoidAsync("notifyInstallUpdate", Result.Failed(ex.Message));
+            request.JSObjectReference?.InvokeVoidAsync("notifyInstallUpdate", Result.Failed(ex.Message));
         }
     }
 
-    [JSInvokable]
-    public static async Task<Result<List<PickFileInfo>>> PickFilesAsync()
+    public async Task<List<PickFileInfo>> PickFiles()
     {
-        try
-        {
-            var files = await FilePicker.Default.PickMultipleAsync();
-            var result = files.Select(x => GetPickerFileInfo(x.FullPath)).ToList();
-            return Result.Succeed(result);
-        }
-        catch (Exception ex)
-        {
-            return Result.Failed<List<PickFileInfo>>(ex.Message);
-        }
+        var files = await FilePicker.Default.PickMultipleAsync();
+        return files.Select(x => GetPickerFileInfo(x.FullPath)).ToList();
     }
 
-    private static PickFileInfo GetPickerFileInfo(string path)
+    PickFileInfo GetPickerFileInfo(string path)
     {
         var fileInfo = new FileInfo(path);
         return new PickFileInfo
