@@ -3,7 +3,7 @@ using Microsoft.JSInterop;
 using SharpDevLib;
 using SharpDevLib.Extensions.Http;
 
-namespace ProgrammerTools.Services;
+namespace ProgrammerTools.Services.Common;
 
 public static class HttpService
 {

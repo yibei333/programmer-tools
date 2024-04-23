@@ -34,7 +34,7 @@
         <div class="label-input" v-if="request.mode!='ECB'">
             <label>{{$t('message.iv')}}</label>
             <Tooltip placement="top">
-                <Input v-model="request.iv" :placeholder="$t('message.iv')" />
+                <Input v-model="request.iv" :placeholder="$t('message.iv')" maxlength="16" show-word-limit />
                 <template #content>
                     <div style="white-space: normal;">{{$t('message.aesIVNotice')}}</div>
                 </template>
@@ -70,7 +70,14 @@
         </div>
     </div>
 
-    <div v-if="request.type=='file'">
-        this is file
+    <div class="file-container" v-if="request.type=='file'">
+        <Button @click="filePicker">选择文件</Button>
+        <div>
+            <h2 v-for="item in request.inputFiles">{{item.fullName}}</h2>
+        </div>
+        <div class="operations">
+            <Button :disabled="!request.inputFiles||request.inputFiles.length<=0" type="primary" @click="encryptFile">{{$t('message.encrypt')}}</Button>
+            <Button :disabled="!request.inputFiles||request.inputFiles.length<=0" type="primary" @click="decryptFile">{{$t('message.decrypt')}}</Button>
+        </div>
     </div>
 </div>

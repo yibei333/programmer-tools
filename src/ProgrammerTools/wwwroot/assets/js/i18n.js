@@ -50,6 +50,8 @@
             copy: '拷贝',
             convertToHex: '转换为Hex',
             copySuccess: '拷贝成功',
+            ivFormatError: '向量格式错误',
+            keyRequired: '请输入密钥',
         }
     },
     English: {
@@ -103,6 +105,8 @@
             copy: 'copy',
             convertToHex: 'convert to hex',
             copySuccess: 'copy succeed',
+            ivFormatError: 'iv format error',
+            keyRequired: 'key required',
         }
     },
 };

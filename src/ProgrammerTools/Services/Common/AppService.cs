@@ -4,7 +4,7 @@ using SharpDevLib.Extensions.Model;
 using System.Diagnostics;
 using System.Text;
 
-namespace ProgrammerTools.Services;
+namespace ProgrammerTools.Services.Common;
 
 public static class AppService
 {
@@ -96,6 +96,33 @@ public static class AppService
             parameter.ParameterRefercence?.InvokeVoidAsync("notifyInstallUpdate", Result.Failed(ex.Message));
         }
     }
+
+    [JSInvokable]
+    public static async Task<Result<List<PickFileInfo>>> PickFilesAsync()
+    {
+        try
+        {
+            var files = await FilePicker.Default.PickMultipleAsync();
+            var result = files.Select(x => GetPickerFileInfo(x.FullPath)).ToList();
+            return Result.Succeed(result);
+        }
+        catch (Exception ex)
+        {
+            return Result.Failed<List<PickFileInfo>>(ex.Message);
+        }
+    }
+
+    private static PickFileInfo GetPickerFileInfo(string path)
+    {
+        var fileInfo = new FileInfo(path);
+        return new PickFileInfo
+        {
+            Name = fileInfo.Name[..^fileInfo.Extension.Length],
+            FullName = fileInfo.Name,
+            Extension = fileInfo.Extension,
+            FullPath = path,
+        };
+    }
 }
 
 public class ApplicationInfo
@@ -124,4 +151,12 @@ public enum Platforms
     mac,
     tizen,
     windows,
+}
+
+public class PickFileInfo
+{
+    public required string Name { get; set; }
+    public required string FullName { get; set; }
+    public required string Extension { get; set; }
+    public required string FullPath { get; set; }
 }

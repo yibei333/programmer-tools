@@ -2,13 +2,14 @@ export default {
     data() {
         return {
             request: {
-                type: "txt",
+                type: "file",
                 mode: 'CBC',
                 padding: 'PKCS7',
-                key: '',
+                key: null,
                 iv: '0000000000000000',
                 plainText: null,
                 cipherText: null,
+                inputFiles: []
             },
             types: ['txt', 'file'],
             modes: ['CBC', 'ECB', 'OFB', 'CFB', 'CTS'],
@@ -21,14 +22,27 @@ export default {
 
     },
     methods: {
+        valid() {
+            if (!this.request.key) {
+                this.$Message.warning(this.$t('message.keyRequired'));
+                return false;
+            }
+            if (this.request.mode != 'ECB' && (!this.request.iv || this.request.iv.length != 16)) {
+                this.$Message.warning(this.$t('message.ivFormatError'));
+                return false;
+            }
+            return true;
+        },
         async encrypt() {
-            let result = await invokeSharpMethod('Encrypt', this.request);
+            if (!this.valid()) return;
+            let result = await invokeSharpMethod('AesEncrypt', this.request);
             if (result.success) {
                 this.request.cipherText = result.data;
             } else this.$Message.error(result.description);
         },
         async decrypt() {
-            let result = await invokeSharpMethod('Decrypt', this.request);
+            if (!this.valid()) return;
+            let result = await invokeSharpMethod('AesDecrypt', this.request);
             if (result.success) {
                 this.request.plainText = result.data;
             } else this.$Message.error(result.description);
@@ -45,6 +59,27 @@ export default {
                 this.hexResultShow = true;
             }
             else this.$Message.error(result.description);
-        }
+        },
+        async filePicker() {
+            let result = await invokeSharpMethod('PickFilesAsync');
+            if (result.success) {
+                this.request.inputFiles = result.data;
+            }
+            else this.$Message.error(result.description);
+        },
+        async encryptFile() {
+            if (!this.valid()) return;
+            let result = await invokeSharpMethod('AesEncryptFile', this.request);
+            if (result.success) {
+                this.$Message.success('ok');
+            } else this.$Message.error(result.description);
+        },
+        async decryptFile() {
+            if (!this.valid()) return;
+            let result = await invokeSharpMethod('AesDecryptFile', this.request);
+            if (result.success) {
+                this.$Message.success('ok');
+            } else this.$Message.error(result.description);
+        },
     }
 }

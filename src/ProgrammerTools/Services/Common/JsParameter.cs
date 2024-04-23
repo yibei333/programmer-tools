@@ -1,6 +1,6 @@
 ﻿using Microsoft.JSInterop;
 
-namespace ProgrammerTools.Services;
+namespace ProgrammerTools.Services.Common;
 
 public class JsParameter<T>
 {
