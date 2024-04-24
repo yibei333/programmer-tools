@@ -2,7 +2,7 @@ export default {
     data() {
         return {
             request: {
-                type: "file",
+                type: "txt",
                 mode: 'CBC',
                 padding: 'PKCS7',
                 key: null,
