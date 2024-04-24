@@ -23,7 +23,7 @@
 
         <div class="label-input">
             <label>{{$t('message.key')}}</label>
-            <Tooltip placement="top">
+            <Tooltip placement="top" :theme="$root.theme">
                 <Input v-model="request.key" :placeholder="$t('message.key')" />
                 <template #content>
                     <div style="white-space: normal;">{{$t('message.aesKeyNotice')}}</div>
@@ -33,7 +33,7 @@
 
         <div class="label-input" v-if="request.mode!='ECB'">
             <label>{{$t('message.iv')}}</label>
-            <Tooltip placement="top">
+            <Tooltip placement="top" :theme="$root.theme">
                 <Input v-model="request.iv" :placeholder="$t('message.iv')" maxlength="16" show-word-limit />
                 <template #content>
                     <div style="white-space: normal;">{{$t('message.aesIVNotice')}}</div>
@@ -71,13 +71,58 @@
     </div>
 
     <div class="file-container" v-if="request.type=='file'">
-        <Button @click="filePicker">选择文件</Button>
-        <div>
-            <h2 v-for="item in request.inputFiles">{{item.fullName}}</h2>
-        </div>
-        <div class="operations">
-            <Button :disabled="!request.inputFiles||request.inputFiles.length<=0" type="primary" @click="encryptFile">{{$t('message.encrypt')}}</Button>
-            <Button :disabled="!request.inputFiles||request.inputFiles.length<=0" type="primary" @click="decryptFile">{{$t('message.decrypt')}}</Button>
-        </div>
+        <List border class="file-list">
+            <ListItem v-if="request.inputFiles&&request.inputFiles.length>0" v-for="item in request.inputFiles">
+                <div class="file-item">
+                    <div class="name">
+                        <Tooltip placement="top" :theme="$root.theme">
+                            <div style="min-width:200px">{{item.fullName}}</div>
+                            <template #content>
+                                <div style="white-space: normal;overflow-wrap:anywhere;">{{item.fullName}}</div>
+                            </template>
+                        </Tooltip>
+                    </div>
+                    <div class="status">
+                        <div v-if="item.status==0">
+                            {{$t('message.waitExecute')}}
+                            <Icon type="md-alarm" size="18" />
+                        </div>
+                        <div v-if="item.status==1">
+                            {{$t('message.executing')}}
+                            <Icon type="ios-loading" color="var(--primary)" size="18" style="animation: rotateAnimation 1s ease-in-out forwards; animation-iteration-count: infinite;" />
+                        </div>
+                        <Tooltip v-if="item.status==2" placement="left" :theme="$root.theme">
+                            <div class="notice">
+                                {{$t('message.success')}}
+                                <Icon type="ios-checkmark-circle" color="var(--success)" size="18" />
+                            </div>
+                            <template #content>
+                                <div style="white-space: normal;overflow-wrap:anywhere;">{{$t('message.fileSavedAt')}}:{{item.data}}</div>
+                            </template>
+                        </Tooltip>
+                        <Tooltip v-if="item.status==3" placement="left" :theme="$root.theme">
+                            <div class="notice">
+                                {{$t('message.fail')}}
+                                <Icon type="md-close-circle" color="var(--danger)" size="18" />
+                            </div>
+                            <template #content>
+                                <div style="white-space: normal;overflow-wrap:anywhere;">{{item.data}}</div>
+                            </template>
+                        </Tooltip>
+                    </div>
+                </div>
+            </ListItem>
+            <ListItem v-else>
+                <div>请选择文件</div>
+            </ListItem>
+
+            <template #header>
+                <div class="operations">
+                    <Button :disabled="fileEncrypting" type="primary" @click="filePicker">选择文件</Button>
+                    <Button :disabled="fileEncrypting||!request.inputFiles||request.inputFiles.length<=0" type="success" @click="encryptFile">{{$t('message.encrypt')}}</Button>
+                    <Button :disabled="fileEncrypting||!request.inputFiles||request.inputFiles.length<=0" type="warning" @click="decryptFile">{{$t('message.decrypt')}}</Button>
+                </div>
+            </template>
+        </List>
     </div>
 </div>

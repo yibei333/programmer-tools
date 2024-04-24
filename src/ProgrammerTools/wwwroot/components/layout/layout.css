@@ -167,6 +167,7 @@
     padding-top: .25rem;
     overflow: hidden;
     background: var(--theme-800);
+    user-select: text;
 }
 
 .page-layout-body-content {

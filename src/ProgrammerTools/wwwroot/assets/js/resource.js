@@ -120,6 +120,7 @@ async function importPage(path) {
     let html = await fetch(`/pages${path}/${name}.html`).then(r => r.text());
     let page = await import(`/pages${path}/${name}.js`);
     page.default.template = html;
+    page.default.name = name;
     await addStyle(`/pages${path}/${name}.css`);
     return page;
 }

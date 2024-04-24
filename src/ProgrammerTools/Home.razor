@@ -1,9 +1,9 @@
 @page "/"
 
 <div id="vue-app">
-    <layout>
+    <layout @theme-changed="themeChanged" v-slot="{ keepAliveTabs }">
         <router-view v-slot="{ Component }">
-            <keep-alive>
+            <keep-alive :include="keepAliveTabs">
                 <component :is="Component" />
             </keep-alive>
         </router-view>
@@ -26,7 +26,8 @@
         },
         data() {
             return {
-                size: 5
+                size: 5,
+                theme: 'light',
             }
         },
         mounted() {
@@ -34,6 +35,9 @@
             this.setSize();
         },
         methods: {
+            themeChanged(theme){
+                this.theme = theme;
+            },
             setSize() {
                 let width = window.innerWidth;
 

@@ -71,21 +71,27 @@ public class AesCryptoService : BaseService
             CipherMode = mode.Value,
             Padding = padding.Value,
         };
-        foreach (var file in request.Parameter.InputFiles)
+        await Parallel.ForEachAsync(request.Parameter.InputFiles, async (file, _) =>
         {
-            var fileInfo = new FileInfo(file.FullPath);
-            if (!fileInfo.Exists)
+            try
             {
-                continue;
-            }
-            var targetDirectory = fileInfo.Directory!.FullName;
-            var targetName = $"{file.Name}.encrypted{file.Extension}";
+                await SetInputFileStatus(request, file.FullName, 1);
+                var fileInfo = new FileInfo(file.FullPath);
+                if (!fileInfo.Exists) throw new FileNotFoundException();
+                var targetDirectory = fileInfo.Directory!.FullName;
+                var targetName = $"{file.Name}.encrypted{file.Extension}";
 #if ANDROID
-            targetDirectory = Android.OS.Environment.ExternalStorageDirectory?.Path.CombinePath($"Download") ?? throw new Exception("找不到外部存储目录");
+                targetDirectory = Android.OS.Environment.ExternalStorageDirectory?.Path.CombinePath($"Download") ?? throw new Exception("找不到外部存储目录");
 #endif
-            var targetPath = targetDirectory.CombinePath(targetName);
-            encryption.Symmetric.Aes.EncryptFile(file.FullPath, targetPath, option);
-        }
+                var targetPath = targetDirectory.CombinePath(targetName);
+                await Task.Run(() => encryption.Symmetric.Aes.EncryptFile(file.FullPath, targetPath, option));
+                await SetInputFileStatus(request, file.FullName, 2, targetPath);
+            }
+            catch (Exception ex)
+            {
+                await SetInputFileStatus(request, file.FullName, 3, ex.Message);
+            }
+        });
         await Task.CompletedTask;
     }
 
@@ -106,22 +112,34 @@ public class AesCryptoService : BaseService
             CipherMode = mode.Value,
             Padding = padding.Value,
         };
-        foreach (var file in request.Parameter.InputFiles)
+        await Parallel.ForEachAsync(request.Parameter.InputFiles, async (file, _) =>
         {
-            var fileInfo = new FileInfo(file.FullPath);
-            if (!fileInfo.Exists)
+            try
             {
-                continue;
-            }
-            var targetDirectory = fileInfo.Directory!.FullName;
-            var targetName = $"{file.Name}.decrypted{file.Extension}";
+                await SetInputFileStatus(request, file.FullName, 1);
+                var fileInfo = new FileInfo(file.FullPath);
+                if (!fileInfo.Exists) throw new FileNotFoundException();
+                var targetDirectory = fileInfo.Directory!.FullName;
+                var targetName = $"{file.Name}.decrypted{file.Extension}";
 #if ANDROID
-            targetDirectory = Android.OS.Environment.ExternalStorageDirectory?.Path.CombinePath("Download") ?? throw new Exception("找不到外部存储目录");
+                targetDirectory = Android.OS.Environment.ExternalStorageDirectory?.Path.CombinePath("Download") ?? throw new Exception("找不到外部存储目录");
 #endif
-            var targetPath = targetDirectory.CombinePath(targetName);
-            encryption.Symmetric.Aes.DecryptFile(file.FullPath, targetPath, option);
+                var targetPath = targetDirectory.CombinePath(targetName);
+                await Task.Run(() => encryption.Symmetric.Aes.DecryptFile(file.FullPath, targetPath, option));
+                await SetInputFileStatus(request, file.FullName, 2, targetPath);
+            }
+            catch (Exception ex)
+            {
+                await SetInputFileStatus(request, file.FullName, 3, ex.Message);
+            }
+        });
         await Task.CompletedTask;
-        }
+    }
+
+    async Task SetInputFileStatus(JSRequest request, string name, int status, object? data = null)
+    {
+        if (request.JSObjectReference is null) return;
+        await request.JSObjectReference.InvokeVoidAsync("setInputFileStatus", name, status, data);
     }
 }
 

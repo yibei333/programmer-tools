@@ -22,9 +22,11 @@
             upgrading: false,
             progress: null,
             installing: false,
-            packagePath: null
+            packagePath: null,
+            keepAliveTabs: []
         }
     },
+    emits: ['themeChanged'],
     watch: {
         $route(to) {
             this.updateTabs(to?.name);
@@ -33,10 +35,14 @@
             this.setSize();
         },
         currentTabName() {
-            this.$router.push({ name: this.currentTabName });
+            this.$router.push({ name: this.currentTabName, replace: true });
         },
         theme() {
             this.setTheme();
+            this.$emit('themeChanged', this.theme);
+        },
+        'tabList.length'() {
+            this.keepAliveTabs = this.tabList.map(x => x.name);
         }
     },
     mounted() {
@@ -79,7 +85,7 @@
         nav(id) {
             let name = this.pagesConfigList.filter(x => x.id == id)[0]?.name;
             if (name) {
-                this.$router.push({ name: name });
+                this.$router.push({ name: name, replace: true });
                 if (this.isSmall) this.isMenuOpen = false;
             }
         },

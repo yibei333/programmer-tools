@@ -52,6 +52,12 @@
             copySuccess: '拷贝成功',
             ivFormatError: '向量格式错误',
             keyRequired: '请输入密钥',
+            operateComplete: '操作完成',
+            fileSavedAt: '文件保存在位置',
+            waitExecute: '等待执行',
+            executing: '执行中',
+            success: '成功',
+            fail:'失败',
         }
     },
     English: {
@@ -107,6 +113,12 @@
             copySuccess: 'copy succeed',
             ivFormatError: 'iv format error',
             keyRequired: 'key required',
+            operateComplete: 'operate complete',
+            fileSavedAt: 'file saved at',
+            waitExecute: 'wait execute',
+            executing: 'executing',
+            success: 'success',
+            fail: 'fail',
         }
     },
 };

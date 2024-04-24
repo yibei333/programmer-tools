@@ -16,6 +16,7 @@ export default {
             paddings: ['None', 'PKCS7', 'Zeros', 'ANSIX923', 'ISO10126'],
             hexResult: null,
             hexResultShow: false,
+            fileEncrypting: false,
         }
     },
     mounted() {
@@ -60,22 +61,43 @@ export default {
         },
         async filePicker() {
             let result = await callService('AppService.PickFiles');
-            if (result.success) this.request.inputFiles = result.data;
+            if (result.success) {
+                this.request.inputFiles = result.data;
+                this.initInputFilesStatus();
+            }
             else this.$Message.error(result.description);
         },
         async encryptFile() {
             if (!this.valid()) return;
-            let result = await callService('AesCryptoService.AesEncryptFile', this.request);
+            this.fileEncrypting = true;
+            this.initInputFilesStatus();
+            let result = await callService('AesCryptoService.AesEncryptFile', this.request, this);
+            this.fileEncrypting = false;
             if (result.success) {
-                this.$Message.success('ok');
+                this.$Message.success(this.$t('message.operateComplete'));
             } else this.$Message.error(result.description);
         },
         async decryptFile() {
             if (!this.valid()) return;
-            let result = await callService('AesCryptoService.AesDecryptFile', this.request);
+            this.fileEncrypting = true;
+            this.initInputFilesStatus();
+            let result = await callService('AesCryptoService.AesDecryptFile', this.request, this);
+            this.fileEncrypting = false;
             if (result.success) {
-                this.$Message.success('ok');
+                this.$Message.success(this.$t('message.operateComplete'));
             } else this.$Message.error(result.description);
         },
+        initInputFilesStatus() {
+            this.request.inputFiles.forEach(x => {
+                x.status = 0;
+                x.data = null;
+            });
+        },
+        setInputFileStatus(name, status, data) {
+            let file = this.request.inputFiles.filter(x => x.fullName == name)[0];
+            if (!file) return;
+            file.status = status;
+            file.data = data;
+        }
     }
 }
