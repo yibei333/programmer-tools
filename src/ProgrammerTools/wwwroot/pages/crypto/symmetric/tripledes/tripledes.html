@@ -1,4 +1,4 @@
-<div class="des-page">
+<div class="tripleDes-page">
     <div v-bind:style="{display:'grid',gap:'.5rem','grid-template-columns':'repeat('+($root.size+1)+',1fr)'}">
         <labelinput :label="$t('type')">
             <Select v-model="request.type" :placeholder="$t('type')">
@@ -19,13 +19,13 @@
         </labelinput>
 
         <labelinput :label="$t('key')">
-            <tooltip :text="$t('desKeyNotice')">
+            <tooltip :text="$t('tripleDesKeyNotice')">
                 <Input v-model="request.key" :placeholder="$t('key')" />
             </tooltip>
         </labelinput>
 
         <labelinput :label="$t('iv')" v-if="request.mode!='ECB'">
-            <tooltip :text="$t('desIVNotice')">
+            <tooltip :text="$t('tripleDesIVNotice')">
                 <Input v-model="request.iv" :placeholder="$t('iv')" maxlength="8" show-word-limit />
             </tooltip>
         </labelinput>

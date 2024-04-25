@@ -1,21 +1,21 @@
-.des-page {
+.tripleDes-page {
     display: grid;
     grid-template-rows: auto 1fr;
     height: 100%;
 }
 
-    .des-page .text-container {
+    .tripleDes-page .text-container {
         display: grid;
         grid-template-rows: 1fr auto 1fr;
         gap: .5rem;
         padding: .5rem 0;
     }
 
-        .des-page .text-container .text {
+        .tripleDes-page .text-container .text {
             position: relative;
         }
 
-        .des-page .text-container textarea {
+        .tripleDes-page .text-container textarea {
             width: 100%;
             height: 100%;
             resize: none;
@@ -25,23 +25,23 @@
             padding: .5rem;
         }
 
-            .des-page .text-container textarea:hover {
+            .tripleDes-page .text-container textarea:hover {
                 border-color: var(--blue-200);
             }
 
-            .des-page .text-container textarea:focus {
+            .tripleDes-page .text-container textarea:focus {
                 border-color: var(--blue-200);
                 box-shadow: 0 0 0 2px var(--blue-100);
             }
 
-        .des-page .text-container .operations {
+        .tripleDes-page .text-container .operations {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: .5rem;
             align-items: center;
         }
 
-    .des-page .transfer {
+    .tripleDes-page .transfer {
         position: absolute;
         top: .5rem;
         right: .5rem;
@@ -49,30 +49,30 @@
         display: none;
     }
 
-    .des-page .text:hover .transfer {
+    .tripleDes-page .text:hover .transfer {
         display: inline-flex;
     }
 
-    .des-page .file-container {
+    .tripleDes-page .file-container {
         height: 100%;
         overflow: hidden;
         padding-top: .5rem;
     }
 
-        .des-page .file-container .operations {
+        .tripleDes-page .file-container .operations {
             display: flex;
             gap: .5rem;
             align-items: center;
             justify-content: start;
         }
 
-        .des-page .file-container .file-list {
+        .tripleDes-page .file-container .file-list {
             height: 100%;
             display: grid;
             grid-template-rows: auto 1fr;
         }
 
-            .des-page .file-container .file-list .ivu-list-container {
+            .tripleDes-page .file-container .file-list .ivu-list-container {
                 overflow: auto;
             }
 
@@ -80,11 +80,11 @@
     padding: .5rem !important;
 }
 
-.des-page .ivu-list-item {
+.tripleDes-page .ivu-list-item {
     padding: 1rem .5rem;
 }
 
-.des-page .file-item {
+.tripleDes-page .file-item {
     display: grid;
     grid-template-columns: 1fr auto;
     gap: .5rem;
@@ -92,16 +92,16 @@
     overflow: hidden;
 }
 
-.des-page .file-container .name {
+.tripleDes-page .file-container .name {
     overflow: hidden;
 }
 
 
-.des-page .file-container .status .notice {
+.tripleDes-page .file-container .status .notice {
     text-decoration: underline;
     cursor: pointer
 }
 
-    .des-page .file-container .status .notice:hover {
+    .tripleDes-page .file-container .status .notice:hover {
         color: var(--primary);
     }

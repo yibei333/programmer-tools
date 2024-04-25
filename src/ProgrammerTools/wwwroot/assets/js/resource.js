@@ -32,6 +32,12 @@ const pagesConfig = [
                         pid: 201,
                         path: '/crypto/symmetric/des',
                         name: 'des',
+                    },
+                    {
+                        id: 201003,
+                        pid: 201,
+                        path: '/crypto/symmetric/tripledes',
+                        name: 'tripledes',
                     }
                 ]
             },

@@ -40,12 +40,12 @@ export default {
         },
         async encrypt() {
             if (!this.valid()) return;
-            let data = await callService('AesCryptoService.AesEncrypt', this.request);
+            let data = await callService('AesCryptoService.Encrypt', this.request);
             this.request.cipherText = data;
         },
         async decrypt() {
             if (!this.valid()) return;
-            let data = await callService('AesCryptoService.AesDecrypt', this.request);
+            let data = await callService('AesCryptoService.Decrypt', this.request);
             this.request.plainText = data;
         },
         async copy(text) {
@@ -66,7 +66,7 @@ export default {
             if (!this.valid()) return;
             this.fileEncrypting = true;
             this.initInputFilesStatus();
-            await callService('AesCryptoService.AesEncryptFile', this.request, this);
+            await callService('AesCryptoService.EncryptFile', this.request, this);
             this.fileEncrypting = false;
             notifySuccess(this.$t('operateComplete'));
         },
@@ -74,7 +74,7 @@ export default {
             if (!this.valid()) return;
             this.fileEncrypting = true;
             this.initInputFilesStatus();
-            await callService('AesCryptoService.AesDecryptFile', this.request, this);
+            await callService('AesCryptoService.DecryptFile', this.request, this);
             this.fileEncrypting = false;
             notifySuccess(this.$t('operateComplete'));
         },
