@@ -3,9 +3,9 @@
 采用maui blazor+vue3开发。
 
 # 截图
-<img src="https://gitee.com/developer333/programmer-tools/raw/main/screenshot/aes.png">
+<img src="https://gitee.com/developer333/programmer-tools/raw/main/screenshot/aes.jpg">
 <br>
-<img src="https://gitee.com/developer333/programmer-tools/raw/main/screenshot/aes-file.png">
+<img src="https://gitee.com/developer333/programmer-tools/raw/main/screenshot/aes-file.jpg">
 <br>
 
 # 下载
