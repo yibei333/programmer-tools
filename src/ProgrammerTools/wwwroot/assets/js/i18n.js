@@ -24,6 +24,7 @@ const i18nMessages = {
                 des: 'DES',
                 tripledes: '3DES',
                 asymmetric: '非对称',
+                rsakey: 'RSA密钥',
                 rsa: 'RSA',
             },
             theme: {
@@ -90,6 +91,7 @@ const i18nMessages = {
                 des: 'DES',
                 tripledes: '3DES',
                 asymmetric: 'Asymmetric',
+                rsakey: 'RSA Key',
                 rsa: 'RSA'
             },
             theme: {

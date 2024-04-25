@@ -46,6 +46,8 @@
         }
     },
     mounted() {
+        this.getLocale();
+        this.getTheme();
         this.setTheme();
         this.setSize();
         this.menus = pagesConfig;
@@ -58,6 +60,10 @@
             this.isSmall = this.$root.size == 1;
             this.isMenuOpen = !this.isSmall;
         },
+        async getTheme() {
+            let theme = await callService("SettingService.Get", 'theme');
+            if (theme) this.theme = theme;
+        },
         setTheme() {
             let existed = document.querySelector('link[href*="/assets/css/theme-"]');
             if (existed) document.head.removeChild(existed);
@@ -68,6 +74,7 @@
         },
         selectTheme(theme) {
             this.theme = theme;
+            callService("SettingService.Set", { key: 'theme', value: theme });
         },
 
         updateTabs(name) {
@@ -134,8 +141,13 @@
                 if (this.isSmall) this.isMenuOpen = false;
             }
         },
+        async getLocale() {
+            let locale = await callService("SettingService.Get", 'locale');
+            if (locale) this.$i18n.locale = locale;
+        },
         selectLocale(locale) {
             this.$i18n.locale = locale;
+            callService("SettingService.Set", { key: 'locale', value: locale });
         },
         async openGithub() {
             await callService('AppService.OpenBrowser', staticConfigs.githubUrl);

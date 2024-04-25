@@ -49,6 +49,12 @@ const pagesConfig = [
                     {
                         id: 202001,
                         pid: 202,
+                        path: '/crypto/asymmetric/rsakey',
+                        name: 'rsakey',
+                    },
+                    {
+                        id: 202002,
+                        pid: 202,
                         path: '/crypto/asymmetric/rsa',
                         name: 'rsa',
                     }
