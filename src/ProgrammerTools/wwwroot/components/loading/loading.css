@@ -17,8 +17,8 @@
     .loading svg {
         width: 100%;
         height: 100%;
-        max-width: 4rem;
-        max-height: 4rem;
+        max-width: 3rem;
+        max-height: 3rem;
         animation: rotateAnimation 1s ease-in-out forwards;
         animation-iteration-count: infinite;
     }

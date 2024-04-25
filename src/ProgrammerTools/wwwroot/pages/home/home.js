@@ -4,7 +4,9 @@ export default {
         }
     },
     mounted() {
-        this.$router.push({ name: 'aes' });
+        setTimeout(() => {
+            this.$router.push({ name: 'aes' });
+        }, 20);
     },
     methods: {
         

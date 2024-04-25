@@ -61,8 +61,8 @@ public class AppService : BaseService
             install.PutExtra(Android.Content.Intent.ExtraNotUnknownSource, true);
             Platform.CurrentActivity?.StartActivity(install);
             request.JSObjectReference?.InvokeVoidAsync("notifyInstallUpdate", Result.Succeed());
-            await Task.CompletedTask;
 #endif
+            await Task.CompletedTask;
         }
         catch (Exception ex)
         {

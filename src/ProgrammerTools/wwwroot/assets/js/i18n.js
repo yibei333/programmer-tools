@@ -71,7 +71,8 @@ const i18nMessages = {
         executing: '执行中',
         success: '成功',
         fail: '失败',
-        selectFile: '请选择文件',
+        selectFile: '选择文件',
+        please: '请',
     },
     English: {
         app: {
@@ -131,7 +132,8 @@ const i18nMessages = {
         executing: 'executing',
         success: 'success',
         fail: 'fail',
-        selectFile: 'please select files',
+        selectFile: 'select files',
+        please: 'please',
     },
 };
 

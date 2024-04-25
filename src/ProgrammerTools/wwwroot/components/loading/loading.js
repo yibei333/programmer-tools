@@ -9,4 +9,10 @@ export default {
             default: 'var(--purple)'
         },
     },
+    mounted() {
+        let parent = this.$refs.loading.parentElement;
+        if (parent) {
+            parent.style.position = 'relative';
+        }
+    }
 }

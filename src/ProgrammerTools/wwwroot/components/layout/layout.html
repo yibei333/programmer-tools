@@ -16,7 +16,7 @@
                 </div>
                 <div class="version">
                     <p>v{{currentVersion.version}}</p>
-                    <Button size="small" icon="md-arrow-up" shape="circle" type="primary" ghost @click="showVersion"></Button>
+                    <Button size="small" icon="md-arrow-up" shape="circle" v-bind:type="'primary'" ghost @click="showVersion"></Button>
                 </div>
             </div>
         </Drawer>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="version">
                     <p>v{{currentVersion.version}}</p>
-                    <Button size="small" icon="md-arrow-up" shape="circle" type="primary" ghost @click="showVersion"></Button>
+                    <Button size="small" icon="md-arrow-up" shape="circle" v-bind:type="'primary'" ghost @click="showVersion"></Button>
                 </div>
             </div>
         </div>
@@ -64,8 +64,8 @@
                     </Progress>
                 </div>
                 <div class="operations">
-                    <Button v-if="!lastVersion||lastVersion==currentVersion.version" type="primary" @click="checkUpdate" :loading="checking">{{$t('checkUpdate')}}</Button>
-                    <Button v-else type="success" @click="upgrade" :loading="upgrading||installing">{{$t('installUpdate')}}</Button>
+                    <Button v-if="!lastVersion||lastVersion==currentVersion.version" v-bind:type="'primary'" @click="checkUpdate" :loading="checking">{{$t('checkUpdate')}}</Button>
+                    <Button v-else  v-bind:type="'success'" @click="upgrade" :loading="upgrading||installing">{{$t('installUpdate')}}</Button>
                 </div>
             </div>
         </Modal>
@@ -110,7 +110,7 @@
                     </template>
                 </Dropdown>
                 <Dropdown trigger="click" @on-click="selectLocale">
-                    <Button type="primary" size="small" :title="$t('languages')">
+                    <Button v-bind:type="'primary'" size="small" :title="$t('languages')">
                         {{$i18n.locale}}
                         <Icon type="ios-arrow-down"></Icon>
                     </Button>
