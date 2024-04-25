@@ -94,7 +94,7 @@
         },
         async openGithub() {
             let result = await callService('AppService.OpenBrowser', staticConfigs.githubUrl);
-            if (!result.success) this.$Message.error(result.description);
+            if (!result.success) notifyError(result.description);
         },
         setSize() {
             this.isSmall = this.$root.size == 1;
@@ -141,7 +141,7 @@
         },
         async getCurrentVersion() {
             let result = await callService('AppService.GetAppInfo');
-            if (!result.success) this.$Message.error(result.description);
+            if (!result.success) notifyError(result.description);
             else this.currentVersion = result.data;
         },
         showVersion() {
@@ -161,17 +161,17 @@
             }
             options.url = staticConfigs.githubRawUrl + '/main/pack/version.txt';
             result = await callService('HttpService.HttpRequest', options);
-            if (!result.success) this.$Message.error(result.description);
+            if (!result.success) notifyError(result.description);
             else this.checkComplete(result.data);
         },
         checkComplete(response) {
             this.lastVersion = response.isSuccess ? response.data : null;
             this.checking = false;
             if (response.isSuccess) {
-                if (this.lastVersion == this.currentVersion.version) this.$Message.info(this.$t('alreadyUptodate'));
-                else this.$Message.info(this.$t('newVersionDetected'));
+                if (this.lastVersion == this.currentVersion.version) notifyInfo(this.$t('alreadyUptodate'));
+                else notifyInfo(this.$t('newVersionDetected'));
             }
-            else this.$Message.error(response.message);
+            else notifyError(response.message);
         },
         async upgrade() {
             if (!this.lastVersion || this.lastVersion == this.currentVersion.version) return;
@@ -189,16 +189,16 @@
             };
             let result = await callService('HttpService.Download', options, this);
             if (result.success && result.data.isSuccess) {
-                this.$Message.success(`${this.$t('installPackageSavedAt')}:${result.data.data}`);
+                notifySuccess(`${this.$t('installPackageSavedAt')}:${result.data.data}`);
                 this.upgradeComplete(result.data);
                 return;
             }
 
             options.url = staticConfigs.githubUrl + `/releases/download/${this.lastVersion}/${name}`;
             result = await callService('HttpService.Download', options, this);
-            if (!result.success) this.$Message.error(result.description);
+            if (!result.success) notifyError(result.description);
             else {
-                if (result.data.isSuccess) this.$Message.success(`${this.$t('installPackageSavedAt')}:${result.data.data}`);
+                if (result.data.isSuccess) notifySuccess(`${this.$t('installPackageSavedAt')}:${result.data.data}`);
                 this.upgradeComplete(result.data);
             }
         },
@@ -212,17 +212,17 @@
                 this.packagePath = response.data;
                 this.installUpdate();
             }
-            else this.$Message.error(`${this.$t('downloadFailed')}:${response.message}`);
+            else notifyError(`${this.$t('downloadFailed')}:${response.message}`);
         },
         async installUpdate() {
             if (!this.packagePath) return;
             this.installing = true;
             let result = await callService('AppService.Upgrade', this.packagePath, this);
-            if (!result.success) this.$Message.error(result.description);
+            if (!result.success) notifyError(result.description);
         },
         notifyInstallUpdate(res) {
             this.installing = false;
-            if (!res.success) this.$Message.error(res.description);
+            if (!res.success) notifyError(res.description);
         }
     }
 }

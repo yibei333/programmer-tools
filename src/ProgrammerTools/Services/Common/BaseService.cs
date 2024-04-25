@@ -1,4 +1,5 @@
-﻿using Microsoft.JSInterop;
+﻿using CommunityToolkit.Maui.Alerts;
+using Microsoft.JSInterop;
 using Newtonsoft.Json;
 using SharpDevLib;
 using SharpDevLib.Extensions.Http;
@@ -52,6 +53,7 @@ public class BaseService
         }
         return methodInfo ?? throw new Exception($"can't find method of name '{methodName}'");
     }
+    public static IJSRuntime? JSRuntime { get; set; }
 
     [JSInvokable]
     public static async Task<Result<object?>> Invoke(InvokeRequest invokeRequest)
@@ -96,8 +98,21 @@ public class BaseService
         }
         catch (Exception ex)
         {
+            NotifyError(ex.Message);
             App.Logger.Error(ex);
             return Result.Failed<object?>(ex.Message);
+        }
+    }
+
+    static async void NotifyError(string message)
+    {
+        if (JSRuntime is null)
+        {
+            await Toast.Make(message, CommunityToolkit.Maui.Core.ToastDuration.Long).Show();
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("notifyError", message);
         }
     }
 }

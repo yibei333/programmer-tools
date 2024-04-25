@@ -1,4 +1,15 @@
 @page "/"
+@using Microsoft.JSInterop
+@using ProgrammerTools.Services.Common
+@inject IJSRuntime _js
+
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+        BaseService.JSRuntime = _js;
+    }
+}
 
 <div id="vue-app">
     <layout @theme-changed="themeChanged" v-slot="{ keepAliveTabs }">
@@ -35,7 +46,7 @@
             this.setSize();
         },
         methods: {
-            themeChanged(theme){
+            themeChanged(theme) {
                 this.theme = theme;
             },
             setSize() {

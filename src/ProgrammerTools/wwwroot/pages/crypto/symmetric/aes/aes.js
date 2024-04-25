@@ -29,11 +29,11 @@ export default {
     methods: {
         valid() {
             if (!this.request.key) {
-                this.$Message.warning(this.$t('keyRequired'));
+                notifyWarning(this.$t('keyRequired'));
                 return false;
             }
             if (this.request.mode != 'ECB' && (!this.request.iv || this.request.iv.length != 16)) {
-                this.$Message.warning(this.$t('ivFormatError'));
+                notifyWarning(this.$t('ivFormatError'));
                 return false;
             }
             return true;
@@ -42,18 +42,18 @@ export default {
             if (!this.valid()) return;
             let result = await callService('AesCryptoService.AesEncrypt', this.request);
             if (result.success) this.request.cipherText = result.data;
-            else this.$Message.error(result.description);
+            else notifyError(result.description);
         },
         async decrypt() {
             if (!this.valid()) return;
             let result = await callService('AesCryptoService.AesDecrypt', this.request);
             if (result.success) this.request.plainText = result.data;
-            else this.$Message.error(result.description);
+            else notifyError(result.description);
         },
         async copy(text) {
             let result = await callService('AppService.SetClipboard', text);
-            if (result.success) this.$Message.success(this.$t('copySuccess'));
-            else this.$Message.error(result.description);
+            if (result.success) notifySuccess(this.$t('copySuccess'));
+            else notifyError(result.description);
         },
         async convertToHex(text) {
             let result = await callService('EncodeService.ConvertBase64ToHext', text);
@@ -61,7 +61,7 @@ export default {
                 this.hexResult = result.data;
                 this.hexResultShow = true;
             }
-            else this.$Message.error(result.description);
+            else notifyError(result.description);
         },
         async filePicker() {
             let result = await callService('AppService.PickFiles');
@@ -69,7 +69,7 @@ export default {
                 this.request.inputFiles = result.data;
                 this.initInputFilesStatus();
             }
-            else this.$Message.error(result.description);
+            else notifyError(result.description);
         },
         async encryptFile() {
             if (!this.valid()) return;
@@ -78,8 +78,8 @@ export default {
             let result = await callService('AesCryptoService.AesEncryptFile', this.request, this);
             this.fileEncrypting = false;
             if (result.success) {
-                this.$Message.success(this.$t('operateComplete'));
-            } else this.$Message.error(result.description);
+                notifySuccess(this.$t('operateComplete'));
+            } else notifyError(result.description);
         },
         async decryptFile() {
             if (!this.valid()) return;
@@ -88,8 +88,8 @@ export default {
             let result = await callService('AesCryptoService.AesDecryptFile', this.request, this);
             this.fileEncrypting = false;
             if (result.success) {
-                this.$Message.success(this.$t('operateComplete'));
-            } else this.$Message.error(result.description);
+                notifySuccess(this.$t('operateComplete'));
+            } else notifyError(result.description);
         },
         initInputFilesStatus() {
             this.request.inputFiles.forEach(x => {
