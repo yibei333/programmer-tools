@@ -1,68 +1,57 @@
 <div class="aes-page">
     <div v-bind:style="{display:'grid',gap:'.5rem','grid-template-columns':'repeat('+($root.size+1)+',1fr)'}">
-        <div class="label-input">
-            <label>{{$t('message.type')}}</label>
-            <Select v-model="request.type" :placeholder="$t('message.type')">
-                <Option v-for="item in types" :value="item" :key="item">{{ $t('message.'+item) }}</Option>
+        <labelinput :label="$t('type')">
+            <Select v-model="request.type" :placeholder="$t('type')">
+                <Option v-for="item in types" :value="item" :key="item">{{ $t(item) }}</Option>
             </Select>
-        </div>
+        </labelinput>
 
-        <div class="label-input">
-            <label>{{$t('message.mode')}}</label>
-            <Select v-model="request.mode" :placeholder="$t('message.mode')">
+        <labelinput :label="$t('mode')">
+            <Select v-model="request.mode" :placeholder="$t('mode')">
                 <Option v-for="item in modes" :value="item" :key="item">{{item}}</Option>
             </Select>
-        </div>
+        </labelinput>
 
-        <div class="label-input">
-            <label>{{$t('message.padding')}}</label>
-            <Select v-model="request.padding" :placeholder="$t('message.padding')">
+        <labelinput :label="$t('padding')">
+            <Select v-model="request.padding" :placeholder="$t('padding')">
                 <Option v-for="item in paddings" :value="item" :key="item">{{item}}</Option>
             </Select>
-        </div>
+        </labelinput>
 
-        <div class="label-input">
-            <label>{{$t('message.key')}}</label>
-            <Tooltip placement="top" :theme="$root.theme">
-                <Input v-model="request.key" :placeholder="$t('message.key')" />
-                <template #content>
-                    <div style="white-space: normal;">{{$t('message.aesKeyNotice')}}</div>
-                </template>
-            </Tooltip>
-        </div>
+        <labelinput :label="$t('key')">
+            <tooltip :text="$t('aesKeyNotice')">
+                <Input v-model="request.key" :placeholder="$t('key')" />
+            </tooltip>
+        </labelinput>
 
-        <div class="label-input" v-if="request.mode!='ECB'">
-            <label>{{$t('message.iv')}}</label>
-            <Tooltip placement="top" :theme="$root.theme">
-                <Input v-model="request.iv" :placeholder="$t('message.iv')" maxlength="16" show-word-limit />
-                <template #content>
-                    <div style="white-space: normal;">{{$t('message.aesIVNotice')}}</div>
-                </template>
-            </Tooltip>
-        </div>
+        <labelinput :label="$t('iv')" v-if="request.mode!='ECB'">
+            <tooltip :text="$t('aesIVNotice')">
+                <Input v-model="request.iv" :placeholder="$t('iv')" maxlength="16" show-word-limit />
+            </tooltip>
+        </labelinput>
     </div>
 
     <div class="text-container" v-if="request.type=='txt'">
         <div class="text">
-            <textarea v-model="request.plainText" :placeholder="$t('message.plainText')" />
+            <textarea v-model="request.plainText" :placeholder="$t('plainText')" />
             <div class="transfer" v-if="request.plainText">
-                <Button @click="copy(request.plainText)">{{$t('message.copy')}}</Button>
+                <Button @click="copy(request.plainText)">{{$t('copy')}}</Button>
             </div>
         </div>
         <div class="operations">
-            <Button :disabled="!request.plainText" type="primary" @click="encrypt" icon="md-arrow-down">{{$t('message.encrypt')}}</Button>
-            <Button :disabled="!request.cipherText" type="primary" @click="decrypt" icon="md-arrow-up">{{$t('message.decrypt')}}</Button>
+            <Button :disabled="!request.plainText" type="primary" @click="encrypt" icon="md-arrow-down">{{$t('encrypt')}}</Button>
+            <Button :disabled="!request.cipherText" type="primary" @click="decrypt" icon="md-arrow-up">{{$t('decrypt')}}</Button>
         </div>
         <div class="text">
-            <textarea v-model="request.cipherText" :placeholder="$t('message.cipherText')" />
+            <textarea v-model="request.cipherText" :placeholder="$t('cipherText')" />
             <div class="transfer" v-if="request.cipherText">
-                <Button @click="convertToHex(request.cipherText)">{{$t('message.convertToHex')}}</Button>
-                <Button @click="copy(request.cipherText)">{{$t('message.copy')}}</Button>
+                <Button @click="convertToHex(request.cipherText)">{{$t('convertToHex')}}</Button>
+                <Button @click="copy(request.cipherText)">{{$t('copy')}}</Button>
             </div>
             <Modal v-model="hexResultShow"
                    width="250px"
-                   :title="$t('message.convertToHex')"
-                   :ok-text="$t('message.copy')"
+                   :title="$t('convertToHex')"
+                   :ok-text="$t('copy')"
                    @on-ok="copy(hexResult)"
                    @on-cancel="hexResultShow=false">
                 <Input v-model="hexResult" type="textarea" autosize="true" />
@@ -75,52 +64,44 @@
             <ListItem v-if="request.inputFiles&&request.inputFiles.length>0" v-for="item in request.inputFiles">
                 <div class="file-item">
                     <div class="name">
-                        <Tooltip placement="top" :theme="$root.theme">
+                        <tooltip :text="item.fullName">
                             <div style="min-width:200px">{{item.fullName}}</div>
-                            <template #content>
-                                <div style="white-space: normal;overflow-wrap:anywhere;">{{item.fullName}}</div>
-                            </template>
-                        </Tooltip>
+                        </tooltip>
                     </div>
                     <div class="status">
                         <div v-if="item.status==0">
-                            {{$t('message.waitExecute')}}
+                            {{$t('waitExecute')}}
                             <Icon type="md-alarm" size="18" />
                         </div>
                         <div v-if="item.status==1">
-                            {{$t('message.executing')}}
+                            {{$t('executing')}}
                             <Icon type="ios-loading" color="var(--primary)" size="18" style="animation: rotateAnimation 1s ease-in-out forwards; animation-iteration-count: infinite;" />
                         </div>
-                        <Tooltip v-if="item.status==2" placement="left" :theme="$root.theme">
+                        <tooltip v-if="item.status==2" placement="left" :text="$t('fileSavedAt')+':'+item.data">
                             <div class="notice">
-                                {{$t('message.success')}}
+                                {{$t('success')}}
                                 <Icon type="ios-checkmark-circle" color="var(--success)" size="18" />
                             </div>
-                            <template #content>
-                                <div style="white-space: normal;overflow-wrap:anywhere;">{{$t('message.fileSavedAt')}}:{{item.data}}</div>
-                            </template>
-                        </Tooltip>
-                        <Tooltip v-if="item.status==3" placement="left" :theme="$root.theme">
+                        </tooltip>
+
+                        <tooltip v-if="item.status==3" placement="left" :text="item.data">
                             <div class="notice">
-                                {{$t('message.fail')}}
+                                {{$t('fail')}}
                                 <Icon type="md-close-circle" color="var(--danger)" size="18" />
                             </div>
-                            <template #content>
-                                <div style="white-space: normal;overflow-wrap:anywhere;">{{item.data}}</div>
-                            </template>
-                        </Tooltip>
+                        </tooltip>
                     </div>
                 </div>
             </ListItem>
             <ListItem v-else>
-                <div>请选择文件</div>
+                <div>{{$t('selectFile')}}</div>
             </ListItem>
 
             <template #header>
                 <div class="operations">
                     <Button :disabled="fileEncrypting" type="primary" @click="filePicker">选择文件</Button>
-                    <Button :disabled="fileEncrypting||!request.inputFiles||request.inputFiles.length<=0" type="success" @click="encryptFile">{{$t('message.encrypt')}}</Button>
-                    <Button :disabled="fileEncrypting||!request.inputFiles||request.inputFiles.length<=0" type="warning" @click="decryptFile">{{$t('message.decrypt')}}</Button>
+                    <Button :disabled="fileEncrypting||!request.inputFiles||request.inputFiles.length<=0" type="success" @click="encryptFile">{{$t('encrypt')}}</Button>
+                    <Button :disabled="fileEncrypting||!request.inputFiles||request.inputFiles.length<=0" type="warning" @click="decryptFile">{{$t('decrypt')}}</Button>
                 </div>
             </template>
         </List>

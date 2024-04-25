@@ -1,4 +1,8 @@
 export default {
+    components: {
+        labelinput: Vue.defineAsyncComponent(async () => await importComponent('labelinput')),
+        tooltip: Vue.defineAsyncComponent(async () => await importComponent('tooltip')),
+    },
     data() {
         return {
             request: {
@@ -25,11 +29,11 @@ export default {
     methods: {
         valid() {
             if (!this.request.key) {
-                this.$Message.warning(this.$t('message.keyRequired'));
+                this.$Message.warning(this.$t('keyRequired'));
                 return false;
             }
             if (this.request.mode != 'ECB' && (!this.request.iv || this.request.iv.length != 16)) {
-                this.$Message.warning(this.$t('message.ivFormatError'));
+                this.$Message.warning(this.$t('ivFormatError'));
                 return false;
             }
             return true;
@@ -48,7 +52,7 @@ export default {
         },
         async copy(text) {
             let result = await callService('AppService.SetClipboard', text);
-            if (result.success) this.$Message.success(this.$t('message.copySuccess'));
+            if (result.success) this.$Message.success(this.$t('copySuccess'));
             else this.$Message.error(result.description);
         },
         async convertToHex(text) {
@@ -74,7 +78,7 @@ export default {
             let result = await callService('AesCryptoService.AesEncryptFile', this.request, this);
             this.fileEncrypting = false;
             if (result.success) {
-                this.$Message.success(this.$t('message.operateComplete'));
+                this.$Message.success(this.$t('operateComplete'));
             } else this.$Message.error(result.description);
         },
         async decryptFile() {
@@ -84,7 +88,7 @@ export default {
             let result = await callService('AesCryptoService.AesDecryptFile', this.request, this);
             this.fileEncrypting = false;
             if (result.success) {
-                this.$Message.success(this.$t('message.operateComplete'));
+                this.$Message.success(this.$t('operateComplete'));
             } else this.$Message.error(result.description);
         },
         initInputFilesStatus() {

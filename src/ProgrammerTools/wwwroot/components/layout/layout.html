@@ -4,7 +4,7 @@
             <template #header>
                 <div class="page-layout-brand">
                     <Icon type="ios-hammer-outline" size="24" />
-                    <span>{{$t('appName')}}</span>
+                    <span>{{$t('app.name')}}</span>
                     <Icon type="ios-close" size="24" @click="isMenuOpen=false" />
                 </div>
             </template>
@@ -24,7 +24,7 @@
         <div v-else v-bind:class="['large',isMenuOpen?'show':'hide']">
             <div class="page-layout-brand">
                 <Icon type="ios-hammer-outline" size="24" />
-                <span>{{$t('appName')}}</span>
+                <span>{{$t('app.name')}}</span>
                 <Icon type="ios-close" size="24" @click="isMenuOpen=false" />
             </div>
             <div class="page-layout-nav-body">
@@ -44,28 +44,28 @@
             <template #header>
                 <p style="color:var(--primary);display:flex;justify-content:center;align-items:center;">
                     <Icon type="md-arrow-up"></Icon>
-                    <span style="margin-top:4px">{{$t('message.checkUpdate')}}</span>
+                    <span style="margin-top:4px">{{$t('checkUpdate')}}</span>
                 </p>
             </template>
             <div class="versionModalBody">
                 <div style="display:grid;grid-template-columns:auto 1fr;grid-template-rows:repeat(4,auto);gap:.5rem;">
-                    <p style="grid-row:1;grid-column:1;text-align:right;padding-right:.5rem;">{{$t('message.platform')}}:</p>
+                    <p style="grid-row:1;grid-column:1;text-align:right;padding-right:.5rem;">{{$t('platform')}}:</p>
                     <p style="grid-row:1;grid-column:2;font-weight:bold;">{{currentVersion.platform}}</p>
 
-                    <p style="grid-row:2;grid-column:1;text-align:right;padding-right:.5rem;">{{$t('message.currentVersion')}}:</p>
+                    <p style="grid-row:2;grid-column:1;text-align:right;padding-right:.5rem;">{{$t('currentVersion')}}:</p>
                     <p style="grid-row:2;grid-column:2;font-weight:bold;">v{{currentVersion.version}}</p>
 
-                    <p v-if="lastVersion" style="grid-row:3;grid-column:1;text-align:right;padding-right:.5rem;">{{$t('message.lastVersion')}}:</p>
+                    <p v-if="lastVersion" style="grid-row:3;grid-column:1;text-align:right;padding-right:.5rem;">{{$t('lastVersion')}}:</p>
                     <p v-if="lastVersion" style="grid-row:3;grid-column:2;font-weight:bold;">v{{lastVersion}}</p>
                 </div>
                 <div v-if="progress" class="progress">
                     <Progress :percent="progress.progress" status="active">
-                        <span>{{$t('message.progress')}}:{{progress.progressString}}&nbsp;&nbsp;{{$t('message.downloadSpeed')}}:{{progress.speed}}</span>
+                        <span>{{$t('progress')}}:{{progress.progressString}}&nbsp;&nbsp;{{$t('downloadSpeed')}}:{{progress.speed}}</span>
                     </Progress>
                 </div>
                 <div class="operations">
-                    <Button v-if="!lastVersion||lastVersion==currentVersion.version" type="primary" @click="checkUpdate" :loading="checking">{{$t('message.checkUpdate')}}</Button>
-                    <Button v-else type="success" @click="upgrade" :loading="upgrading||installing">{{$t('message.installUpdate')}}</Button>
+                    <Button v-if="!lastVersion||lastVersion==currentVersion.version" type="primary" @click="checkUpdate" :loading="checking">{{$t('checkUpdate')}}</Button>
+                    <Button v-else type="success" @click="upgrade" :loading="upgrading||installing">{{$t('installUpdate')}}</Button>
                 </div>
             </div>
         </Modal>
@@ -74,9 +74,9 @@
     <div class="page-layout-header">
         <div class="content start">
             <Space v-if="!isMenuOpen">
-                <Icon type="ios-menu" @click="isMenuOpen=true" size="20" color="var(--primary)" :title="$t('message.menu')" />
+                <Icon type="ios-menu" @click="isMenuOpen=true" size="20" color="var(--primary)" :title="$t('menu')" />
                 <Icon type="ios-hammer-outline" size="24" />
-                <span>{{$t('appName')}}</span>
+                <span>{{$t('app.name')}}</span>
             </Space>
         </div>
         <div class="content center">
@@ -84,7 +84,7 @@
         <div class="content end">
             <Space>
                 <Dropdown trigger="click" @on-click="selectTheme">
-                    <button class="theme-button" :title="$t('message.themes')">
+                    <button class="theme-button" :title="$t('themes')">
                         <svg viewBox="0 0 1024 1024" width="24" height="24">
                             <path d="M512 512c0-141.44-114.56-256-256-256S0 370.56 0 512c0 46.72 12.8 90.24 34.56 128 0-88.32 45.44-174.08 128-221.44A255.488 255.488 0 0 1 512 512z" fill="#0FFCE4"></path>
                             <path d="M511.744 512a255.488 255.488 0 0 0-349.44-93.44A255.488 255.488 0 0 0 68.864 768c23.04 40.32 55.68 72.32 93.44 93.44a255.808 255.808 0 0 1 0-256A256.192 256.192 0 0 1 511.744 512z" fill="#0FFCE4"></path>
@@ -104,13 +104,13 @@
                         <DropdownMenu>
                             <DropdownItem v-for="item in themes" v-bind:name="item" v-bind:selected="item==theme">
                                 <div class="theme-color" v-bind:style="{width:'24px',height:'24px',background:'var(--'+item+')'}"></div>
-                                {{ $t('theme.'+item) }}
+                                {{ $t('app.theme.'+item) }}
                             </DropdownItem>
                         </DropdownMenu>
                     </template>
                 </Dropdown>
                 <Dropdown trigger="click" @on-click="selectLocale">
-                    <Button type="primary" size="small" :title="$t('message.languages')">
+                    <Button type="primary" size="small" :title="$t('languages')">
                         {{$i18n.locale}}
                         <Icon type="ios-arrow-down"></Icon>
                     </Button>
@@ -120,14 +120,14 @@
                         </DropdownMenu>
                     </template>
                 </Dropdown>
-                <Icon type="logo-github" @click="openGithub" size="24" color="var(--theme-reverse)" :title="$t('message.sourceRepository')" />
+                <Icon type="logo-github" @click="openGithub" size="24" color="var(--theme-reverse)" :title="$t('sourceRepository')" />
             </Space>
         </div>
     </div>
 
     <div class="page-layout-route-tabs">
         <Tabs type="card" :draggable="true" @on-drag-drop="handleDragDrop" closable @on-tab-remove="handleTabRemove" v-model:model-value="currentTabName">
-            <TabPane v-for="(tab, index) in tabList" :index="index" :label="$t('menus.'+tab.name)" :name="tab.name" :closable="tabList.length>1" v-bind:data-id="tab.id" />
+            <TabPane v-for="(tab, index) in tabList" :index="index" :label="$t('app.menus.'+tab.name)" :name="tab.name" :closable="tabList.length>1" v-bind:data-id="tab.id" />
         </Tabs>
     </div>
 

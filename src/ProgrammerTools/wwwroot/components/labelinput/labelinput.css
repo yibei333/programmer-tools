@@ -1,0 +1,19 @@
+.label-input {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+    .label-input label {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid var(--gray-300);
+        background: var(--label);
+        border-radius: 4px 0 0 4px;
+        padding: 0 .5rem;
+        border-right: 0;
+    }
+
+    .label-input .ivu-select-selection, .label-input input {
+        border-radius: 0 4px 4px 0;
+    }

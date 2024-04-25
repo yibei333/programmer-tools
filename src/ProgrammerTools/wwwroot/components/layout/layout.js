@@ -168,8 +168,8 @@
             this.lastVersion = response.isSuccess ? response.data : null;
             this.checking = false;
             if (response.isSuccess) {
-                if (this.lastVersion == this.currentVersion.version) this.$Message.info(this.$t('message.alreadyUptodate'));
-                else this.$Message.info(this.$t('message.newVersionDetected'));
+                if (this.lastVersion == this.currentVersion.version) this.$Message.info(this.$t('alreadyUptodate'));
+                else this.$Message.info(this.$t('newVersionDetected'));
             }
             else this.$Message.error(response.message);
         },
@@ -189,7 +189,7 @@
             };
             let result = await callService('HttpService.Download', options, this);
             if (result.success && result.data.isSuccess) {
-                this.$Message.success(`${this.$t('message.installPackageSavedAt')}:${result.data.data}`);
+                this.$Message.success(`${this.$t('installPackageSavedAt')}:${result.data.data}`);
                 this.upgradeComplete(result.data);
                 return;
             }
@@ -198,7 +198,7 @@
             result = await callService('HttpService.Download', options, this);
             if (!result.success) this.$Message.error(result.description);
             else {
-                if (result.data.isSuccess) this.$Message.success(`${this.$t('message.installPackageSavedAt')}:${result.data.data}`);
+                if (result.data.isSuccess) this.$Message.success(`${this.$t('installPackageSavedAt')}:${result.data.data}`);
                 this.upgradeComplete(result.data);
             }
         },
@@ -212,7 +212,7 @@
                 this.packagePath = response.data;
                 this.installUpdate();
             }
-            else this.$Message.error(`${this.$t('message.downloadFailed')}:${response.message}`);
+            else this.$Message.error(`${this.$t('downloadFailed')}:${response.message}`);
         },
         async installUpdate() {
             if (!this.packagePath) return;

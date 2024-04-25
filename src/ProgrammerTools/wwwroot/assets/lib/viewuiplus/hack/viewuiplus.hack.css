@@ -1,0 +1,18 @@
+
+@media (max-width: 576px) {
+    .ivu-modal {
+        width: 300px !important;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .ivu-modal {
+        width: 300px !important;
+        margin: 0 auto;
+    }
+}
+
+.ivu-tooltip-rel {
+    width: 100%;
+}

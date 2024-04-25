@@ -7,12 +7,6 @@
     { key: 'linux', value: 5 },
 ];
 
-function getPlatform() {
-    let ua = navigator.userAgent.toLowerCase();
-    let platform = platforms.filter(x => ua.indexOf(x.key) > -1)[0];
-    return platform?.value ?? 0;
-}
-
 function invokeSharpMethod(name, parameter, parameterRefercence) {
     return DotNet.invokeMethodAsync("ProgrammerTools", name, {
         parameterRefercence: parameterRefercence ? DotNet.createJSObjectReference(parameterRefercence) : null,
