@@ -40,56 +40,43 @@ export default {
         },
         async encrypt() {
             if (!this.valid()) return;
-            let result = await callService('AesCryptoService.AesEncrypt', this.request);
-            if (result.success) this.request.cipherText = result.data;
-            else notifyError(result.description);
+            let data = await callService('AesCryptoService.AesEncrypt', this.request);
+            this.request.cipherText = data;
         },
         async decrypt() {
             if (!this.valid()) return;
-            let result = await callService('AesCryptoService.AesDecrypt', this.request);
-            if (result.success) this.request.plainText = result.data;
-            else notifyError(result.description);
+            let data = await callService('AesCryptoService.AesDecrypt', this.request);
+            this.request.plainText = data;
         },
         async copy(text) {
-            let result = await callService('AppService.SetClipboard', text);
-            if (result.success) notifySuccess(this.$t('copySuccess'));
-            else notifyError(result.description);
+            await callService('AppService.SetClipboard', text);
+            notifySuccess(this.$t('copySuccess'));
         },
         async convertToHex(text) {
-            let result = await callService('EncodeService.ConvertBase64ToHext', text);
-            if (result.success) {
-                this.hexResult = result.data;
-                this.hexResultShow = true;
-            }
-            else notifyError(result.description);
+            let data = await callService('EncodeService.ConvertBase64ToHext', text);
+            this.hexResult = data;
+            this.hexResultShow = true;
         },
         async filePicker() {
-            let result = await callService('AppService.PickFiles');
-            if (result.success) {
-                this.request.inputFiles = result.data;
-                this.initInputFilesStatus();
-            }
-            else notifyError(result.description);
+            let data = await callService('AppService.PickFiles');
+            this.request.inputFiles = data;
+            this.initInputFilesStatus();
         },
         async encryptFile() {
             if (!this.valid()) return;
             this.fileEncrypting = true;
             this.initInputFilesStatus();
-            let result = await callService('AesCryptoService.AesEncryptFile', this.request, this);
+            await callService('AesCryptoService.AesEncryptFile', this.request, this);
             this.fileEncrypting = false;
-            if (result.success) {
-                notifySuccess(this.$t('operateComplete'));
-            } else notifyError(result.description);
+            notifySuccess(this.$t('operateComplete'));
         },
         async decryptFile() {
             if (!this.valid()) return;
             this.fileEncrypting = true;
             this.initInputFilesStatus();
-            let result = await callService('AesCryptoService.AesDecryptFile', this.request, this);
+            await callService('AesCryptoService.AesDecryptFile', this.request, this);
             this.fileEncrypting = false;
-            if (result.success) {
-                notifySuccess(this.$t('operateComplete'));
-            } else notifyError(result.description);
+            notifySuccess(this.$t('operateComplete'));
         },
         initInputFilesStatus() {
             this.request.inputFiles.forEach(x => {

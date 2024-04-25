@@ -53,6 +53,7 @@ public class BaseService
         }
         return methodInfo ?? throw new Exception($"can't find method of name '{methodName}'");
     }
+
     public static IJSRuntime? JSRuntime { get; set; }
 
     [JSInvokable]
@@ -104,7 +105,7 @@ public class BaseService
         }
     }
 
-    static async void NotifyError(string message)
+    protected static async void NotifyError(string message)
     {
         if (JSRuntime is null)
         {

@@ -14,11 +14,30 @@ function invokeSharpMethod(name, parameter, parameterRefercence) {
     });
 }
 
-function callService(signature, request, objectRefercence) {
+function callServiceFull(signature, request, objectRefercence) {
     return DotNet.invokeMethodAsync("ProgrammerTools", "Invoke", {
         signature: signature,
         jSObjectReference: objectRefercence ? DotNet.createJSObjectReference(objectRefercence) : null,
         json: request ? (request instanceof Object ? JSON.stringify(request) : request) : null
+    });
+}
+
+function callService(signature, request, objectRefercence) {
+    return new Promise((resolve, reject) => {
+        DotNet.invokeMethodAsync("ProgrammerTools", "Invoke", {
+            signature: signature,
+            jSObjectReference: objectRefercence ? DotNet.createJSObjectReference(objectRefercence) : null,
+            json: request ? (request instanceof Object ? JSON.stringify(request) : request) : null
+        }).then(result => {
+            if (result.success) resolve(result.data);
+            else {
+                console.log(result);
+                reject(result);
+            }
+        }).catch(error => {
+            console.log(error);
+            reject(error);
+        });
     });
 }
 

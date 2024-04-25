@@ -1,4 +1,5 @@
-﻿using Microsoft.JSInterop;
+﻿using DocumentFormat.OpenXml.Drawing.Diagrams;
+using Microsoft.JSInterop;
 using ProgrammerTools.Services.Common;
 using SharpDevLib;
 using SharpDevLib.Extensions.Encryption;
@@ -10,108 +11,78 @@ namespace ProgrammerTools.Services.Crypto;
 
 public class AesCryptoService : BaseService
 {
+    IEncryption _encryption;
+
+    public AesCryptoService()
+    {
+        _encryption = App.ServiceProvider.GetRequiredService<IEncryption>();
+    }
+
     public async Task<string> AesEncrypt(JSRequest<AesEncryptRequest> request)
     {
-        if (request.Parameter is null) throw new Exception("parameter required");
-        if (request.Parameter.Key is null) throw new Exception("key required");
-        if (request.Parameter.PlainText is null) throw new Exception("plain text required");
-        CipherMode? mode = Enum.TryParse(typeof(CipherMode), request.Parameter.Mode, out var x) ? (CipherMode)x : null;
-        if (mode is null) throw new Exception("cipher mode required");
-        if (mode != CipherMode.ECB && request.Parameter.IV is null) throw new Exception("iv required");
-        PaddingMode? padding = Enum.TryParse(typeof(PaddingMode), request.Parameter.Padding, out var y) ? (PaddingMode)y : null;
-        if (padding is null) throw new Exception("cipher padding required");
+        if (request.Parameter.PlainText is null) throw new ArgumentNullException(nameof(request.Parameter.PlainText));
+        this.VerifyAesRequest(request, out var mode, out var padding);
 
-        var encryption = App.ServiceProvider.GetRequiredService<IEncryption>();
-        var option = new AesEncryptOption(request.Parameter.Key, request.Parameter.IV.NotEmpty() ? Encoding.UTF8.GetBytes(request.Parameter.IV!) : [])
-        {
-            CipherMode = mode.Value,
-            Padding = padding.Value,
-        };
-        var cipherBytes = encryption.Symmetric.Aes.Encrypt(request.Parameter.PlainText, option);
+        var option = CreateEncryptionOption<AesEncryptOption>(request, mode, padding);
+        var cipherBytes = _encryption.Symmetric.Aes.Encrypt(request.Parameter.PlainText, option);
         var cipherText = Convert.ToBase64String(cipherBytes);
         return await Task.FromResult(cipherText);
     }
 
     public async Task<string> AesDecrypt(JSRequest<AesEncryptRequest> request)
     {
-        if (request.Parameter is null) throw new Exception("parameter required");
-        if (request.Parameter.Key is null) throw new Exception("key required");
-        if (request.Parameter.CipherText is null) throw new Exception("cipher text required");
-        CipherMode? mode = Enum.TryParse(typeof(CipherMode), request.Parameter.Mode, out var x) ? (CipherMode)x : null;
-        if (mode is null) throw new Exception("cipher mode required");
-        if (mode != CipherMode.ECB && request.Parameter.IV is null) throw new Exception("iv required");
-        PaddingMode? padding = Enum.TryParse(typeof(PaddingMode), request.Parameter.Padding, out var y) ? (PaddingMode)y : null;
-        if (padding is null) throw new Exception("cipher padding required");
+        if (request.Parameter.CipherText is null) throw new ArgumentNullException(nameof(request.Parameter.CipherText));
+        this.VerifyAesRequest(request, out var mode, out var padding);
 
-        var encryption = App.ServiceProvider.GetRequiredService<IEncryption>();
-        var option = new AesDecryptOption(request.Parameter.Key, request.Parameter.IV.NotEmpty() ? Encoding.UTF8.GetBytes(request.Parameter.IV!) : [])
-        {
-            CipherMode = mode.Value,
-            Padding = padding.Value,
-        };
-        var plainBytes = encryption.Symmetric.Aes.Decrypt(request.Parameter.CipherText, option);
+        var option = CreateEncryptionOption<AesDecryptOption>(request, mode, padding);
+        var plainBytes = _encryption.Symmetric.Aes.Decrypt(request.Parameter.CipherText, option);
         var plainText = Encoding.UTF8.GetString(plainBytes);
         return await Task.FromResult(plainText);
     }
 
     public async Task AesEncryptFile(JSRequest<AesEncryptRequest> request)
     {
-        if (request.Parameter is null) throw new Exception("parameter required");
-        if (request.Parameter.Key is null) throw new Exception("key required");
-        if (request.Parameter.InputFiles is null || request.Parameter.InputFiles.Count <= 0) throw new Exception("input files required");
-        CipherMode? mode = Enum.TryParse(typeof(CipherMode), request.Parameter.Mode, out var x) ? (CipherMode)x : null;
-        if (mode is null) throw new Exception("cipher mode required");
-        if (mode != CipherMode.ECB && request.Parameter.IV is null) throw new Exception("iv required");
-        PaddingMode? padding = Enum.TryParse(typeof(PaddingMode), request.Parameter.Padding, out var y) ? (PaddingMode)y : null;
-        if (padding is null) throw new Exception("cipher padding required");
+        if (request.Parameter.InputFiles is null || request.Parameter.InputFiles.Count <= 0) throw new ArgumentNullException(nameof(request.Parameter.InputFiles));
+        this.VerifyAesRequest(request, out var mode, out var padding);
 
-        var encryption = App.ServiceProvider.GetRequiredService<IEncryption>();
-        var option = new AesEncryptOption(request.Parameter.Key, request.Parameter.IV.NotEmpty() ? Encoding.UTF8.GetBytes(request.Parameter.IV!) : [])
-        {
-            CipherMode = mode.Value,
-            Padding = padding.Value,
-        };
-        await Parallel.ForEachAsync(request.Parameter.InputFiles, async (file, _) =>
-        {
-            try
-            {
-                await SetInputFileStatus(request, file.FullName, 1);
-                var fileInfo = new FileInfo(file.FullPath);
-                if (!fileInfo.Exists) throw new FileNotFoundException();
-                var targetDirectory = fileInfo.Directory!.FullName;
-                var targetName = $"{file.Name}.encrypted{file.Extension}";
-#if ANDROID
-                targetDirectory = Android.OS.Environment.ExternalStorageDirectory?.Path.CombinePath($"Download") ?? throw new Exception("找不到外部存储目录");
-#endif
-                var targetPath = targetDirectory.CombinePath(targetName);
-                await Task.Run(() => encryption.Symmetric.Aes.EncryptFile(file.FullPath, targetPath, option));
-                await SetInputFileStatus(request, file.FullName, 2, targetPath);
-            }
-            catch (Exception ex)
-            {
-                await SetInputFileStatus(request, file.FullName, 3, ex.Message);
-            }
-        });
+        var option = CreateEncryptionOption<AesEncryptOption>(request, mode, padding);
+        await RunFileCryptoTask(true, request, (source, target) => _encryption.Symmetric.Aes.EncryptFile(source, target, option));
+
         await Task.CompletedTask;
     }
 
     public async Task AesDecryptFile(JSRequest<AesEncryptRequest> request)
     {
-        if (request.Parameter is null) throw new Exception("parameter required");
-        if (request.Parameter.Key is null) throw new Exception("key required");
-        if (request.Parameter.InputFiles is null || request.Parameter.InputFiles.Count <= 0) throw new Exception("input files required");
-        CipherMode? mode = Enum.TryParse(typeof(CipherMode), request.Parameter.Mode, out var x) ? (CipherMode)x : null;
-        if (mode is null) throw new Exception("cipher mode required");
-        if (mode != CipherMode.ECB && request.Parameter.IV is null) throw new Exception("iv required");
-        PaddingMode? padding = Enum.TryParse(typeof(PaddingMode), request.Parameter.Padding, out var y) ? (PaddingMode)y : null;
-        if (padding is null) throw new Exception("cipher padding required");
+        if (request.Parameter.InputFiles is null || request.Parameter.InputFiles.Count <= 0) throw new ArgumentNullException(nameof(request.Parameter.InputFiles));
+        this.VerifyAesRequest(request, out var mode, out var padding);
 
-        var encryption = App.ServiceProvider.GetRequiredService<IEncryption>();
+        var option = CreateEncryptionOption<AesDecryptOption>(request, mode, padding);
+        await RunFileCryptoTask(false, request, (source, target) => _encryption.Symmetric.Aes.DecryptFile(source, target, option));
+
+        await Task.CompletedTask;
+    }
+
+    void VerifyAesRequest(JSRequest<AesEncryptRequest> request, out CipherMode mode, out PaddingMode padding)
+    {
+        if (request.Parameter is null) throw new ArgumentNullException(nameof(request.Parameter));
+        if (request.Parameter.Key is null) throw new ArgumentNullException(nameof(request.Parameter.Key));
+        mode = Enum.TryParse(typeof(CipherMode), request.Parameter.Mode, out var x) ? (CipherMode)x : throw new ArgumentNullException(nameof(request.Parameter.Mode));
+        if (mode != CipherMode.ECB && request.Parameter.IV is null) throw new ArgumentNullException(nameof(request.Parameter.IV));
+        padding = Enum.TryParse(typeof(PaddingMode), request.Parameter.Padding, out var y) ? (PaddingMode)y : throw new ArgumentNullException(nameof(request.Parameter.Padding));
+    }
+
+    T CreateEncryptionOption<T>(JSRequest<AesEncryptRequest> request, CipherMode mode, PaddingMode padding) where T : AesEncryptOption
+    {
         var option = new AesDecryptOption(request.Parameter.Key, request.Parameter.IV.NotEmpty() ? Encoding.UTF8.GetBytes(request.Parameter.IV!) : [])
         {
-            CipherMode = mode.Value,
-            Padding = padding.Value,
+            CipherMode = mode,
+            Padding = padding,
         };
+        return (option as T)!;
+    }
+
+    async Task RunFileCryptoTask(bool isEncrypt, JSRequest<AesEncryptRequest> request, Action<string, string> action)
+    {
         await Parallel.ForEachAsync(request.Parameter.InputFiles, async (file, _) =>
         {
             try
@@ -120,12 +91,12 @@ public class AesCryptoService : BaseService
                 var fileInfo = new FileInfo(file.FullPath);
                 if (!fileInfo.Exists) throw new FileNotFoundException();
                 var targetDirectory = fileInfo.Directory!.FullName;
-                var targetName = $"{file.Name}.decrypted{file.Extension}";
+                var targetName = $"{file.Name}.{(isEncrypt ? "encrypted" : "decrypted")}{file.Extension}";
 #if ANDROID
-                targetDirectory = Android.OS.Environment.ExternalStorageDirectory?.Path.CombinePath("Download") ?? throw new Exception("找不到外部存储目录");
+                targetDirectory = Android.OS.Environment.ExternalStorageDirectory?.Path.CombinePath($"Download") ?? throw new Exception("找不到外部存储目录");
 #endif
                 var targetPath = targetDirectory.CombinePath(targetName);
-                await Task.Run(() => encryption.Symmetric.Aes.DecryptFile(file.FullPath, targetPath, option));
+                await Task.Run(() => action(file.FullPath, targetPath));
                 await SetInputFileStatus(request, file.FullName, 2, targetPath);
             }
             catch (Exception ex)
@@ -133,7 +104,6 @@ public class AesCryptoService : BaseService
                 await SetInputFileStatus(request, file.FullName, 3, ex.Message);
             }
         });
-        await Task.CompletedTask;
     }
 
     async Task SetInputFileStatus(JSRequest request, string name, int status, object? data = null)
@@ -145,11 +115,11 @@ public class AesCryptoService : BaseService
 
 public class AesEncryptRequest
 {
+    public required string Key { get; set; }
+    public required string Mode { get; set; }
+    public required string Padding { get; set; }
+    public string? IV { get; set; }
     public string? PlainText { get; set; }
     public string? CipherText { get; set; }
-    public string? Key { get; set; }
-    public string? IV { get; set; }
-    public string? Mode { get; set; }
-    public string? Padding { get; set; }
     public List<PickFileInfo> InputFiles { get; set; } = [];
 }

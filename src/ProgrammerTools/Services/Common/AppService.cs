@@ -11,16 +11,9 @@ namespace ProgrammerTools.Services.Common;
 
 public class AppService : BaseService
 {
-    public async Task<bool> WWWRootFilesExsit(JSRequest<string> request)
-    {
-        var path = "wwwroot".CombinePath(request.Parameter);
-        return await FileSystem.AppPackageFileExistsAsync(path);
-    }
+    public async Task<bool> WWWRootFilesExsit(JSRequest<string> request) => await FileSystem.AppPackageFileExistsAsync("wwwroot".CombinePath(request.Parameter));
 
-    public async Task OpenBrowser(JSRequest<string> request)
-    {
-        await Browser.Default.OpenAsync(new Uri(request.Parameter!), BrowserLaunchMode.SystemPreferred);
-    }
+    public async Task OpenBrowser(JSRequest<string> request) => await Browser.Default.OpenAsync(new Uri(request.Parameter!), BrowserLaunchMode.SystemPreferred);
 
     public async Task<ApplicationInfo> GetAppInfo()
     {
@@ -35,10 +28,7 @@ public class AppService : BaseService
         return new() { Version = version, Platform = DeviceInfo.Current.Platform.Convert() };
     }
 
-    public async Task SetClipboard(JSRequest<string> request)
-    {
-        await Clipboard.Default.SetTextAsync(request.Parameter);
-    }
+    public async Task SetClipboard(JSRequest<string> request)=> await Clipboard.Default.SetTextAsync(request.Parameter);
 
     public async Task Upgrade(JSRequest<string> request)
     {

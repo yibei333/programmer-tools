@@ -54,6 +54,10 @@
         this.getCurrentVersion();
     },
     methods: {
+        setSize() {
+            this.isSmall = this.$root.size == 1;
+            this.isMenuOpen = !this.isSmall;
+        },
         setTheme() {
             let existed = document.querySelector('link[href*="/assets/css/theme-"]');
             if (existed) document.head.removeChild(existed);
@@ -65,6 +69,7 @@
         selectTheme(theme) {
             this.theme = theme;
         },
+
         updateTabs(name) {
             let route = this.pagesConfigList.filter(x => x.name == name)[0];
             if (route) {
@@ -81,24 +86,6 @@
                     this.$refs.menu.updateOpened();
                 }, 300);
             }
-        },
-        nav(id) {
-            let name = this.pagesConfigList.filter(x => x.id == id)[0]?.name;
-            if (name) {
-                this.$router.push({ name: name, replace: true });
-                if (this.isSmall) this.isMenuOpen = false;
-            }
-        },
-        selectLocale(locale) {
-            this.$i18n.locale = locale;
-        },
-        async openGithub() {
-            let result = await callService('AppService.OpenBrowser', staticConfigs.githubUrl);
-            if (!result.success) notifyError(result.description);
-        },
-        setSize() {
-            this.isSmall = this.$root.size == 1;
-            this.isMenuOpen = !this.isSmall;
         },
         handleTabRemove(name) {
             let tab = this.tabList.filter(x => x.name == name)[0];
@@ -139,10 +126,24 @@
             }
             this.moveStartTab = this.tabList.filter(x => x.id == id)[0];
         },
+
+        nav(id) {
+            let name = this.pagesConfigList.filter(x => x.id == id)[0]?.name;
+            if (name) {
+                this.$router.push({ name: name, replace: true });
+                if (this.isSmall) this.isMenuOpen = false;
+            }
+        },
+        selectLocale(locale) {
+            this.$i18n.locale = locale;
+        },
+        async openGithub() {
+            await callService('AppService.OpenBrowser', staticConfigs.githubUrl);
+        },
+
         async getCurrentVersion() {
-            let result = await callService('AppService.GetAppInfo');
-            if (!result.success) notifyError(result.description);
-            else this.currentVersion = result.data;
+            let data = await callService('AppService.GetAppInfo');
+            this.currentVersion = data;
         },
         showVersion() {
             this.showVersionModal = true;
@@ -154,15 +155,14 @@
                 url: staticConfigs.giteeUrl + '/raw/main/pack/version.txt',
                 method: 'get',
             };
-            let result = await callService('HttpService.HttpRequest', options);
+            let result = await callServiceFull('HttpService.HttpRequest', options);
             if (result.success && result.data.isSuccess) {
                 this.checkComplete(result.data);
                 return;
             }
             options.url = staticConfigs.githubRawUrl + '/main/pack/version.txt';
-            result = await callService('HttpService.HttpRequest', options);
-            if (!result.success) notifyError(result.description);
-            else this.checkComplete(result.data);
+            result = await callServiceFull('HttpService.HttpRequest', options);
+            this.checkComplete(result.data);
         },
         checkComplete(response) {
             this.lastVersion = response.isSuccess ? response.data : null;
@@ -187,7 +187,7 @@
                 method: 'get',
                 name: name
             };
-            let result = await callService('HttpService.Download', options, this);
+            let result = await callServiceFull('HttpService.Download', options, this);
             if (result.success && result.data.isSuccess) {
                 notifySuccess(`${this.$t('installPackageSavedAt')}:${result.data.data}`);
                 this.upgradeComplete(result.data);
@@ -195,15 +195,9 @@
             }
 
             options.url = staticConfigs.githubUrl + `/releases/download/${this.lastVersion}/${name}`;
-            result = await callService('HttpService.Download', options, this);
-            if (!result.success) notifyError(result.description);
-            else {
-                if (result.data.isSuccess) notifySuccess(`${this.$t('installPackageSavedAt')}:${result.data.data}`);
-                this.upgradeComplete(result.data);
-            }
-        },
-        setProgress(p) {
-            this.progress = p;
+            result = await callServiceFull('HttpService.Download', options, this);
+            if (result.data.isSuccess) notifySuccess(`${this.$t('installPackageSavedAt')}:${result.data.data}`);
+            this.upgradeComplete(result.data);
         },
         upgradeComplete(response) {
             this.progress = null;
@@ -214,11 +208,13 @@
             }
             else notifyError(`${this.$t('downloadFailed')}:${response.message}`);
         },
+        setProgress(p) {
+            this.progress = p;
+        },
         async installUpdate() {
             if (!this.packagePath) return;
             this.installing = true;
-            let result = await callService('AppService.Upgrade', this.packagePath, this);
-            if (!result.success) notifyError(result.description);
+            await callService('AppService.Upgrade', this.packagePath, this);
         },
         notifyInstallUpdate(res) {
             this.installing = false;
