@@ -79,6 +79,15 @@ const i18nMessages = {
         fail: '失败',
         selectFile: '选择文件',
         please: '请',
+        convertType: '格式转换',
+        matchKeyPair: '密钥对校验',
+        exportPublicKey: '导出公钥',
+        generateKeyPair: '生成密钥对',
+        length: '长度',
+        password: '密码',
+        generate: '生成',
+        privateKey: '私钥',
+        publicKey: '公钥',
     },
     English: {
         app: {
@@ -146,6 +155,15 @@ const i18nMessages = {
         fail: 'fail',
         selectFile: 'select files',
         please: 'please',
+        convertType: 'convert type',
+        matchKeyPair: 'match key pair',
+        exportPublicKey: 'export public key',
+        generateKeyPair: 'generate key pair',
+        length: 'length',
+        password: 'password',
+        generate: 'generate',
+        privateKey: 'private key',
+        publicKey: 'public key',
     },
 };
 

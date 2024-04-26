@@ -1,6 +1,6 @@
 <div class="label-input">
     <slot name="label">
-        <label>{{label}}</label>
+        <label><bold v-if="required">*</bold>{{label}}</label>
     </slot>
     <slot></slot>
 </div>

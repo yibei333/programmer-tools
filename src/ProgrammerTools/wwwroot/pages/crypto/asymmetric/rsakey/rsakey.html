@@ -1,1 +1,52 @@
-<h2>this is rsa key page</h2>
+<div class="rsakey-page">
+    <Tabs value="panel1" class="tabs">
+        <TabPane :label="$t('generateKeyPair')" name="panel1">
+            <div class="panel1-content">
+                <div v-bind:style="{display:'grid',gap:'.5rem','grid-template-columns':'repeat('+($root.size+1)+',1fr)'}">
+                    <labelinput :label="$t('type')">
+                        <Select v-model="panel1.type" :placeholder="$t('type')">
+                            <Option v-for="item in panel1.types" :value="item" :key="item">{{ item }}</Option>
+                        </Select>
+                    </labelinput>
+
+                    <labelinput :label="$t('length')">
+                        <Select v-model="panel1.length" :placeholder="$t('length')">
+                            <Option v-for="item in panel1.lengths" :value="item" :key="item">{{item}}</Option>
+                        </Select>
+                    </labelinput>
+
+                    <labelinput :label="$t('password')" :required="false">
+                        <Input v-model="panel1.password" v-bind:type="'password'" :placeholder="$t('password')" />
+                    </labelinput>
+                </div>
+
+                <div class="operations">
+                    <Button @click="generateKeyPair" v-bind:type="'primary'">{{$t('generate')}}</Button>
+                </div>
+                <label>{{$t('privateKey')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel1.pair.private" readonly />
+                    <div class="transfer" v-if="panel1.pair.private">
+                        <Button @click="copy(panel1.pair.private)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+                <label>{{$t('publicKey')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel1.pair.public" readonly />
+                    <div class="transfer" v-if="panel1.pair.public">
+                        <Button @click="copy(panel1.pair.public)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+            </div>
+        </TabPane>
+        <TabPane :label="$t('exportPublicKey')" name="panel2">
+            标签二的内容
+        </TabPane>
+        <TabPane :label="$t('matchKeyPair')" name="panel3">
+            标签三的内容
+        </TabPane>
+        <TabPane :label="$t('convertType')" name="panel4">
+            标签三的内容
+        </TabPane>
+    </Tabs>
+</div>

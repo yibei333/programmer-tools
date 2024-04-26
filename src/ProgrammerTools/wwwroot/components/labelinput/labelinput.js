@@ -1,3 +1,11 @@
 export default {
-    props: ["label"],
+    props: {
+        label: {
+            type: String
+        },
+        required: {
+            type: Boolean,
+            default: true
+        }
+    },
 }

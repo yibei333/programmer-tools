@@ -1,0 +1,31 @@
+.rsakey-page, .rsakey-page .tabs {
+    height: 100%;
+}
+
+    .rsakey-page .tabs {
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+    }
+
+
+    .rsakey-page .panel1-content {
+        display: grid;
+        grid-template-rows: auto auto auto 1fr auto 1fr;
+        gap: .5rem;
+        height: 100%;
+    }
+
+    .rsakey-page .text {
+        position: relative;
+    }
+
+    .rsakey-page .transfer {
+        position: absolute;
+        right: 1rem;
+        top: .5rem;
+        display: none;
+    }
+
+    .rsakey-page .text:hover .transfer {
+        display: initial;
+    }

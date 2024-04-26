@@ -17,3 +17,8 @@
     .label-input .ivu-select-selection, .label-input input {
         border-radius: 0 4px 4px 0;
     }
+
+    .label-input bold {
+        padding-right: 4px;
+        color: var(--danger);
+    }
