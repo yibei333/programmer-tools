@@ -88,6 +88,7 @@ const i18nMessages = {
         generate: '生成',
         privateKey: '私钥',
         publicKey: '公钥',
+        export: '导出',
     },
     English: {
         app: {
@@ -164,6 +165,7 @@ const i18nMessages = {
         generate: 'generate',
         privateKey: 'private key',
         publicKey: 'public key',
+        export: 'export',
     },
 };
 

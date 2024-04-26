@@ -1,5 +1,6 @@
 <div class="rsakey-page">
     <Tabs value="panel1" class="tabs">
+        <!--generate key pair-->
         <TabPane :label="$t('generateKeyPair')" name="panel1">
             <div class="panel1-content">
                 <div v-bind:style="{display:'grid',gap:'.5rem','grid-template-columns':'repeat('+($root.size+1)+',1fr)'}">
@@ -25,26 +26,54 @@
                 </div>
                 <label>{{$t('privateKey')}}:</label>
                 <div class="text">
-                    <textarea v-model="panel1.pair.private" readonly />
+                    <textarea v-model="panel1.pair.private" readonly spellcheck="false" />
                     <div class="transfer" v-if="panel1.pair.private">
                         <Button @click="copy(panel1.pair.private)">{{$t('copy')}}</Button>
                     </div>
                 </div>
                 <label>{{$t('publicKey')}}:</label>
                 <div class="text">
-                    <textarea v-model="panel1.pair.public" readonly />
+                    <textarea v-model="panel1.pair.public" readonly spellcheck="false" />
                     <div class="transfer" v-if="panel1.pair.public">
                         <Button @click="copy(panel1.pair.public)">{{$t('copy')}}</Button>
                     </div>
                 </div>
             </div>
         </TabPane>
+
+        <!--export public key-->
         <TabPane :label="$t('exportPublicKey')" name="panel2">
-            标签二的内容
+            <div class="panel2-content">
+                <label>{{$t('privateKey')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel2.privateKey" spellcheck="false" />
+                    <div class="transfer" v-if="panel2.privateKey">
+                        <Button @click="copy(panel2.privateKey)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+                <div class="operations">
+                    <labelinput :label="$t('password')" :required="false">
+                        <Input v-model="panel2.password" v-bind:type="'password'" :placeholder="$t('password')" />
+                    </labelinput>
+                    <Button @click="exportPublicKey" v-bind:type="'primary'">{{$t('export')}}</Button>
+                </div>
+
+                <label>{{$t('publicKey')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel2.publicKey" readonly spellcheck="false" />
+                    <div class="transfer" v-if="panel2.publicKey">
+                        <Button @click="copy(panel2.publicKey)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+            </div>
         </TabPane>
+
+        <!--key pair match-->
         <TabPane :label="$t('matchKeyPair')" name="panel3">
             标签三的内容
         </TabPane>
+
+        <!--key convert-->
         <TabPane :label="$t('convertType')" name="panel4">
             标签三的内容
         </TabPane>

@@ -33,7 +33,7 @@
 
     <div class="text-container" v-if="request.type=='txt'">
         <div class="text">
-            <textarea v-model="request.plainText" :placeholder="$t('plainText')" />
+            <textarea v-model="request.plainText" :placeholder="$t('plainText')" spellcheck="false" />
             <div class="transfer" v-if="request.plainText">
                 <Button @click="copy(request.plainText)">{{$t('copy')}}</Button>
             </div>
@@ -43,7 +43,7 @@
             <Button v-bind:disabled="!request.cipherText" v-bind:type="'primary'" @click="decrypt" icon="md-arrow-up">{{$t('decrypt')}}</Button>
         </div>
         <div class="text">
-            <textarea v-model="request.cipherText" :placeholder="$t('cipherText')" />
+            <textarea v-model="request.cipherText" :placeholder="$t('cipherText')" spellcheck="false" />
             <div class="transfer" v-if="request.cipherText">
                 <Button @click="convertToHex(request.cipherText)">{{$t('convertToHex')}}</Button>
                 <Button @click="copy(request.cipherText)">{{$t('copy')}}</Button>
@@ -54,7 +54,7 @@
                    :ok-text="$t('copy')"
                    @on-ok="copy(hexResult)"
                    @on-cancel="hexResultShow=false">
-                <Input v-model="hexResult" v-bind:type="'textarea'" autosize="true" />
+                <Input v-model="hexResult" v-bind:type="'textarea'" autosize="true" spellcheck="false" />
             </Modal>
         </div>
     </div>

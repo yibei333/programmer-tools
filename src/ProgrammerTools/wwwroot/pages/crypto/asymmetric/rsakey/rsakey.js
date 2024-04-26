@@ -15,19 +15,28 @@ export default {
                     private: null,
                     public: null
                 }
+            },
+            panel2: {
+                privateKey: null,
+                publicKey: null,
+                password: null
             }
         }
     },
     mounted() {
     },
     methods: {
+        async copy(text) {
+            await callService('AppService.SetClipboard', text);
+            notifySuccess(this.$t('copySuccess'));
+        },
         async generateKeyPair() {
             let data = await callService('RsaKeyService.GenerateKeyPair', { type: this.panel1.type, length: this.panel1.length, password: this.panel1.password });
             this.panel1.pair = data;
         },
-        async copy(text) {
-            await callService('AppService.SetClipboard', text);
-            notifySuccess(this.$t('copySuccess'));
+        async exportPublicKey() {
+            let data = await callService('RsaKeyService.ExportPublicKey', { privateKey: this.panel2.privateKey, password: this.panel2.password });
+            this.panel2.publicKey = data;
         },
     }
 }
