@@ -89,6 +89,9 @@ const i18nMessages = {
         privateKey: '私钥',
         publicKey: '公钥',
         export: '导出',
+        match: '匹配',
+        correct: '正确',
+        wrong: '错误',
     },
     English: {
         app: {
@@ -166,6 +169,9 @@ const i18nMessages = {
         privateKey: 'private key',
         publicKey: 'public key',
         export: 'export',
+        match: 'match',
+        correct: 'correct',
+        wrong: 'wrong',
     },
 };
 

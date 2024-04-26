@@ -20,6 +20,12 @@ export default {
                 privateKey: null,
                 publicKey: null,
                 password: null
+            },
+            panel3: {
+                privateKey: null,
+                publicKey: null,
+                password: null,
+                result: null
             }
         }
     },
@@ -38,5 +44,9 @@ export default {
             let data = await callService('RsaKeyService.ExportPublicKey', { privateKey: this.panel2.privateKey, password: this.panel2.password });
             this.panel2.publicKey = data;
         },
+        async matchKeyPair() {
+            let data = await callService('RsaKeyService.MatchKeyPair', { privateKey: this.panel3.privateKey, publicKey: this.panel3.publicKey, password: this.panel3.password });
+            this.panel3.result = data;
+        }
     }
 }

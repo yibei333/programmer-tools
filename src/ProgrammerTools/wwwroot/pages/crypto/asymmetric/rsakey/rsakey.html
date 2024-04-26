@@ -70,7 +70,34 @@
 
         <!--key pair match-->
         <TabPane :label="$t('matchKeyPair')" name="panel3">
-            标签三的内容
+            <div class="panel3-content">
+                <div class="operations">
+                    <labelinput :label="$t('password')" :required="false">
+                        <Input v-model="panel3.password" v-bind:type="'password'" :placeholder="$t('password')" />
+                    </labelinput>
+                    <Button @click="matchKeyPair" v-bind:type="'primary'">{{$t('match')}}</Button>
+                    <div v-if="panel3.privateKey&&panel3.publicKey&&panel3.result!=null">
+                        <div v-if="panel3.result">{{$t('correct')}}</div>
+                        <div v-else>{{$t('wrong')}}</div>
+                    </div>
+                </div>
+
+                <label>{{$t('privateKey')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel3.privateKey" spellcheck="false" />
+                    <div class="transfer" v-if="panel3.privateKey">
+                        <Button @click="copy(panel3.privateKey)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+
+                <label>{{$t('publicKey')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel3.publicKey" spellcheck="false" />
+                    <div class="transfer" v-if="panel3.publicKey">
+                        <Button @click="copy(panel3.publicKey)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+            </div>
         </TabPane>
 
         <!--key convert-->

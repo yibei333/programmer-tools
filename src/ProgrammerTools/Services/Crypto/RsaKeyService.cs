@@ -58,6 +58,28 @@ public class RsaKeyService : BaseService
             throw new Exception($"{ex.Message},may be password error",ex);
         }
     }
+
+    public async Task<bool> MatchKeyPair(JSRequest<MatchKeyPairRequest> request)
+    {
+        if (request.Parameter is null) throw new ArgumentNullException(nameof(request.Parameter));
+        try
+        {
+            if (string.IsNullOrWhiteSpace(request.Parameter.Password))
+            {
+                var isMatch = _rsaKey.IsKeyPairMatch(request.Parameter.PrivateKey,request.Parameter.PublicKey);
+                return await Task.FromResult(isMatch);
+            }
+            else
+            {
+                var isMatch = _rsaKey.IsKeyPairMatch(request.Parameter.PrivateKey, request.Parameter.PublicKey, request.Parameter.Password);
+                return await Task.FromResult(isMatch);
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"{ex.Message},may be password error", ex);
+        }
+    }
 }
 
 public class GenerateKeyPairRequest
@@ -76,6 +98,13 @@ public class GenerateKeyPairRequest
 public class ExportPublicKeyRequest
 {
     public required string PrivateKey { get; set; }
+    public string? Password { get; set; }
+}
+
+public class MatchKeyPairRequest
+{
+    public required string PrivateKey { get; set; }
+    public required string PublicKey { get; set; }
     public string? Password { get; set; }
 }
 
