@@ -97,6 +97,10 @@ const i18nMessages = {
         convert: '转换',
         currentType: '当前类型',
         targetType: '目标类型',
+        publicKeyEncrypt: '公钥加密',
+        privateKeyDecrypt: '私钥解密',
+        privateKeySign: '私钥签名',
+        publicKeyVerifySign: '公钥验签',
     },
     English: {
         app: {
@@ -182,6 +186,10 @@ const i18nMessages = {
         convert: 'convert',
         currentType: 'current type',
         targetType: 'target type',
+        publicKeyEncrypt: 'public key encrypt',
+        privateKeyDecrypt: 'private key decrypt',
+        privateKeySign:'private key sign',
+        publicKeyVerifySign: 'public key verify sign',
     },
 };
 

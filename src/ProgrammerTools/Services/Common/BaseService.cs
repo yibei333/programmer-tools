@@ -21,7 +21,7 @@ public class BaseService
                 if (_services is not null) return _services;
 
                 var baseType = typeof(BaseService);
-                _services = baseType.Assembly.GetTypes().Where(x => x.BaseType == baseType && x.IsPublic).ToList();
+                _services = baseType.Assembly.GetTypes().Where(x => x.IsSubclassOf(baseType) && x.IsPublic).ToList();
                 return _services;
             }
         }

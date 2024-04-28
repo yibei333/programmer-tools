@@ -1,1 +1,159 @@
-<h2>this is rsa page</h2>
+<div class="rsa-page">
+    <Tabs value="panel1" class="tabs">
+        <Modal v-model="hexResultShow"
+               :width="$root.size==1?'300px':'500px'"
+               :title="$t('convertToHex')"
+               :ok-text="$t('copy')"
+               @on-ok="copy(hexResult)"
+               @on-cancel="hexResultShow=false">
+            <Input v-model="hexResult" v-bind:type="'textarea'" autosize="true" spellcheck="false" />
+        </Modal>
+        <!--public key encrypt-->
+        <TabPane :label="$t('publicKeyEncrypt')" name="panel1">
+            <div class="panel1-content">
+                <div v-bind:style="{display:'grid',gap:'.5rem','grid-template-columns':'repeat('+($root.size+1)+',1fr)'}">
+                    <labelinput :label="$t('padding')">
+                        <Select v-model="panel1.padding" :placeholder="$t('padding')">
+                            <Option v-for="item in paddings" :value="item" :key="item">{{item}}</Option>
+                        </Select>
+                    </labelinput>
+
+                    <!--<labelinput :label="$t('password')" :required="false">
+                        <Input v-model="panel1.password" :placeholder="$t('password')" v-bind:type="password" />
+                    </labelinput>-->
+                </div>
+
+                <div class="key">
+                    <label>{{$t('publicKey')}}:</label>
+                    <div class="text">
+                        <textarea v-model="panel1.key" spellcheck="false" />
+                        <div class="transfer" v-if="panel1.key">
+                            <Button @click="copy(panel1.key)">{{$t('copy')}}</Button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-container">
+                    <div class="operations">
+                        <Button v-bind:disabled="!panel1.text||!panel1.key" v-bind:type="'primary'" @click="encrypt">{{$t('encrypt')}}</Button>
+                    </div>
+
+                    <label>{{$t('plainText')}}:</label>
+                    <div class="text">
+                        <textarea v-model="panel1.text" :placeholder="$t('plainText')" spellcheck="false" />
+                        <div class="transfer" v-if="panel1.text">
+                            <Button @click="copy(panel1.text)">{{$t('copy')}}</Button>
+                        </div>
+                    </div>
+
+                    <label>{{$t('cipherText')}}:</label>
+                    <div class="text">
+                        <textarea v-model="panel1.cipherText" :placeholder="$t('cipherText')" spellcheck="false" readonly />
+                        <div class="transfer" v-if="panel1.cipherText">
+                            <Button @click="convertToHex(panel1.cipherText)">{{$t('convertToHex')}}</Button>
+                            <Button @click="copy(panel1.cipherText)">{{$t('copy')}}</Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </TabPane>
+
+        <!--private key decrypt-->
+        <TabPane :label="$t('privateKeyDecrypt')" name="panel2">
+            <div class="panel2-content">
+                <label>{{$t('privateKey')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel2.privateKey" spellcheck="false" />
+                    <div class="transfer" v-if="panel2.privateKey">
+                        <Button @click="copy(panel2.privateKey)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+                <div class="operations">
+                    <labelinput :label="$t('password')" :required="false">
+                        <Input v-model="panel2.password" v-bind:type="'password'" :placeholder="$t('password')" />
+                    </labelinput>
+                    <Button @click="exportPublicKey" v-bind:type="'primary'">{{$t('export')}}</Button>
+                </div>
+
+                <label>{{$t('publicKey')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel2.publicKey" readonly spellcheck="false" />
+                    <div class="transfer" v-if="panel2.publicKey">
+                        <Button @click="copy(panel2.publicKey)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+            </div>
+        </TabPane>
+
+        <!--private key sign-->
+        <TabPane :label="$t('privateKeySign')" name="panel3">
+            <div class="panel3-content">
+                <div class="operations">
+                    <labelinput :label="$t('password')" :required="false">
+                        <Input v-model="panel3.password" v-bind:type="'password'" :placeholder="$t('password')" />
+                    </labelinput>
+                    <Button @click="matchKeyPair" v-bind:type="'primary'">{{$t('match')}}</Button>
+                    <div v-if="panel3.privateKey&&panel3.publicKey&&panel3.result!=null" class="result">
+                        <template v-if="panel3.result">
+                            <Icon type="ios-checkmark-circle" :color="'var(--success)'" />
+                            {{$t('correct')}}
+                        </template>
+                        <template v-else>
+                            <Icon type="md-close-circle" :color="'var(--danger)'" />
+                            {{$t('wrong')}}
+                        </template>
+                    </div>
+                </div>
+
+                <label>{{$t('privateKey')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel3.privateKey" spellcheck="false" @input="panel3.result=null" />
+                    <div class="transfer" v-if="panel3.privateKey">
+                        <Button @click="copy(panel3.privateKey)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+
+                <label>{{$t('publicKey')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel3.publicKey" spellcheck="false" @input="panel3.result=null" />
+                    <div class="transfer" v-if="panel3.publicKey">
+                        <Button @click="copy(panel3.publicKey)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+            </div>
+        </TabPane>
+
+        <!--public key verfify sign-->
+        <TabPane :label="$t('publicKeyVerifySign')" name="panel4">
+            <div class="panel4-content">
+                <label>{{$t('input')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel4.source" spellcheck="false" />
+                    <div class="transfer" v-if="panel4.source">
+                        <Button @click="copy(panel4.source)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+
+                <div class="operations">
+                    <labelinput :label="$t('currentType')" :required="false">
+                        <Input v-model="panel4.currentType" disabled />
+                    </labelinput>
+                    <labelinput :label="$t('targetType')">
+                        <Select v-model="panel4.targetType" :placeholder="$t('targetType')" v-bind:disabled="!panel4.targetTypes||panel4.targetTypes.length<=0">
+                            <Option v-for="item in panel4.targetTypes" :value="item" :key="item">{{ item }}</Option>
+                        </Select>
+                    </labelinput>
+                    <Button @click="convert" v-bind:type="'primary'" v-bind:disabled="!panel4.targetTypes||panel4.targetTypes.length<=0">{{$t('convert')}}</Button>
+                </div>
+
+                <label>{{$t('output')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel4.target" spellcheck="false" readonly />
+                    <div class="transfer" v-if="panel4.target">
+                        <Button @click="copy(panel4.target)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+            </div>
+        </TabPane>
+    </Tabs>
+</div>

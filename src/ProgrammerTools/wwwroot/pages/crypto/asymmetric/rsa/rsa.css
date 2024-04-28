@@ -1,0 +1,101 @@
+.rsa-page, .rsa-page .tabs {
+    height: 100%;
+}
+
+    .rsa-page .ivu-tabs-content {
+        height: calc(100% - 52px);
+    }
+
+    .rsa-page .text {
+        position: relative;
+    }
+
+    .rsa-page .transfer {
+        position: absolute;
+        right: 1rem;
+        top: .5rem;
+        display: none;
+    }
+
+    .rsa-page .key textarea {
+        min-height: 100px;
+    }
+
+    .rsa-page .text:hover .transfer {
+        display: flex;
+        gap: .5rem;
+    }
+
+    .rsa-page .operations {
+        display: grid;
+        grid-template-columns: auto auto auto 1fr;
+        gap: .5rem;
+    }
+
+.rsa-page .file-container {
+    height: 100%;
+    overflow: hidden;
+    padding-top: .5rem;
+}
+
+    .rsa-page .file-container .operations {
+        display: flex;
+        gap: .5rem;
+        align-items: center;
+        justify-content: start;
+    }
+
+    .rsa-page .file-container .file-list {
+        height: 100%;
+        display: grid;
+        grid-template-rows: auto 1fr;
+    }
+
+        .rsa-page .file-container .file-list .ivu-list-container {
+            overflow: auto;
+        }
+
+.file-list .ivu-list-header, .file-list .ivu-list-content, .file-list .ivu-list-footer {
+    padding: .5rem !important;
+}
+
+.rsa-page .ivu-list-item {
+    padding: 1rem .5rem;
+}
+
+.rsa-page .file-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .5rem;
+    width: 100%;
+    overflow: hidden;
+}
+
+.rsa-page .file-container .name {
+    overflow: hidden;
+}
+
+
+.rsa-page .file-container .status .notice {
+    text-decoration: underline;
+    cursor: pointer
+}
+
+    .rsa-page .file-container .status .notice:hover {
+        color: var(--primary);
+    }
+
+
+    .rsa-page .panel1-content {
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+        gap: .5rem;
+        height: 100%;
+    }
+
+        .rsa-page .panel1-content .text-container {
+            display: grid;
+            grid-template-rows: auto auto 1fr auto 1fr;
+            gap: .5rem;
+        }
+

@@ -40,11 +40,13 @@ export default {
         },
         async encrypt() {
             if (!this.valid()) return;
+            this.request.text = this.request.plainText;
             let data = await callService('DesCryptoService.Encrypt', this.request);
             this.request.cipherText = data;
         },
         async decrypt() {
             if (!this.valid()) return;
+            this.request.text = this.request.cipherText;
             let data = await callService('DesCryptoService.Decrypt', this.request);
             this.request.plainText = data;
         },

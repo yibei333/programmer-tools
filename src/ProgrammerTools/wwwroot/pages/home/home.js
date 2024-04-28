@@ -5,7 +5,7 @@ export default {
     },
     mounted() {
         setTimeout(() => {
-            this.$router.push({ name: 'rsakey' });
+            this.$router.push({ name: 'rsa' });
         }, 20);
     },
     methods: {
