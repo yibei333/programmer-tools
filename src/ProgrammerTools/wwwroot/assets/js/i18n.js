@@ -92,6 +92,11 @@ const i18nMessages = {
         match: '匹配',
         correct: '正确',
         wrong: '错误',
+        input: '输入',
+        output: '输出',
+        convert: '转换',
+        currentType: '当前类型',
+        targetType: '目标类型',
     },
     English: {
         app: {
@@ -172,6 +177,11 @@ const i18nMessages = {
         match: 'match',
         correct: 'correct',
         wrong: 'wrong',
+        input: 'input',
+        output: 'output',
+        convert: 'convert',
+        currentType: 'current type',
+        targetType: 'target type',
     },
 };
 

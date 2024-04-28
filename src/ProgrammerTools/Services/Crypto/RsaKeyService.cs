@@ -53,9 +53,9 @@ public class RsaKeyService : BaseService
                 return await Task.FromResult(publicKey);
             }
         }
-        catch (Exception ex)
+        catch (NotSupportedException)
         {
-            throw new Exception($"{ex.Message},may be password error",ex);
+            throw new Exception($"{(request.Parameter.Password.IsNull() ? "password required" : "password should be null")}");
         }
     }
 
@@ -66,7 +66,7 @@ public class RsaKeyService : BaseService
         {
             if (string.IsNullOrWhiteSpace(request.Parameter.Password))
             {
-                var isMatch = _rsaKey.IsKeyPairMatch(request.Parameter.PrivateKey,request.Parameter.PublicKey);
+                var isMatch = _rsaKey.IsKeyPairMatch(request.Parameter.PrivateKey, request.Parameter.PublicKey);
                 return await Task.FromResult(isMatch);
             }
             else
@@ -77,8 +77,26 @@ public class RsaKeyService : BaseService
         }
         catch (Exception ex)
         {
-            throw new Exception($"{ex.Message},may be password error", ex);
+            throw new Exception($"may be password error", ex);
         }
+    }
+
+    public async Task<string?> GetKeyType(JSRequest<string> request)
+    {
+        if (request.Parameter is null) throw new ArgumentNullException(nameof(request.Parameter));
+        try
+        {
+            return await Task.FromResult(_rsaKey.KeyType(request.Parameter).ToString());
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    public async Task<string> Convert(JSRequest<ConvertRequest> request)
+    {
+        return await Task.FromResult(_rsaKey.ConvertType(request.Parameter.Source,request.Parameter.TargetType));
     }
 }
 
@@ -106,6 +124,12 @@ public class MatchKeyPairRequest
     public required string PrivateKey { get; set; }
     public required string PublicKey { get; set; }
     public string? Password { get; set; }
+}
+
+public class ConvertRequest
+{
+    public required string Source { get; set; }
+    public required RsaKeyType TargetType { get; set; }
 }
 
 public class RsaKeyPair
