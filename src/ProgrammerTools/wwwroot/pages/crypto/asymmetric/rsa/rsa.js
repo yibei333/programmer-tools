@@ -87,7 +87,6 @@ export default {
             this.panel3.hasPassword = data;
         },
         async sign() {
-            console.log(1111, this.panel3);
             let data = await callService('RsaCryptoService.Sign', this.panel3);
             this.panel3.signature = data;
         },
