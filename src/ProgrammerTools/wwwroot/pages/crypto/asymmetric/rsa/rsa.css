@@ -86,16 +86,15 @@
     }
 
 
-    .rsa-page .panel1-content {
-        display: grid;
-        grid-template-rows: auto auto 1fr;
-        gap: .5rem;
-        height: 100%;
-    }
+.rsa-page .panel1-content, .rsa-page .panel2-content {
+    display: grid;
+    grid-template-rows: auto auto 1fr;
+    gap: .5rem;
+    height: 100%;
+}
 
-        .rsa-page .panel1-content .text-container {
+        .rsa-page .text-container {
             display: grid;
             grid-template-rows: auto auto 1fr auto 1fr;
             gap: .5rem;
         }
-

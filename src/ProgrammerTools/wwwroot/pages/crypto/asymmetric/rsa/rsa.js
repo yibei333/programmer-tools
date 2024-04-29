@@ -14,13 +14,12 @@ export default {
                 cipherText: null,
             },
             panel2: {
-                fileOrText: 'txt',
                 padding: 'Pkcs1',
                 key: null,
+                hasPassword: false,
+                password: null,
                 text: null,
-                inputFiles: [],
                 plainText: null,
-                handling: false,
             },
             panel3: {
                 privateKey: null,
@@ -63,6 +62,14 @@ export default {
             let data = await callService('EncodeService.ConvertBase64ToHext', text);
             this.hexResult = data;
             this.hexResultShow = true;
+        },
+        async panel2PrivateKeyChanged() {
+            if (!this.panel2.key) {
+                this.panel2.hasPassword = false;
+                return;
+            }
+            let data = await callService('RsaKeyService.IsKeyHasPassword', this.panel2.key);
+            this.panel2.hasPassword = data;
         },
     }
 }

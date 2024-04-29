@@ -30,8 +30,8 @@ public class RsaCryptoService : CryptoService
 
         return await Task.Run(() =>
         {
-            var bytes = _encryption.Asymmetric.Rsa.Decrypt(request.Parameter.Text!, new RsaDecryptOption(request.Parameter.Key) { Padding = request.Parameter.GetPadding() });
-            return Convert.ToBase64String(bytes);
+            var bytes = _encryption.Asymmetric.Rsa.Decrypt(request.Parameter.Text!, new RsaDecryptOption(request.Parameter.Key) { PrivateKeyPassword = request.Parameter.Password, Padding = request.Parameter.GetPadding() });
+            return Encoding.UTF8.GetString(bytes);
         });
     }
 

@@ -17,10 +17,6 @@
                             <Option v-for="item in paddings" :value="item" :key="item">{{item}}</Option>
                         </Select>
                     </labelinput>
-
-                    <!--<labelinput :label="$t('password')" :required="false">
-                        <Input v-model="panel1.password" :placeholder="$t('password')" v-bind:type="password" />
-                    </labelinput>-->
                 </div>
 
                 <div class="key">
@@ -61,25 +57,46 @@
         <!--private key decrypt-->
         <TabPane :label="$t('privateKeyDecrypt')" name="panel2">
             <div class="panel2-content">
-                <label>{{$t('privateKey')}}:</label>
-                <div class="text">
-                    <textarea v-model="panel2.privateKey" spellcheck="false" />
-                    <div class="transfer" v-if="panel2.privateKey">
-                        <Button @click="copy(panel2.privateKey)">{{$t('copy')}}</Button>
-                    </div>
-                </div>
-                <div class="operations">
-                    <labelinput :label="$t('password')" :required="false">
-                        <Input v-model="panel2.password" v-bind:type="'password'" :placeholder="$t('password')" />
+                <div v-bind:style="{display:'grid',gap:'.5rem','grid-template-columns':'repeat('+($root.size+1)+',1fr)'}">
+                    <labelinput :label="$t('padding')">
+                        <Select v-model="panel2.padding" :placeholder="$t('padding')">
+                            <Option v-for="item in paddings" :value="item" :key="item">{{item}}</Option>
+                        </Select>
                     </labelinput>
-                    <Button @click="exportPublicKey" v-bind:type="'primary'">{{$t('export')}}</Button>
                 </div>
 
-                <label>{{$t('publicKey')}}:</label>
-                <div class="text">
-                    <textarea v-model="panel2.publicKey" readonly spellcheck="false" />
-                    <div class="transfer" v-if="panel2.publicKey">
-                        <Button @click="copy(panel2.publicKey)">{{$t('copy')}}</Button>
+                <div class="key">
+                    <label>{{$t('privateKey')}}:</label>
+                    <div class="text">
+                        <textarea v-model="panel2.key" spellcheck="false" @input="panel2PrivateKeyChanged" />
+                        <div class="transfer" v-if="panel2.key">
+                            <Button @click="copy(panel2.key)">{{$t('copy')}}</Button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-container">
+                    <div class="operations">
+                        <labelinput :label="$t('password')" v-if="panel2.hasPassword">
+                            <Input v-model="panel2.password" v-bind:type="'password'" :placeholder="$t('password')" />
+                        </labelinput>
+                        <Button v-bind:disabled="!panel2.text||!panel2.key||(panel2.hasPassword&&!panel2.password)" v-bind:type="'primary'" @click="decrypt">{{$t('decrypt')}}</Button>
+                    </div>
+
+                    <label>{{$t('cipherText')}}:</label>
+                    <div class="text">
+                        <textarea v-model="panel2.text" :placeholder="$t('cipherText')" spellcheck="false" />
+                        <div class="transfer" v-if="panel2.text">
+                            <Button @click="copy(panel2.text)">{{$t('copy')}}</Button>
+                        </div>
+                    </div>
+
+                    <label>{{$t('plainText')}}:</label>
+                    <div class="text">
+                        <textarea v-model="panel2.plainText" :placeholder="$t('plainText')" spellcheck="false" readonly />
+                        <div class="transfer" v-if="panel2.plainText">
+                            <Button @click="copy(panel2.plainText)">{{$t('copy')}}</Button>
+                        </div>
                     </div>
                 </div>
             </div>
