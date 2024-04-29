@@ -65,3 +65,14 @@
         gap: .5rem;
         height: 100%;
     }
+
+    .rsakey-page .panel5-content {
+        display: grid;
+        grid-template-rows: auto 1fr auto auto 1fr;
+        gap: .5rem;
+        height: 100%;
+    }
+
+        .rsakey-page .panel5-content .operations {
+            grid-template-columns: auto auto auto auto 1fr;
+        }

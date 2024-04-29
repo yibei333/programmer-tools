@@ -101,6 +101,9 @@ const i18nMessages = {
         privateKeyDecrypt: '私钥解密',
         privateKeySign: '私钥签名',
         publicKeyVerifySign: '公钥验签',
+        passwordRequired: '请输入密码',
+        add: '添加',
+        remove: '删除',
     },
     English: {
         app: {
@@ -188,8 +191,11 @@ const i18nMessages = {
         targetType: 'target type',
         publicKeyEncrypt: 'public key encrypt',
         privateKeyDecrypt: 'private key decrypt',
-        privateKeySign:'private key sign',
+        privateKeySign: 'private key sign',
         publicKeyVerifySign: 'public key verify sign',
+        passwordRequired: 'password required',
+        add: 'add',
+        remove: 'remove',
     },
 };
 

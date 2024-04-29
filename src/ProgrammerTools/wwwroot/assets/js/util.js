@@ -31,11 +31,11 @@ function callService(signature, request, objectRefercence) {
         }).then(result => {
             if (result.success) resolve(result.data);
             else {
-                console.log(result);
+                console.log(signature, request, result);
                 reject(result);
             }
         }).catch(error => {
-            console.log(error);
+            console.log(signature, request, error);
             reject(error);
         });
     });

@@ -22,63 +22,24 @@ public class RsaKeyService : BaseService
     {
         if (request.Parameter is null) throw new ArgumentNullException(nameof(request.Parameter));
 
-        if (string.IsNullOrWhiteSpace(request.Parameter.Password))
-        {
-            var privateKey = _rsaKey.ExportPrivateKey(request.Parameter.GetKeyType(), request.Parameter.Length);
-            var publicKey = _rsaKey.ExportPublicKey(privateKey);
-            return await Task.FromResult(new RsaKeyPair { Private = privateKey, Public = publicKey });
-        }
-        else
-        {
-            var privateKey = _rsaKey.ExportPrivateKey(request.Parameter.GetKeyType(), request.Parameter.Password, request.Parameter.Length);
-            var publicKey = _rsaKey.ExportPublicKey(privateKey, request.Parameter.Password);
-            return await Task.FromResult(new RsaKeyPair { Private = privateKey, Public = publicKey });
-        }
+        var privateKey = _rsaKey.ExportPrivateKey(request.Parameter.GetKeyType(), request.Parameter.Length);
+        var publicKey = _rsaKey.ExportPublicKey(privateKey);
+        return await Task.FromResult(new RsaKeyPair { Private = privateKey, Public = publicKey });
     }
 
     public async Task<string> ExportPublicKey(JSRequest<ExportPublicKeyRequest> request)
     {
         if (request.Parameter is null) throw new ArgumentNullException(nameof(request.Parameter));
 
-        try
-        {
-            if (string.IsNullOrWhiteSpace(request.Parameter.Password))
-            {
-                var publicKey = _rsaKey.ExportPublicKey(request.Parameter.PrivateKey);
-                return await Task.FromResult(publicKey);
-            }
-            else
-            {
-                var publicKey = _rsaKey.ExportPublicKey(request.Parameter.PrivateKey, request.Parameter.Password);
-                return await Task.FromResult(publicKey);
-            }
-        }
-        catch (NotSupportedException)
-        {
-            throw new Exception($"{(request.Parameter.Password.IsNull() ? "password required" : "password should be null")}");
-        }
+        var publicKey = _rsaKey.ExportPublicKey(request.Parameter.PrivateKey, request.Parameter.Password);
+        return await Task.FromResult(publicKey);
     }
 
     public async Task<bool> MatchKeyPair(JSRequest<MatchKeyPairRequest> request)
     {
         if (request.Parameter is null) throw new ArgumentNullException(nameof(request.Parameter));
-        try
-        {
-            if (string.IsNullOrWhiteSpace(request.Parameter.Password))
-            {
-                var isMatch = _rsaKey.IsKeyPairMatch(request.Parameter.PrivateKey, request.Parameter.PublicKey);
-                return await Task.FromResult(isMatch);
-            }
-            else
-            {
-                var isMatch = _rsaKey.IsKeyPairMatch(request.Parameter.PrivateKey, request.Parameter.PublicKey, request.Parameter.Password);
-                return await Task.FromResult(isMatch);
-            }
-        }
-        catch (Exception ex)
-        {
-            throw new Exception($"may be password error", ex);
-        }
+        var isMatch = _rsaKey.IsKeyPairMatch(request.Parameter.PrivateKey, request.Parameter.PublicKey, request.Parameter.Password);
+        return await Task.FromResult(isMatch);
     }
 
     public async Task<string?> GetKeyType(JSRequest<string> request)
@@ -94,16 +55,42 @@ public class RsaKeyService : BaseService
         }
     }
 
+    public async Task<bool> IsKeyHasPassword(JSRequest<string> request)
+    {
+        if (request.Parameter is null) throw new ArgumentNullException(nameof(request.Parameter));
+        try
+        {
+            return await Task.FromResult(_rsaKey.IsKeyHasPassword(request.Parameter));
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     public async Task<string> Convert(JSRequest<ConvertRequest> request)
     {
-        return await Task.FromResult(_rsaKey.ConvertType(request.Parameter.Source,request.Parameter.TargetType));
+        return await Task.FromResult(_rsaKey.ConvertType(request.Parameter.Source, request.Parameter.TargetType));
+    }
+
+    public async Task<string> AddPassword(JSRequest<PasswordRequest> request)
+    {
+        var isPrivate = _rsaKey.IsPrivate(request.Parameter.Source);
+        if (!isPrivate) throw new InvalidOperationException("source is not private key");
+        return await Task.FromResult(_rsaKey.AddPrivateKeyPassword(request.Parameter.Source, request.Parameter.Password));
+    }
+
+    public async Task<string> RemovePassword(JSRequest<PasswordRequest> request)
+    {
+        var isPrivate = _rsaKey.IsPrivate(request.Parameter.Source);
+        if (!isPrivate) throw new InvalidOperationException("source is not private key");
+        return await Task.FromResult(_rsaKey.RemovePrivateKeyPassword(request.Parameter.Source, request.Parameter.Password));
     }
 }
 
 public class GenerateKeyPairRequest
 {
     public int Length { get; set; }
-    public string? Password { get; set; }
     public required string Type { get; set; }
     public RsaKeyType GetKeyType()
     {
@@ -130,6 +117,12 @@ public class ConvertRequest
 {
     public required string Source { get; set; }
     public required RsaKeyType TargetType { get; set; }
+}
+
+public class PasswordRequest
+{
+    public required string Source { get; set; }
+    public required string Password { get; set; }
 }
 
 public class RsaKeyPair

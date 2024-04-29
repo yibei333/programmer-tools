@@ -10,18 +10,19 @@ export default {
                 type: 'Pkcs1',
                 lengths: [512, 1024, 2048, 3072, 4096],
                 length: 2048,
-                password: null,
                 pair: {
                     private: null,
                     public: null
                 }
             },
             panel2: {
+                hasPassword: false,
                 privateKey: null,
                 publicKey: null,
                 password: null
             },
             panel3: {
+                hasPassword: false,
                 privateKey: null,
                 publicKey: null,
                 password: null,
@@ -33,6 +34,13 @@ export default {
                 target: null,
                 targetTypes: [],
                 targetType: null,
+            },
+            panel5: {
+                hasPassword: false,
+                source: null,
+                password: null,
+                currentType: null,
+                target: null,
             }
         }
     },
@@ -49,14 +57,22 @@ export default {
             notifySuccess(this.$t('copySuccess'));
         },
         async generateKeyPair() {
-            let data = await callService('RsaKeyService.GenerateKeyPair', { type: this.panel1.type, length: this.panel1.length, password: this.panel1.password });
+            let data = await callService('RsaKeyService.GenerateKeyPair', { type: this.panel1.type, length: this.panel1.length });
             this.panel1.pair = data;
         },
         async exportPublicKey() {
+            if (this.panel2.hasPassword && !this.panel2.password) {
+                notifyWarning(this.$t('passwordRequired'));
+                return;
+            }
             let data = await callService('RsaKeyService.ExportPublicKey', { privateKey: this.panel2.privateKey, password: this.panel2.password });
             this.panel2.publicKey = data;
         },
         async matchKeyPair() {
+            if (this.panel3.hasPassword && !this.panel3.password) {
+                notifyWarning(this.$t('passwordRequired'));
+                return;
+            }
             let data = await callService('RsaKeyService.MatchKeyPair', { privateKey: this.panel3.privateKey, publicKey: this.panel3.publicKey, password: this.panel3.password });
             this.panel3.result = data;
         },
@@ -82,6 +98,47 @@ export default {
         async convert() {
             let data = await callService('RsaKeyService.Convert', { source: this.panel4.source, targetType: this.panel4.targetType });
             this.panel4.target = data;
+        },
+        async panel2PrivateKeyChanged() {
+            let data = await callService('RsaKeyService.IsKeyHasPassword', this.panel2.privateKey);
+            this.panel2.hasPassword = data;
+        },
+        async panel3PrivateKeyChanged() {
+            this.panel3.result = null
+            let data = await callService('RsaKeyService.IsKeyHasPassword', this.panel3.privateKey);
+            this.panel3.hasPassword = data;
+        },
+        async panel5PrivateKeyChanged() {
+            if (!this.panel5.source) {
+                this.panel5.type = null;
+                this.panel5.hasPassword = false;
+                return;
+            }
+            let type = await callService('RsaKeyService.GetKeyType', this.panel5.source);
+            this.panel5.currentType = type;
+            let data = await callService('RsaKeyService.IsKeyHasPassword', this.panel5.source);
+            this.panel5.hasPassword = data;
+        },
+        async addPassword() {
+            if (!this.veriryPanel5()) return;
+            let data = await callService('RsaKeyService.AddPassword', this.panel5);
+            this.panel5.target = data;
+        },
+        async removePassword() {
+            if (!this.veriryPanel5()) return;
+            let data = await callService('RsaKeyService.RemovePassword', this.panel5);
+            this.panel5.target = data;
+        },
+        veriryPanel5() {
+            if (this.panel5.currentType != 'Pkcs1' && this.panel5.currentType != "Pkcs8") {
+                notifyWarning(this.$t('xml not supported'));
+                return false;
+            }
+            if (!this.panel5.password) {
+                notifyWarning(this.$t('passwordRequired'));
+                return false;
+            }
+            return true;
         }
     }
 }

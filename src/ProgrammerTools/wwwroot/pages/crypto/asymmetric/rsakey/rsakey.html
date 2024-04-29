@@ -15,10 +15,6 @@
                             <Option v-for="item in panel1.lengths" :value="item" :key="item">{{item}}</Option>
                         </Select>
                     </labelinput>
-
-                    <labelinput :label="$t('password')" :required="false">
-                        <Input v-model="panel1.password" v-bind:type="'password'" :placeholder="$t('password')" />
-                    </labelinput>
                 </div>
 
                 <div class="operations">
@@ -46,13 +42,13 @@
             <div class="panel2-content">
                 <label>{{$t('privateKey')}}:</label>
                 <div class="text">
-                    <textarea v-model="panel2.privateKey" spellcheck="false" />
+                    <textarea v-model="panel2.privateKey" spellcheck="false" @input="panel2PrivateKeyChanged" />
                     <div class="transfer" v-if="panel2.privateKey">
                         <Button @click="copy(panel2.privateKey)">{{$t('copy')}}</Button>
                     </div>
                 </div>
                 <div class="operations">
-                    <labelinput :label="$t('password')" :required="false">
+                    <labelinput :label="$t('password')" v-if="panel2.hasPassword">
                         <Input v-model="panel2.password" v-bind:type="'password'" :placeholder="$t('password')" />
                     </labelinput>
                     <Button @click="exportPublicKey" v-bind:type="'primary'">{{$t('export')}}</Button>
@@ -72,10 +68,10 @@
         <TabPane :label="$t('matchKeyPair')" name="panel3">
             <div class="panel3-content">
                 <div class="operations">
-                    <labelinput :label="$t('password')" :required="false">
+                    <labelinput :label="$t('password')" v-if="panel3.hasPassword">
                         <Input v-model="panel3.password" v-bind:type="'password'" :placeholder="$t('password')" />
                     </labelinput>
-                    <Button @click="matchKeyPair" v-bind:type="'primary'">{{$t('match')}}</Button>
+                    <Button @click="matchKeyPair" v-bind:type="'primary'" v-bind:disabled="!panel3.privateKey||!panel3.publicKey||(panel3.hasPassword&&!panel3.password)">{{$t('match')}}</Button>
                     <div v-if="panel3.privateKey&&panel3.publicKey&&panel3.result!=null" class="result">
                         <template v-if="panel3.result">
                             <Icon type="ios-checkmark-circle" :color="'var(--success)'" />
@@ -90,7 +86,7 @@
 
                 <label>{{$t('privateKey')}}:</label>
                 <div class="text">
-                    <textarea v-model="panel3.privateKey" spellcheck="false" @input="panel3.result=null" />
+                    <textarea v-model="panel3.privateKey" spellcheck="false" @input="panel3PrivateKeyChanged" />
                     <div class="transfer" v-if="panel3.privateKey">
                         <Button @click="copy(panel3.privateKey)">{{$t('copy')}}</Button>
                     </div>
@@ -134,6 +130,38 @@
                     <textarea v-model="panel4.target" spellcheck="false" readonly />
                     <div class="transfer" v-if="panel4.target">
                         <Button @click="copy(panel4.target)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+            </div>
+        </TabPane>
+
+        <!--password-->
+        <TabPane :label="$t('password')" name="panel5">
+            <div class="panel5-content">
+                <label>{{$t('input')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel5.source" spellcheck="false" @input="panel5PrivateKeyChanged" />
+                    <div class="transfer" v-if="panel5.source">
+                        <Button @click="copy(panel5.source)">{{$t('copy')}}</Button>
+                    </div>
+                </div>
+
+                <div class="operations">
+                    <labelinput :label="$t('currentType')" :required="false">
+                        <Input v-model="panel5.currentType" disabled />
+                    </labelinput>
+                    <labelinput :label="$t('password')">
+                        <Input v-model="panel5.password" v-bind:type="'password'" :placeholder="$t('password')" />
+                    </labelinput>
+                    <Button @click="addPassword" v-bind:type="'primary'" v-bind:disabled="!panel5.source||panel5.hasPassword">{{$t('add')}}</Button>
+                    <Button @click="removePassword" v-bind:type="'error'" v-bind:disabled="!panel5.source||!panel5.hasPassword">{{$t('remove')}}</Button>
+                </div>
+
+                <label>{{$t('output')}}:</label>
+                <div class="text">
+                    <textarea v-model="panel5.target" spellcheck="false" readonly />
+                    <div class="transfer" v-if="panel5.target">
+                        <Button @click="copy(panel5.target)">{{$t('copy')}}</Button>
                     </div>
                 </div>
             </div>
