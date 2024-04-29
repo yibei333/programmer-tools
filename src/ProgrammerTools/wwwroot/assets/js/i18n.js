@@ -104,6 +104,11 @@ const i18nMessages = {
         passwordRequired: '请输入密码',
         add: '添加',
         remove: '删除',
+        algorithm: '算法',
+        sign: '签名',
+        verifySign: '验签',
+        data: '数据',
+        signature: '签名'
     },
     English: {
         app: {
@@ -196,6 +201,11 @@ const i18nMessages = {
         passwordRequired: 'password required',
         add: 'add',
         remove: 'remove',
+        algorithm: 'algorithm',
+        sign: 'sign',
+        verifySign: 'verify sign',
+        data: 'data',
+        signature: 'signature'
     },
 };
 

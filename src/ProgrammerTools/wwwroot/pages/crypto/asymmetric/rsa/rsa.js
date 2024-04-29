@@ -5,7 +5,9 @@ export default {
     },
     data() {
         return {
-            paddings: ['SHA1', 'SHA256', 'SHA384', 'SHA512', 'Pkcs1'],
+            paddings: ['Pkcs1', 'OaepSHA1', 'OaepSHA256', 'OaepSHA384', 'OaepSHA512'],
+            signPaddings: ['Pkcs1', 'Pss'],
+            algorithms: ['MD5', 'SHA1', 'SHA256', 'SHA384', 'SHA512'],
             panel1: {
                 padding: 'Pkcs1',
                 key: null,
@@ -22,17 +24,21 @@ export default {
                 plainText: null,
             },
             panel3: {
-                privateKey: null,
-                publicKey: null,
+                key: null,
+                hasPassword: false,
                 password: null,
-                result: null
+                text: null,
+                padding: 'Pkcs1',
+                signHashAlgorithm: 'SHA256',
+                signature: null
             },
             panel4: {
-                source: null,
-                currentType: null,
-                target: null,
-                targetTypes: [],
-                targetType: null,
+                key: null,
+                text: null,
+                padding: 'Pkcs1',
+                signHashAlgorithm: 'SHA256',
+                signature: null,
+                result: null
             },
             hexResult: null,
             hexResultShow: false,
@@ -71,5 +77,23 @@ export default {
             let data = await callService('RsaKeyService.IsKeyHasPassword', this.panel2.key);
             this.panel2.hasPassword = data;
         },
+        async panel3PrivateKeyChanged() {
+            this.panel3.signature = null;
+            if (!this.panel3.key) {
+                this.panel3.hasPassword = false;
+                return;
+            }
+            let data = await callService('RsaKeyService.IsKeyHasPassword', this.panel3.key);
+            this.panel3.hasPassword = data;
+        },
+        async sign() {
+            console.log(1111, this.panel3);
+            let data = await callService('RsaCryptoService.Sign', this.panel3);
+            this.panel3.signature = data;
+        },
+        async verifySign() {
+            let data = await callService('RsaCryptoService.VerifySign', this.panel4);
+            this.panel4.result = data;
+        }
     }
 }

@@ -8,6 +8,7 @@
                @on-cancel="hexResultShow=false">
             <Input v-model="hexResult" v-bind:type="'textarea'" autosize="true" spellcheck="false" />
         </Modal>
+
         <!--public key encrypt-->
         <TabPane :label="$t('publicKeyEncrypt')" name="panel1">
             <div class="panel1-content">
@@ -30,16 +31,16 @@
                 </div>
 
                 <div class="text-container">
-                    <div class="operations">
-                        <Button v-bind:disabled="!panel1.text||!panel1.key" v-bind:type="'primary'" @click="encrypt">{{$t('encrypt')}}</Button>
-                    </div>
-
                     <label>{{$t('plainText')}}:</label>
                     <div class="text">
                         <textarea v-model="panel1.text" :placeholder="$t('plainText')" spellcheck="false" />
                         <div class="transfer" v-if="panel1.text">
                             <Button @click="copy(panel1.text)">{{$t('copy')}}</Button>
                         </div>
+                    </div>
+
+                    <div class="operations">
+                        <Button v-bind:disabled="!panel1.text||!panel1.key" v-bind:type="'primary'" @click="encrypt">{{$t('encrypt')}}</Button>
                     </div>
 
                     <label>{{$t('cipherText')}}:</label>
@@ -76,19 +77,19 @@
                 </div>
 
                 <div class="text-container">
-                    <div class="operations">
-                        <labelinput :label="$t('password')" v-if="panel2.hasPassword">
-                            <Input v-model="panel2.password" v-bind:type="'password'" :placeholder="$t('password')" />
-                        </labelinput>
-                        <Button v-bind:disabled="!panel2.text||!panel2.key||(panel2.hasPassword&&!panel2.password)" v-bind:type="'primary'" @click="decrypt">{{$t('decrypt')}}</Button>
-                    </div>
-
                     <label>{{$t('cipherText')}}:</label>
                     <div class="text">
                         <textarea v-model="panel2.text" :placeholder="$t('cipherText')" spellcheck="false" />
                         <div class="transfer" v-if="panel2.text">
                             <Button @click="copy(panel2.text)">{{$t('copy')}}</Button>
                         </div>
+                    </div>
+
+                    <div class="operations">
+                        <labelinput :label="$t('password')" v-if="panel2.hasPassword">
+                            <Input v-model="panel2.password" v-bind:type="'password'" :placeholder="$t('password')" />
+                        </labelinput>
+                        <Button v-bind:disabled="!panel2.text||!panel2.key||(panel2.hasPassword&&!panel2.password)" v-bind:type="'primary'" @click="decrypt">{{$t('decrypt')}}</Button>
                     </div>
 
                     <label>{{$t('plainText')}}:</label>
@@ -105,36 +106,52 @@
         <!--private key sign-->
         <TabPane :label="$t('privateKeySign')" name="panel3">
             <div class="panel3-content">
-                <div class="operations">
-                    <labelinput :label="$t('password')" :required="false">
-                        <Input v-model="panel3.password" v-bind:type="'password'" :placeholder="$t('password')" />
+                <div v-bind:style="{display:'grid',gap:'.5rem','grid-template-columns':'repeat('+($root.size+1)+',1fr)'}">
+                    <labelinput :label="$t('padding')">
+                        <Select v-model="panel3.padding" :placeholder="$t('padding')">
+                            <Option v-for="item in signPaddings" :value="item" :key="item">{{item}}</Option>
+                        </Select>
                     </labelinput>
-                    <Button @click="matchKeyPair" v-bind:type="'primary'">{{$t('match')}}</Button>
-                    <div v-if="panel3.privateKey&&panel3.publicKey&&panel3.result!=null" class="result">
-                        <template v-if="panel3.result">
-                            <Icon type="ios-checkmark-circle" :color="'var(--success)'" />
-                            {{$t('correct')}}
-                        </template>
-                        <template v-else>
-                            <Icon type="md-close-circle" :color="'var(--danger)'" />
-                            {{$t('wrong')}}
-                        </template>
+                    <labelinput :label="$t('algorithm')">
+                        <Select v-model="panel3.signHashAlgorithm" :placeholder="$t('algorithm')">
+                            <Option v-for="item in algorithms" :value="item" :key="item">{{item}}</Option>
+                        </Select>
+                    </labelinput>
+                </div>
+
+                <div class="key">
+                    <label>{{$t('privateKey')}}:</label>
+                    <div class="text">
+                        <textarea v-model="panel3.key" spellcheck="false" @input="panel3PrivateKeyChanged" />
+                        <div class="transfer" v-if="panel3.key">
+                            <Button @click="copy(panel3.key)">{{$t('copy')}}</Button>
+                        </div>
                     </div>
                 </div>
 
-                <label>{{$t('privateKey')}}:</label>
-                <div class="text">
-                    <textarea v-model="panel3.privateKey" spellcheck="false" @input="panel3.result=null" />
-                    <div class="transfer" v-if="panel3.privateKey">
-                        <Button @click="copy(panel3.privateKey)">{{$t('copy')}}</Button>
+                <div class="text-container">
+                    <label>{{$t('data')}}:</label>
+                    <div class="text">
+                        <textarea v-model="panel3.text" :placeholder="$t('data')" spellcheck="false" />
+                        <div class="transfer" v-if="panel3.text">
+                            <Button @click="copy(panel3.text)">{{$t('copy')}}</Button>
+                        </div>
                     </div>
-                </div>
 
-                <label>{{$t('publicKey')}}:</label>
-                <div class="text">
-                    <textarea v-model="panel3.publicKey" spellcheck="false" @input="panel3.result=null" />
-                    <div class="transfer" v-if="panel3.publicKey">
-                        <Button @click="copy(panel3.publicKey)">{{$t('copy')}}</Button>
+                    <div class="operations">
+                        <labelinput :label="$t('password')" v-if="panel3.hasPassword">
+                            <Input v-model="panel3.password" v-bind:type="'password'" :placeholder="$t('password')" />
+                        </labelinput>
+                        <Button v-bind:disabled="!panel3.text||!panel3.key||(panel3.hasPassword&&!panel3.password)" v-bind:type="'primary'" @click="sign">{{$t('sign')}}</Button>
+                    </div>
+
+                    <label>{{$t('signature')}}:</label>
+                    <div class="text">
+                        <textarea v-model="panel3.signature" :placeholder="$t('signature')" spellcheck="false" readonly />
+                        <div class="transfer" v-if="panel3.signature">
+                            <Button @click="convertToHex(panel3.signature)">{{$t('convertToHex')}}</Button>
+                            <Button @click="copy(panel3.signature)">{{$t('copy')}}</Button>
+                        </div>
                     </div>
                 </div>
             </div>
