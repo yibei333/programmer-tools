@@ -1,0 +1,16 @@
+name: app
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - pack/version.txt
+      
+jobs:
+  build:
+    runs-on: windows-latest 
+    env:
+      Solution_Name: hello
+    steps:
+    - name: Invoke
+      run: pack/test.bat
