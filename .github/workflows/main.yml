@@ -13,4 +13,4 @@ jobs:
       Solution_Name: hello
     steps:
     - name: Invoke
-      run: pack/test.bat
+      run: ./pack/test.bat
