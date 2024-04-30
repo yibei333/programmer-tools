@@ -54,10 +54,12 @@ export default {
     methods: {
         async encrypt() {
             let data = await callService('RsaCryptoService.Encrypt', this.panel1);
+            notifySuccess(this.$t('success'));
             this.panel1.cipherText = data;
         },
         async decrypt() {
             let data = await callService('RsaCryptoService.Decrypt', this.panel2);
+            notifySuccess(this.$t('success'));
             this.panel2.plainText = data;
         },
         async copy(text) {
@@ -88,10 +90,13 @@ export default {
         },
         async sign() {
             let data = await callService('RsaCryptoService.Sign', this.panel3);
+            notifySuccess(this.$t('success'));
             this.panel3.signature = data;
         },
         async verifySign() {
             let data = await callService('RsaCryptoService.VerifySign', this.panel4);
+            if (data) notifySuccess(this.$t('success'));
+            else notifyWarning(this.$t('fail'));
             this.panel4.result = data;
         }
     }

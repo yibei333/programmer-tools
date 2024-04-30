@@ -58,6 +58,7 @@ export default {
         },
         async generateKeyPair() {
             let data = await callService('RsaKeyService.GenerateKeyPair', { type: this.panel1.type, length: this.panel1.length });
+            notifySuccess(this.$t('success'));
             this.panel1.pair = data;
         },
         async exportPublicKey() {
@@ -66,6 +67,7 @@ export default {
                 return;
             }
             let data = await callService('RsaKeyService.ExportPublicKey', { privateKey: this.panel2.privateKey, password: this.panel2.password });
+            notifySuccess(this.$t('success'));
             this.panel2.publicKey = data;
         },
         async matchKeyPair() {
@@ -74,6 +76,8 @@ export default {
                 return;
             }
             let data = await callService('RsaKeyService.MatchKeyPair', { privateKey: this.panel3.privateKey, publicKey: this.panel3.publicKey, password: this.panel3.password });
+            if (data) notifySuccess(this.$t('success'));
+            else notifyWarning(this.$t('fail'));
             this.panel3.result = data;
         },
         async convertSourceChanged() {
@@ -97,6 +101,7 @@ export default {
         },
         async convert() {
             let data = await callService('RsaKeyService.Convert', { source: this.panel4.source, targetType: this.panel4.targetType });
+            notifySuccess(this.$t('success'));
             this.panel4.target = data;
         },
         async panel2PrivateKeyChanged() {
@@ -122,11 +127,13 @@ export default {
         async addPassword() {
             if (!this.veriryPanel5()) return;
             let data = await callService('RsaKeyService.AddPassword', this.panel5);
+            notifySuccess(this.$t('success'));
             this.panel5.target = data;
         },
         async removePassword() {
             if (!this.veriryPanel5()) return;
             let data = await callService('RsaKeyService.RemovePassword', this.panel5);
+            notifySuccess(this.$t('success'));
             this.panel5.target = data;
         },
         veriryPanel5() {
