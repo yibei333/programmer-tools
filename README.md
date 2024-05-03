@@ -11,10 +11,10 @@
 # 下载
 
 * 目前支持android和windows客户端。
-    * [windows客户端](https://github.com/yibei333/programmer-tools/releases/download/0.1.1/ProgrammerTools.win64.0.1.1.exe)
-    * [android客户端](https://github.com/yibei333/programmer-tools/releases/download/0.1.1/ProgrammerTools.android.0.1.1.apk)
-    * [国内windows客户端](https://gitee.com/developer333/programmer-tools/releases/download/0.1.1/ProgrammerTools.win64.0.1.1.exe)
-    * [国内android客户端](https://gitee.com/developer333/programmer-tools/releases/download/0.1.1/ProgrammerTools.android.0.1.1.apk)
+    * [windows客户端](https://github.com/yibei333/programmer-tools/releases/download/0.1.2/ProgrammerTools.win64.0.1.2.exe)
+    * [android客户端](https://github.com/yibei333/programmer-tools/releases/download/0.1.2/ProgrammerTools.android.0.1.2.apk)
+    * [国内windows客户端](https://gitee.com/developer333/programmer-tools/releases/download/0.1.2/ProgrammerTools.win64.0.1.2.exe)
+    * [国内android客户端](https://gitee.com/developer333/programmer-tools/releases/download/0.1.2/ProgrammerTools.android.0.1.2.apk)
 
 # 目录
 
