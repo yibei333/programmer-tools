@@ -26,9 +26,6 @@ jobs:
       with:
         dotnet-version: 8.0.x
 
-    - name: Setup MSBuild.exe
-      uses: microsoft/setup-msbuild@v2
-
     - name: Invoke
       run: ./pack/pack.bat
 
